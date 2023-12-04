@@ -43,7 +43,7 @@ M.check = function()
 
 	-- Other OS
 	else
-		error("Operating system not supported")
+		error("Operating system is not supported")
 	end
 end
 
