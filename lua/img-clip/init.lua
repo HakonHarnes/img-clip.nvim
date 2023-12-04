@@ -7,16 +7,17 @@ M.setup = function(opts)
   config.setup(opts)
 end
 
-local deps_ok = false
+local cmd = nil
 
 M.pasteImage = function()
-  -- check dependencies (e.g. xclip, osascript...)
-  if not deps_ok then
-    deps_ok = util.check_deps()
-    if not deps_ok then
+  if not cmd then
+    cmd = util.get_cmd()
+    if not cmd then
       return
     end
   end
+
+  print(cmd)
 
   -- todo: rest of function here
 end
