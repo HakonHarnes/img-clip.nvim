@@ -24,48 +24,19 @@ M.debug = function(msg)
   end
 end
 
-M.get_cmd = function()
-  -- Linux (X11)
-  if os.getenv("DISPLAY") then
-    if M.executable("xclip") then
-      return "xclip"
-    else
-      M.error("Dependency check failed. 'xclip' is not installed.")
-      return nil
-    end
+M.execute = function(cmd)
+  M.debug("Executing: " .. cmd)
 
-  -- Linux (Wayland)
-  elseif os.getenv("WAYLAND_DISPLAY") then
-    if M.executable("wl-copy") then
-      return "wl-copy"
-    else
-      M.error("Dependency check failed. 'wl-clipboard' is not installed.")
-      return nil
-    end
-
-  -- MacOS
-  elseif M.has("mac") then
-    if M.executable("osascript") then
-      return "osascript"
-    else
-      M.error("Dependency check failed. 'osascript' is not installed.")
-      return nil
-    end
-
-  -- Windows
-  elseif M.has("win32") or M.has("wsl") then
-    if M.executable("powershell.exe") then
-      return "powershell.exe"
-    else
-      M.error("Dependency check failed. 'powershell.exe' is not installed.")
-      return nil
-    end
-
-  -- Other OS
-  else
-    M.error("Operating system is not supported.")
+  local handle = io.popen(cmd)
+  if not handle then
+    M.error("Failed to execute command: " .. cmd)
     return nil
   end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  return result
 end
 
 return M
