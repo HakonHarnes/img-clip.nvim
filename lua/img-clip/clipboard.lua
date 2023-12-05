@@ -2,7 +2,7 @@ local util = require("img-clip.util")
 
 local M = {}
 
-M.get_cmd = function()
+M.get_clip_cmd = function()
   -- Linux (X11)
   if os.getenv("DISPLAY") then
     if util.executable("xclip") then
@@ -57,6 +57,29 @@ M.check_if_content_is_image = function(cmd)
     else
       return false
     end
+
+  -- Linux (Wayland)
+  elseif cmd == "wl-paste" then
+    -- TODO: Implement clipboard check for Wayland
+    return false
+
+  -- MacOS
+  elseif cmd == "osascript" then
+    -- TODO: Implement clipboard check for MacOS
+    return false
+
+  -- Windows
+  elseif cmd == "powershell.exe" then
+    -- TODO: Implement clipboard check for Windows
+    return false
+  end
+end
+
+M.save_clipboard_image = function(cmd, file_path)
+  -- Linux (X11)
+  if cmd == "xclip" then
+    local exit_code = os.execute("xclip -selection clipboard -o -t image/png > " .. file_path)
+    return exit_code == 0
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then

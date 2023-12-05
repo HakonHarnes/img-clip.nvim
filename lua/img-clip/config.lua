@@ -1,8 +1,7 @@
 local M = {}
 
 local defaults = {
-  relative_path = "./assets",
-  absolute_path = "$HOME/assets",
+  filepath = "assets",
 
   markdown = {
     template = "![]($PATH)",
@@ -13,6 +12,10 @@ local defaults = {
 }
 
 M.options = {}
+
+M.get_option = function(key)
+  return M.options[key]
+end
 
 function M.setup(opts)
   M.options = vim.tbl_deep_extend("force", {}, defaults, opts or {})

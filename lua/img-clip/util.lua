@@ -6,6 +6,21 @@ M.executable = function(command)
   return vim.fn.executable(command) == 1
 end
 
+M.execute = function(cmd)
+  M.debug("Executing: " .. cmd)
+
+  local handle = io.popen(cmd)
+  if not handle then
+    M.error("Failed to execute command: " .. cmd)
+    return nil, nil, nil, nil
+  end
+
+  local output = handle:read("*a")
+  handle:close()
+
+  return output
+end
+
 M.has = function(feature)
   return vim.fn.has(feature) == 1
 end
@@ -24,19 +39,16 @@ M.debug = function(msg)
   end
 end
 
-M.execute = function(cmd)
-  M.debug("Executing: " .. cmd)
+M.get_filepath = function()
+  local path_separator = package.config:sub(1, 1)
+  local filepath = config.get_option("filepath")
+  local filename = "image.png"
 
-  local handle = io.popen(cmd)
-  if not handle then
-    M.error("Failed to execute command: " .. cmd)
-    return nil
-  end
+  local full_filepath = vim.fn.resolve(filepath .. path_separator .. filename)
 
-  local result = handle:read("*a")
-  handle:close()
+  os.execute("mkdir -p " .. filepath)
 
-  return result
+  return full_filepath
 end
 
 return M
