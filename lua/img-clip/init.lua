@@ -30,13 +30,17 @@ M.pasteImage = function()
     return util.error("Could not determine filepath.")
   end
 
+  -- mkdir if not exists
+  local dir_ok = util.mkdirs(filepath)
+  if not dir_ok then
+    return util.error("Could not create directories.")
+  end
+
   -- save image to specified file path
-  local success = clipboard.save_clipboard_image(clip_cmd, filepath)
-  if not success then
+  local save_ok = clipboard.save_clipboard_image(clip_cmd, filepath)
+  if not save_ok then
     return util.error("Could not save image to disk.")
   end
 end
-
-M.pasteImage()
 
 return M

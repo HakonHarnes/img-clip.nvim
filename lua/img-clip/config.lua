@@ -1,20 +1,42 @@
 local M = {}
 
 local defaults = {
-  filepath = "assets",
+  dir_path = "assets/",
+  filename = "%Y-%m-%d-%H-%M-%S",
+  prompt_for_filename = true,
+  include_filepath_in_prompt = false,
+  template = "$FILE",
 
   markdown = {
-    template = "![]($PATH)",
+    template = "![]($FILE)",
   },
   latex = {
-    template = "\\includegraphics{$PATH}",
+    template = [[\includegraphics{$FILE}]],
   },
 }
 
 M.options = {}
 
 M.get_option = function(key)
-  return M.options[key]
+  local ft = vim.bo.filetype
+  local val
+
+  -- Check for filetype-specific option
+  if M.options[ft] and M.options[ft][key] ~= nil then
+    val = M.options[ft][key]
+  elseif M.options[key] ~= nil then
+    val = M.options[key]
+  else
+    vim.notify("No option found for " .. key .. ".", vim.log.levels.WARN, { title = "img-clip" })
+    return nil
+  end
+
+  -- Check if the option is a function and execute it
+  if type(val) == "function" then
+    return val() -- Execute the function and return its result
+  else
+    return val -- Return the option value directly
+  end
 end
 
 function M.setup(opts)

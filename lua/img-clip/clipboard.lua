@@ -78,7 +78,8 @@ end
 M.save_clipboard_image = function(cmd, file_path)
   -- Linux (X11)
   if cmd == "xclip" then
-    local exit_code = os.execute("xclip -selection clipboard -o -t image/png > " .. file_path)
+    local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
+    local exit_code = os.execute(command)
     return exit_code == 0
 
   -- Linux (Wayland)
