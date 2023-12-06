@@ -8,7 +8,11 @@ local defaults = {
   template = "$FILEPATH",
 
   markdown = {
-    template = "![]($FILEPATH)",
+    template = [[
+Figure 
+![$CURSOR]($FILEPATH)
+*Caption:* $FILENAME
+]],
   },
   latex = {
     template = [[\includegraphics{$FILEPATH}]],

@@ -59,6 +59,18 @@ M.add_file_ext = function(str, ext)
   return str .. ext
 end
 
+M.get_filename_from_filepath = function(filepath)
+  local path_separator = package.config:sub(1, 1)
+  local filename = filepath:match("([^" .. path_separator .. "]+)$")
+  return filename
+end
+
+M.get_dir_path_from_filepath = function(filepath)
+  local path_separator = package.config:sub(1, 1)
+  local dir_path = filepath:match("(.*" .. path_separator .. ").*")
+  return dir_path
+end
+
 M.get_filepath = function()
   local path_separator = package.config:sub(1, 1)
 
@@ -95,11 +107,10 @@ M.get_filepath = function()
 end
 
 M.mkdirs = function(filepath)
-  local path_separator = package.config:sub(1, 1)
   local is_windows = M.has("win32" or M.has("wsl"))
 
   -- get the dir_path (filepath without filename)
-  local dir_path = filepath:match("(.*" .. path_separator .. ").*")
+  local dir_path = M.get_dir_path_from_filepath(filepath)
   if not dir_path then
     return
   end -- if no directory in path, return
@@ -135,7 +146,10 @@ M.insert_markup = function(filepath)
     return
   end
 
+  local filename = M.get_filename_from_filepath(filepath)
+
   template = template:gsub("$FILEPATH", filepath)
+  template = template:gsub("$FILENAME", filename)
   local lines = M.split_lines(template)
 
   vim.api.nvim_put(lines, "l", true, true)
