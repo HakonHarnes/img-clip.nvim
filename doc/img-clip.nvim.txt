@@ -3,20 +3,34 @@
 ==============================================================================
 Table of Contents                            *img-clip.nvim-table-of-contents*
 
-img-clip.nvimPaste images from your clipboard for any markup language, like LaTeX or Markdown
-FEATURES ~
+1. img-clip.nvim                                 |img-clip.nvim-img-clip.nvim|
+  - Features                            |img-clip.nvim-img-clip.nvim-features|
+  - Requirements                    |img-clip.nvim-img-clip.nvim-requirements|
+  - Installation                    |img-clip.nvim-img-clip.nvim-installation|
+  - Configuration                  |img-clip.nvim-img-clip.nvim-configuration|
+  - Usage                                  |img-clip.nvim-img-clip.nvim-usage|
+  - Similar plugins              |img-clip.nvim-img-clip.nvim-similar-plugins|
+
+==============================================================================
+1. img-clip.nvim                                 *img-clip.nvim-img-clip.nvim*
+
+Paste images from your clipboard for any markup language, like LaTeX or
+Markdown
+
+
+FEATURES                                *img-clip.nvim-img-clip.nvim-features*
 
 - Paste images from your clipboard
 - …
 
 
-REQUIREMENTS ~
+REQUIREMENTS                        *img-clip.nvim-img-clip.nvim-requirements*
 
 - Linux: `xclip` (X11) or `wl-clipboard` (Wayland)
 - MacOS and Windows do not have any requirements!
 
 
-INSTALLATION ~
+INSTALLATION                        *img-clip.nvim-img-clip.nvim-installation*
 
 >lua
     {
@@ -26,22 +40,25 @@ INSTALLATION ~
 <
 
 
-CONFIGURATION ~
+CONFIGURATION                      *img-clip.nvim-img-clip.nvim-configuration*
 
 …
 
 
-USAGE ~
+USAGE                                      *img-clip.nvim-img-clip.nvim-usage*
+
+
+COMMANDS ~
 
 …
 
 
-SIMILAR PLUGINS ~
+API ~
 
 …
 
 
-LICENSE ~
+SIMILAR PLUGINS                  *img-clip.nvim-img-clip.nvim-similar-plugins*
 
 …
 
