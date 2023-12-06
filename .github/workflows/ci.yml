@@ -3,9 +3,27 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  docs:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: panvimdoc
+        uses: kdheepak/panvimdoc@main
+        with:
+          vimdoc: img-clip.nvim
+          demojify: true
+          treesitter: true
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore(build): auto-generate vimdoc"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+
   luacheck:
-    name: luacheck
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,8 +33,7 @@ jobs:
           args: lua/
 
   stylua:
-    name: stylua
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: JohnnyMorganz/stylua-action@v3
