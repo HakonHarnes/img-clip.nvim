@@ -20,9 +20,9 @@ M.pasteImage = function()
 
   -- check if clipboard content is an image
   local is_image = clipboard.check_if_content_is_image(clip_cmd)
-  -- if not is_image then
-  --   return util.warn("Clipboard content is not an image.")
-  -- end
+  if not is_image then
+    return util.warn("Clipboard content is not an image.")
+  end
 
   -- get the file path
   local filepath = util.get_filepath()

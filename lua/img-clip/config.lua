@@ -5,6 +5,7 @@ local defaults = {
   filename = "%Y-%m-%d-%H-%M-%S",
   prompt_for_filename = true,
   include_filepath_in_prompt = false,
+  absolute_path = false,
   template = "$FILEPATH",
 
   markdown = {

@@ -48,15 +48,9 @@ M.input = function(args)
 end
 
 M.add_file_ext = function(str, ext)
-  -- add leading dot if missing
-  if not ext:match("^%.") then
-    ext = "." .. ext
-  end
-
-  -- remove existing file extension
-  str = str:gsub("%.[^.]+$", "")
-
-  return str .. ext
+  local path_separator = package.config:sub(1, 1)
+  local str_without_ext = str:gsub("%.[^" .. path_separator .. "]-$", "")
+  return str_without_ext .. "." .. ext
 end
 
 M.get_filename_from_filepath = function(filepath)
@@ -77,29 +71,37 @@ M.get_filepath = function()
   local config_dir_path = config.get_option("dir_path")
   local config_filename = os.date(config.get_option("filename"))
 
-  config_dir_path = vim.fn.resolve(config_dir_path .. path_separator)
+  local dir_path
+
+  if config.get_option("absolute_path") then
+    local cwd = vim.fn.getcwd()
+    dir_path = vim.fn.resolve(cwd .. path_separator .. config_dir_path)
+  else
+    dir_path = vim.fn.resolve(config_dir_path)
+  end
 
   local filepath
   if config.get_option("prompt_for_filename") then
     if config.get_option("include_filepath_in_prompt") then
+      local default_filepath = dir_path .. path_separator
       local input_filepath = M.input({
         prompt = "Filepath: ",
-        default = config_dir_path,
+        default = default_filepath,
         completion = "file",
       })
-      if input_filepath ~= "" and input_filepath ~= config_dir_path then
+      if input_filepath ~= "" and input_filepath ~= default_filepath then
         filepath = vim.fn.resolve(input_filepath)
       end
     else
       local input_filename = M.input({ prompt = "Filename: ", completion = "file" })
       if input_filename ~= "" then
-        filepath = vim.fn.resolve(config_dir_path .. path_separator .. input_filename)
+        filepath = vim.fn.resolve(dir_path .. path_separator .. input_filename)
       end
     end
   end
 
   if not filepath then
-    filepath = vim.fn.resolve(config_dir_path .. path_separator .. config_filename)
+    filepath = vim.fn.resolve(dir_path .. path_separator .. config_filename)
   end
 
   filepath = M.add_file_ext(filepath, "png")
@@ -109,7 +111,6 @@ end
 M.mkdirs = function(filepath)
   local is_windows = M.has("win32" or M.has("wsl"))
 
-  -- get the dir_path (filepath without filename)
   local dir_path = M.get_dir_path_from_filepath(filepath)
   if not dir_path then
     return
