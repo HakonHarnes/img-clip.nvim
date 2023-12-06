@@ -140,10 +140,29 @@ M.split_lines = function(template)
   return lines
 end
 
+M.get_new_row = function(row, lines)
+  for i, line in ipairs(lines) do
+    if line:match("$CURSOR") then
+      return row + i, line, i
+    end
+  end
+
+  return row + #lines, lines[#lines], #lines
+end
+
+M.get_new_col = function(line)
+  local cursor_pos = line:find("$CURSOR")
+  if cursor_pos then
+    return cursor_pos - 1
+  end
+
+  return string.len(line) - 1
+end
+
 M.insert_markup = function(filepath)
   local template = config.get_option("template")
   if not template then
-    return
+    return false
   end
 
   local filename = M.get_filename_from_filepath(filepath)
@@ -152,7 +171,16 @@ M.insert_markup = function(filepath)
   template = template:gsub("$FILENAME", filename)
   local lines = M.split_lines(template)
 
+  local cur_pos = vim.api.nvim_win_get_cursor(0)
+  local cur_row = cur_pos[1]
+
+  local new_row, line, index = M.get_new_row(cur_row, lines)
+  local new_col = M.get_new_col(line)
+
+  lines[index] = line:gsub("$CURSOR", "")
+
   vim.api.nvim_put(lines, "l", true, true)
+  vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
   return true
 end
