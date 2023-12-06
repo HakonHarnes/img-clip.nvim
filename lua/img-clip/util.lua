@@ -48,14 +48,15 @@ M.input = function(args)
 end
 
 M.add_file_ext = function(str, ext)
-  if not str:match("%." .. ext .. "$") then
-    if not ext:match("^%.") then
-      ext = "." .. ext
-    end
-    str = str .. ext
+  -- add leading dot if missing
+  if not ext:match("^%.") then
+    ext = "." .. ext
   end
 
-  return str
+  -- remove existing file extension
+  str = str:gsub("%.[^.]+$", "")
+
+  return str .. ext
 end
 
 M.get_filepath = function()
@@ -64,20 +65,22 @@ M.get_filepath = function()
   local config_dir_path = config.get_option("dir_path")
   local config_filename = os.date(config.get_option("filename"))
 
+  config_dir_path = vim.fn.resolve(config_dir_path .. path_separator)
+
   local filepath
   if config.get_option("prompt_for_filename") then
     if config.get_option("include_filepath_in_prompt") then
       local input_filepath = M.input({
         prompt = "Filepath: ",
-        default = vim.fn.resolve(config_dir_path) .. path_separator,
+        default = config_dir_path,
         completion = "file",
       })
-      if input_filepath then
+      if input_filepath ~= "" and input_filepath ~= config_dir_path then
         filepath = vim.fn.resolve(input_filepath)
       end
     else
-      local input_filename = vim.fn.input({ prompt = "Filename: ", completion = "file" })
-      if input_filename then
+      local input_filename = M.input({ prompt = "Filename: ", completion = "file" })
+      if input_filename ~= "" then
         filepath = vim.fn.resolve(config_dir_path .. path_separator .. input_filename)
       end
     end
@@ -110,6 +113,34 @@ M.mkdirs = function(filepath)
 
   local exit_code = os.execute(command)
   return exit_code == 0
+end
+
+M.split_lines = function(template)
+  local lines = vim.split(template, "\n")
+
+  if lines[1] and lines[1]:match("^%s*$") then
+    table.remove(lines, 1)
+  end
+
+  if lines[#lines] and lines[#lines]:match("^%s*$") then
+    table.remove(lines)
+  end
+
+  return lines
+end
+
+M.insert_markup = function(filepath)
+  local template = config.get_option("template")
+  if not template then
+    return
+  end
+
+  template = template:gsub("$FILEPATH", filepath)
+  local lines = M.split_lines(template)
+
+  vim.api.nvim_put(lines, "l", true, true)
+
+  return true
 end
 
 return M

@@ -3,15 +3,15 @@ local M = {}
 local defaults = {
   dir_path = "assets/",
   filename = "%Y-%m-%d-%H-%M-%S",
-  prompt_for_filename = true,
-  include_filepath_in_prompt = false,
-  template = "$FILE",
+  prompt_for_filename = false,
+  include_filepath_in_prompt = true,
+  template = "$FILEPATH",
 
   markdown = {
-    template = "![]($FILE)",
+    template = "![]($FILEPATH)",
   },
   latex = {
-    template = [[\includegraphics{$FILE}]],
+    template = [[\includegraphics{$FILEPATH}]],
   },
 }
 
