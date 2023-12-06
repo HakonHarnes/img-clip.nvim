@@ -65,15 +65,15 @@ M.get_dir_path_from_filepath = function(filepath)
   return dir_path
 end
 
-M.get_filepath = function()
+M.get_filepath = function(opts)
   local path_separator = package.config:sub(1, 1)
 
-  local config_dir_path = config.get_option("dir_path")
-  local config_filename = os.date(config.get_option("filename"))
+  local config_dir_path = config.get_option("dir_path", opts)
+  local config_filename = os.date(config.get_option("filename", opts))
 
   local dir_path
 
-  if config.get_option("absolute_path") then
+  if config.get_option("absolute_path", opts) then
     local cwd = vim.fn.getcwd()
     dir_path = vim.fn.resolve(cwd .. path_separator .. config_dir_path)
   else
@@ -81,8 +81,8 @@ M.get_filepath = function()
   end
 
   local filepath
-  if config.get_option("prompt_for_filename") then
-    if config.get_option("include_filepath_in_prompt") then
+  if config.get_option("prompt_for_filename", opts) then
+    if config.get_option("include_filepath_in_prompt", opts) then
       local default_filepath = dir_path .. path_separator
       local input_filepath = M.input({
         prompt = "Filepath: ",
@@ -160,8 +160,8 @@ M.get_new_col = function(line)
   return string.len(line) - 1
 end
 
-M.insert_markup = function(filepath)
-  local template = config.get_option("template")
+M.insert_markup = function(filepath, opts)
+  local template = config.get_option("template", opts)
   if not template then
     return false
   end

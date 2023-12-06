@@ -10,7 +10,7 @@ end
 
 local clip_cmd = nil
 
-M.pasteImage = function()
+M.pasteImage = function(opts)
   if not clip_cmd then
     clip_cmd = clipboard.get_clip_cmd()
     if not clip_cmd then
@@ -25,7 +25,7 @@ M.pasteImage = function()
   end
 
   -- get the file path
-  local filepath = util.get_filepath()
+  local filepath = util.get_filepath(opts)
   if not filepath then
     return util.error("Could not determine filepath.")
   end
@@ -43,7 +43,7 @@ M.pasteImage = function()
   end
 
   -- get the markup for the image
-  local markup_ok = util.insert_markup(filepath)
+  local markup_ok = util.insert_markup(filepath, opts)
   if not markup_ok then
     return util.error("Could not insert markup code.")
   end

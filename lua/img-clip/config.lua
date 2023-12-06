@@ -18,12 +18,15 @@ local defaults = {
 
 M.options = {}
 
-M.get_option = function(key)
+M.get_option = function(key, opts)
   local ft = vim.bo.filetype
   local val
 
+  if opts and opts[key] ~= nil then
+    val = opts[key]
+
   -- Check for filetype-specific option
-  if M.options[ft] and M.options[ft][key] ~= nil then
+  elseif M.options[ft] and M.options[ft][key] ~= nil then
     val = M.options[ft][key]
   elseif M.options[key] ~= nil then
     val = M.options[key]
