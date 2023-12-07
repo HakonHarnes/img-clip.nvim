@@ -1,6 +1,8 @@
-local util = require("img-clip.util")
-local config = require("img-clip.config")
 local clipboard = require("img-clip.clipboard")
+local markup = require("img-clip.markup")
+local config = require("img-clip.config")
+local util = require("img-clip.util")
+local fs = require("img-clip.fs")
 
 local M = {}
 
@@ -25,13 +27,13 @@ M.pasteImage = function(opts)
   end
 
   -- get the file path
-  local filepath = util.get_filepath(opts)
+  local filepath = fs.get_filepath(opts)
   if not filepath then
     return util.error("Could not determine filepath.")
   end
 
   -- mkdir if not exists
-  local dir_ok = util.mkdirs(filepath)
+  local dir_ok = fs.mkdirs(filepath)
   if not dir_ok then
     return util.error("Could not create directories.")
   end
@@ -43,7 +45,7 @@ M.pasteImage = function(opts)
   end
 
   -- get the markup for the image
-  local markup_ok = util.insert_markup(filepath, opts)
+  local markup_ok = markup.insert_markup(filepath, opts)
   if not markup_ok then
     return util.error("Could not insert markup code.")
   end
