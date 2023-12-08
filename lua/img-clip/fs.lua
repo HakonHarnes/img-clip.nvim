@@ -3,17 +3,26 @@ local util = require("img-clip.util")
 
 local M = {}
 
+---@type string
 M.sep = package.config:sub(1, 1)
 
+---@param path string
+---@return string
 M.normalize_path = function(path)
   return vim.fn.simplify(path):gsub(M.sep .. "$", "") .. M.sep
 end
 
+---@param str string
+---@param ext string
+---@return string
 M.add_file_ext = function(str, ext)
   str = vim.fn.fnamemodify(str, ":r")
   return str .. "." .. ext
 end
 
+---@param ext string
+---@param opts? table
+---@return string
 M.get_file_path = function(ext, opts)
   local config_dir_path = config.get_option("dir_path", opts)
   local config_filename = os.date(config.get_option("filename", opts))
@@ -56,6 +65,9 @@ M.get_file_path = function(ext, opts)
   return file_path
 end
 
+---@param dir string
+---@param mode number
+---@return boolean
 M.mkdirp = function(dir, mode)
   dir = vim.fn.resolve(dir)
   mode = mode or 493

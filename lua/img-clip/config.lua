@@ -18,6 +18,9 @@ local defaults = {
 
 M.options = {}
 
+---@param key string
+---@param opts? table the options passed to pasteImage function
+---@return string | nil
 M.get_option = function(key, opts)
   local ft = vim.bo.filetype
   local val

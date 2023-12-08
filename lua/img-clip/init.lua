@@ -12,6 +12,7 @@ end
 
 local clip_cmd = nil
 
+---@param opts? table
 M.pasteImage = function(opts)
   if not clip_cmd then
     clip_cmd = clipboard.get_clip_cmd()

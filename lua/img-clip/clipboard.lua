@@ -2,6 +2,7 @@ local util = require("img-clip.util")
 
 local M = {}
 
+---@return string | nil
 M.get_clip_cmd = function()
   -- Linux (X11)
   if os.getenv("DISPLAY") then
@@ -46,6 +47,8 @@ M.get_clip_cmd = function()
   end
 end
 
+---@param cmd string
+---@return boolean
 M.check_if_content_is_image = function(cmd)
   -- Linux (X11)
   if cmd == "xclip" then
@@ -73,8 +76,13 @@ M.check_if_content_is_image = function(cmd)
     -- TODO: Implement clipboard check for Windows
     return false
   end
+
+  return false
 end
 
+---@param cmd string
+---@param file_path string
+---@return boolean
 M.save_clipboard_image = function(cmd, file_path)
   -- Linux (X11)
   if cmd == "xclip" then
@@ -97,6 +105,8 @@ M.save_clipboard_image = function(cmd, file_path)
     -- TODO: Implement clipboard check for Windows
     return false
   end
+
+  return false
 end
 
 return M
