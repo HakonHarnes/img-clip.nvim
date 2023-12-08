@@ -55,11 +55,8 @@ M.check_if_content_is_image = function(cmd)
     local output = util.execute("xclip -selection clipboard -t TARGETS -o")
     if not output then
       return false
-    elseif string.find(output, "image/png") then
-      return true
-    else
-      return false
     end
+    return string.find(output, "image/png") ~= nil
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
