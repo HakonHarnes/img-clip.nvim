@@ -24,7 +24,9 @@ M.get_clip_cmd = function()
 
   -- MacOS
   elseif util.has("mac") then
-    if util.executable("osascript") then
+    if util.executable("pngpaste") then
+      return "pngpaste"
+    elseif util.executable("osascript") then
       return "osascript"
     else
       util.error("Dependency check failed. 'osascript' is not installed.")
@@ -63,7 +65,12 @@ M.check_if_content_is_image = function(cmd)
     -- TODO: Implement clipboard check for Wayland
     return false
 
-  -- MacOS
+  -- MacOS (pngpaste) which is faser than osascript
+  elseif cmd == "pngpaste" then
+    local exit_code = os.execute("pngpaste - > /dev/null 2>&1")
+    return exit_code == 0
+
+  -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local output = util.execute("osascript -e 'clipboard info'")
     if not output then
@@ -95,7 +102,13 @@ M.save_clipboard_image = function(cmd, file_path)
     -- TODO: Implement clipboard write for Wayland
     return false
 
-  -- MacOS
+  -- MacOS (pngpaste) which is faser than osascript
+  elseif cmd == "pngpaste" then
+    local command = string.format('pngpaste "%s"', file_path)
+    local exit_code = os.execute(command)
+    return exit_code == 0
+
+  -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local command = string.format(
       "osascript -e 'set theFile to (open for access POSIX file \"%s\" with write permission)' -e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile' > /dev/null 2>&1",
