@@ -65,8 +65,11 @@ M.check_if_content_is_image = function(cmd)
 
   -- MacOS
   elseif cmd == "osascript" then
-    -- TODO: Implement clipboard check for MacOS
-    return false
+    local output = util.execute("osascript -e 'clipboard info'")
+    if not output then
+      return false
+    end
+    return string.find(output, "class PNGf") ~= nil
 
   -- Windows
   elseif cmd == "powershell.exe" then
@@ -89,17 +92,21 @@ M.save_clipboard_image = function(cmd, file_path)
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    -- TODO: Implement clipboard check for Wayland
+    -- TODO: Implement clipboard write for Wayland
     return false
 
   -- MacOS
   elseif cmd == "osascript" then
-    -- TODO: Implement clipboard check for MacOS
-    return false
+    local command = string.format(
+      "osascript -e 'set theFile to (open for access POSIX file \"%s\" with write permission)' -e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile' > /dev/null 2>&1",
+      file_path
+    )
+    local exit_code = os.execute(command)
+    return exit_code == 0
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    -- TODO: Implement clipboard check for Windows
+    -- TODO: Implement clipboard write for Windows
     return false
   end
 

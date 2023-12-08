@@ -12,7 +12,7 @@ M.execute = function(cmd)
   local handle = io.popen(cmd)
   if not handle then
     M.error("Failed to execute command: " .. cmd)
-    return nil, nil, nil, nil
+    return nil
   end
 
   local output = handle:read("*a")
