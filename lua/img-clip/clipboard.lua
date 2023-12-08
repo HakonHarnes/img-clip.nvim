@@ -111,7 +111,7 @@ M.save_clipboard_image = function(cmd, file_path)
     -- Windows
   elseif cmd == "powershell.exe" then
     local command = string.format(
-      "powershell.exe -command '$content = Get-Clipboard -Format Image; $content.Save(\"%s\", \"png\")' > /dev/null 2>&1",
+      "powershell.exe -command '$content = Get-Clipboard -Format Image; $content.Save(\"%s\", \"png\")'",
       file_path
     )
     return os.execute(command) == 0
