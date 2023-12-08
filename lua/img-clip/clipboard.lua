@@ -68,7 +68,7 @@ M.check_if_content_is_image = function(cmd)
     end
     return string.find(output, "image/png") ~= nil
 
-  -- MacOS (pngpaste) which is faser than osascript
+  -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local exit_code = os.execute("pngpaste - > /dev/null 2>&1")
     return exit_code == 0
@@ -106,7 +106,7 @@ M.save_clipboard_image = function(cmd, file_path)
     local exit_code = os.execute(command)
     return exit_code == 0
 
-  -- MacOS (pngpaste) which is faser than osascript
+  -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local command = string.format('pngpaste "%s"', file_path)
     local exit_code = os.execute(command)
