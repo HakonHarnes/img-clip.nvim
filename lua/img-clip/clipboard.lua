@@ -62,8 +62,11 @@ M.check_if_content_is_image = function(cmd)
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    -- TODO: Implement clipboard check for Wayland
-    return false
+    local output = util.execute("wl-paste --list-types")
+    if not output then
+      return false
+    end
+    return string.find(output, "image/png") ~= nil
 
   -- MacOS (pngpaste) which is faser than osascript
   elseif cmd == "pngpaste" then
@@ -99,8 +102,9 @@ M.save_clipboard_image = function(cmd, file_path)
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    -- TODO: Implement clipboard write for Wayland
-    return false
+    local command = string.format('wl-paste --type image/png > "%s"', file_path)
+    local exit_code = os.execute(command)
+    return exit_code == 0
 
   -- MacOS (pngpaste) which is faser than osascript
   elseif cmd == "pngpaste" then
