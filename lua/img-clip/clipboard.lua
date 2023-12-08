@@ -114,7 +114,14 @@ M.save_clipboard_image = function(cmd, file_path)
 
     -- Windows
   elseif cmd == "powershell.exe" then
-    local command = string.format([[powershell.exe -c '(Get-Clipboard -Format Image).save("%s")']], file_path)
+    local command
+
+    if util.has("win32") then
+      command = string.format([[powershell.exe -c (Get-Clipboard -Format Image).save(\"%s\")]], file_path)
+    else -- wsl uses bash and doesn't handle \" well
+      command = string.format([[powershell.exe -c '(Get-Clipboard -Format Image).save("%s")']], file_path)
+    end
+
     local _, exit_code = util.execute(command)
     return exit_code == 0
   end
