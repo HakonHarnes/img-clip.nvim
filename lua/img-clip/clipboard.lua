@@ -4,8 +4,17 @@ local M = {}
 
 ---@return string | nil
 M.get_clip_cmd = function()
-  -- Linux (X11)
-  if os.getenv("DISPLAY") then
+  -- Windows
+  if util.has("win32") or util.has("wsl") then
+    if util.executable("powershell.exe") then
+      return "powershell.exe"
+    else
+      util.error("Dependency check failed. 'powershell.exe' is not installed.")
+      return nil
+    end
+
+    -- Linux (X11)
+  elseif os.getenv("DISPLAY") then
     if util.executable("xclip") then
       return "xclip"
     else
@@ -13,7 +22,7 @@ M.get_clip_cmd = function()
       return nil
     end
 
-  -- Linux (Wayland)
+    -- Linux (Wayland)
   elseif os.getenv("WAYLAND_DISPLAY") then
     if util.executable("wl-paste") then
       return "wl-paste"
@@ -22,7 +31,7 @@ M.get_clip_cmd = function()
       return nil
     end
 
-  -- MacOS
+    -- MacOS
   elseif util.has("mac") then
     if util.executable("pngpaste") then
       return "pngpaste"
@@ -33,16 +42,7 @@ M.get_clip_cmd = function()
       return nil
     end
 
-  -- Windows
-  elseif util.has("win32") or util.has("wsl") then
-    if util.executable("powershell.exe") then
-      return "powershell.exe"
-    else
-      util.error("Dependency check failed. 'powershell.exe' is not installed.")
-      return nil
-    end
-
-  -- Other OS
+    -- Other OS
   else
     util.error("Operating system is not supported.")
     return nil
@@ -55,38 +55,27 @@ M.check_if_content_is_image = function(cmd)
   -- Linux (X11)
   if cmd == "xclip" then
     local output = util.execute("xclip -selection clipboard -t TARGETS -o")
-    if not output then
-      return false
-    end
-    return string.find(output, "image/png") ~= nil
+    return output ~= nil and output:find("image/png") ~= nil
 
-  -- Linux (Wayland)
+    -- Linux (Wayland)
   elseif cmd == "wl-paste" then
     local output = util.execute("wl-paste --list-types")
-    if not output then
-      return false
-    end
-    return string.find(output, "image/png") ~= nil
+    return output ~= nil and output:find("image/png") ~= nil
 
-  -- MacOS (pngpaste) which is faster than osascript
+    -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local exit_code = os.execute("pngpaste - > /dev/null 2>&1")
     return exit_code == 0
 
-  -- MacOS (osascript) as a fallback
+    -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local output = util.execute("osascript -e 'clipboard info'")
-    if not output then
-      return false
-    end
-    return string.find(output, "class PNGf") ~= nil
+    return output ~= nil and output:find("class PNGf") ~= nil
 
-  -- Windows
+    -- Windows
   elseif cmd == "powershell.exe" then
-    local command =
-      'powershell.exe -command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::ContainsImage()"'
-    local output = util.execute(command)
-    return output and output:find("True") ~= nil
+    local output = util.execute('powershell.exe -command "Get-Clipboard -Format Image"')
+    return output ~= nil and output:find("ImageFormat") ~= nil
   end
 
   return false
@@ -99,38 +88,33 @@ M.save_clipboard_image = function(cmd, file_path)
   -- Linux (X11)
   if cmd == "xclip" then
     local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
-    local exit_code = os.execute(command)
-    return exit_code == 0
+    return os.execute(command) == 0
 
-  -- Linux (Wayland)
+    -- Linux (Wayland)
   elseif cmd == "wl-paste" then
     local command = string.format('wl-paste --type image/png > "%s"', file_path)
-    local exit_code = os.execute(command)
-    return exit_code == 0
+    return os.execute(command) == 0
 
-  -- MacOS (pngpaste) which is faster than osascript
+    -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local command = string.format('pngpaste "%s"', file_path)
-    local exit_code = os.execute(command)
-    return exit_code == 0
+    return os.execute(command) == 0
 
-  -- MacOS (osascript) as a fallback
+    -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local command = string.format(
       "osascript -e 'set theFile to (open for access POSIX file \"%s\" with write permission)' -e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile' > /dev/null 2>&1",
       file_path
     )
-    local exit_code = os.execute(command)
-    return exit_code == 0
+    return os.execute(command) == 0
 
-  -- Windows
+    -- Windows
   elseif cmd == "powershell.exe" then
     local command = string.format(
-      "powershell.exe -command \"Get-Clipboard -Format Image | Out-File -FilePath '%s' -Encoding byte\"",
+      "powershell.exe -command '$content = Get-Clipboard -Format Image; $content.Save(\"%s\", \"png\")' > /dev/null 2>&1",
       file_path
     )
-    local exit_code = os.execute(command)
-    return exit_code == 0
+    return os.execute(command) == 0
   end
 
   return false
