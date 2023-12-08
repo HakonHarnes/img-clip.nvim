@@ -74,7 +74,7 @@ M.check_if_content_is_image = function(cmd)
 
     -- Windows
   elseif cmd == "powershell.exe" then
-    local output = util.execute("powershell.exe -c Get-Clipboard -Format Image")
+    local output = util.execute("powershell.exe -c 'Get-Clipboard -Format Image'")
     return output ~= nil and output:find("ImageFormat") ~= nil
   end
 
@@ -114,7 +114,7 @@ M.save_clipboard_image = function(cmd, file_path)
 
     -- Windows
   elseif cmd == "powershell.exe" then
-    local command = string.format([[powershell.exe -c (Get-Clipboard -Format Image).save(\"%s\")]], file_path)
+    local command = string.format([[powershell.exe -c '(Get-Clipboard -Format Image).save(\"%s\")']], file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
   end
