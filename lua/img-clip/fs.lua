@@ -5,79 +5,79 @@ local M = {}
 
 M.sep = package.config:sub(1, 1)
 
+M.normalize_path = function(path)
+  return vim.fn.simplify(path):gsub(M.sep .. "$", "") .. M.sep
+end
+
 M.add_file_ext = function(str, ext)
-  local str_without_ext = str:gsub("%.[^" .. M.sep .. "]-$", "")
-  return str_without_ext .. "." .. ext
+  str = vim.fn.fnamemodify(str, ":r")
+  return str .. "." .. ext
 end
 
-M.get_filename_from_filepath = function(filepath)
-  local filename = filepath:match("([^" .. M.sep .. "]+)$")
-  return filename
-end
-
-M.get_dir_path_from_filepath = function(filepath)
-  local dir_path = filepath:match("(.*" .. M.sep .. ").*")
-  return dir_path
-end
-
-M.get_filepath = function(opts)
+M.get_file_path = function(ext, opts)
   local config_dir_path = config.get_option("dir_path", opts)
   local config_filename = os.date(config.get_option("filename", opts))
 
-  local dir_path
-
+  local dir_path = config_dir_path
   if config.get_option("absolute_path", opts) then
-    local cwd = vim.fn.getcwd()
-    dir_path = vim.fn.resolve(cwd .. M.sep .. config_dir_path)
-  else
-    dir_path = vim.fn.resolve(config_dir_path)
+    dir_path = vim.fn.fnamemodify(dir_path, ":p")
   end
 
-  local filepath
+  dir_path = M.normalize_path(dir_path)
+
+  local file_path
   if config.get_option("prompt_for_filename", opts) then
     if config.get_option("include_filepath_in_prompt", opts) then
-      local default_filepath = dir_path .. M.sep
-      local input_filepath = M.input({
-        prompt = "Filepath: ",
-        default = default_filepath,
+      local input_file_path = util.input({
+        prompt = "File path: ",
+        default = dir_path,
         completion = "file",
       })
-      if input_filepath ~= "" and input_filepath ~= default_filepath then
-        filepath = vim.fn.resolve(input_filepath)
+      if input_file_path and input_file_path ~= "" and input_file_path ~= dir_path then
+        file_path = input_file_path
       end
     else
-      local input_filename = M.input({ prompt = "Filename: ", completion = "file" })
-      if input_filename ~= "" then
-        filepath = vim.fn.resolve(dir_path .. M.sep .. input_filename)
+      local input_filename = util.input({
+        prompt = "Filename: ",
+        completion = "file",
+      })
+      if input_filename and input_filename ~= "" then
+        file_path = dir_path .. input_filename
       end
     end
   end
 
-  if not filepath then
-    filepath = vim.fn.resolve(dir_path .. M.sep .. config_filename)
+  -- use default path and filename if none was provided
+  if not file_path then
+    file_path = dir_path .. config_filename
   end
 
-  filepath = M.add_file_ext(filepath, "png")
-  return filepath
+  file_path = M.add_file_ext(file_path, ext)
+  return file_path
 end
 
-M.mkdirs = function(filepath)
-  local is_windows = util.has("win32" or util.has("wsl"))
+M.mkdirp = function(dir, mode)
+  dir = vim.fn.resolve(dir)
+  mode = mode or 493
 
-  local dir_path = M.get_dir_path_from_filepath(filepath)
-  if not dir_path then
-    return
-  end -- if no directory in path, return
+  local mod = ""
+  local path = dir
 
-  local command
-  if is_windows then
-    command = string.format('mkdir "%s"', dir_path)
-  else
-    command = string.format('mkdir -p "%s"', dir_path)
+  while vim.fn.isdirectory(path) == 0 do
+    mod = mod .. ":h"
+    path = vim.fn.fnamemodify(dir, mod)
   end
 
-  local exit_code = os.execute(command)
-  return exit_code == 0
+  while mod ~= "" do
+    mod = mod:sub(3)
+    path = vim.fn.fnamemodify(dir, mod)
+
+    if not vim.loop.fs_mkdir(path, mode) then
+      return false
+    end
+  end
+
+  return true
 end
 
 return M

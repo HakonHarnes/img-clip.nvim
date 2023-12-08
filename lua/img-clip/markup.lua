@@ -1,4 +1,3 @@
-local fs = require("img-clip.fs")
 local config = require("img-clip.config")
 
 local M = {}
@@ -42,7 +41,7 @@ function M.insert_markup(filepath, opts)
     return false
   end
 
-  local filename = fs.get_filename_from_filepath(filepath)
+  local filename = vim.fn.fnamemodify(filepath, ":t")
 
   template = template:gsub("$FILEPATH", filepath)
   template = template:gsub("$FILENAME", filename)

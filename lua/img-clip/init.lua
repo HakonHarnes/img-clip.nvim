@@ -27,25 +27,26 @@ M.pasteImage = function(opts)
   end
 
   -- get the file path
-  local filepath = fs.get_filepath(opts)
-  if not filepath then
+  local file_path = fs.get_file_path("png", opts)
+  if not file_path then
     return util.error("Could not determine filepath.")
   end
 
   -- mkdir if not exists
-  local dir_ok = fs.mkdirs(filepath)
+  local dir_path = vim.fn.fnamemodify(file_path, ":h")
+  local dir_ok = fs.mkdirp(dir_path)
   if not dir_ok then
     return util.error("Could not create directories.")
   end
 
   -- save image to specified file path
-  local save_ok = clipboard.save_clipboard_image(clip_cmd, filepath)
+  local save_ok = clipboard.save_clipboard_image(clip_cmd, file_path)
   if not save_ok then
     return util.error("Could not save image to disk.")
   end
 
   -- get the markup for the image
-  local markup_ok = markup.insert_markup(filepath, opts)
+  local markup_ok = markup.insert_markup(file_path, opts)
   if not markup_ok then
     return util.error("Could not insert markup code.")
   end

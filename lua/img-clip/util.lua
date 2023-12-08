@@ -40,9 +40,13 @@ M.debug = function(msg)
 end
 
 M.input = function(args)
-  local _, output = pcall(function()
+  local completed, output = pcall(function()
     return vim.fn.input(args)
   end)
+
+  if not completed then
+    return nil
+  end
 
   return output
 end
