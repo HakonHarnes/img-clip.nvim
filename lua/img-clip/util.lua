@@ -9,16 +9,10 @@ end
 M.execute = function(cmd)
   M.debug("Executing: " .. cmd)
 
-  local handle = io.popen(cmd)
-  if not handle then
-    M.error("Failed to execute command: " .. cmd)
-    return nil
-  end
+  local output = vim.fn.system(cmd)
+  local exit_code = vim.v.shell_error
 
-  local output = handle:read("*a")
-  handle:close()
-
-  return output
+  return output, exit_code
 end
 
 M.has = function(feature)

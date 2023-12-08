@@ -64,7 +64,7 @@ M.check_if_content_is_image = function(cmd)
 
     -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
-    local exit_code = os.execute("pngpaste - > /dev/null 2>&1")
+    local _, exit_code = util.execute("pngpaste -")
     return exit_code == 0
 
     -- MacOS (osascript) as a fallback
@@ -88,33 +88,38 @@ M.save_clipboard_image = function(cmd, file_path)
   -- Linux (X11)
   if cmd == "xclip" then
     local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
-    return os.execute(command) == 0
+    local _, exit_code = util.execute(command)
+    return exit_code == 0
 
     -- Linux (Wayland)
   elseif cmd == "wl-paste" then
     local command = string.format('wl-paste --type image/png > "%s"', file_path)
-    return os.execute(command) == 0
+    local _, exit_code = util.execute(command)
+    return exit_code == 0
 
     -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local command = string.format('pngpaste "%s"', file_path)
-    return os.execute(command) == 0
+    local _, exit_code = util.execute(command)
+    return exit_code == 0
 
     -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local command = string.format(
-      "osascript -e 'set theFile to (open for access POSIX file \"%s\" with write permission)' -e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile' > /dev/null 2>&1",
+      "osascript -e 'set theFile to (open for access POSIX file \"%s\" with write permission)' -e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'",
       file_path
     )
-    return os.execute(command) == 0
+    local _, exit_code = util.execute(command)
+    return exit_code == 0
 
     -- Windows
   elseif cmd == "powershell.exe" then
     local command = string.format(
-      "powershell.exe -command '$content = Get-Clipboard -Format Image; $content.Save(\"%s\", \"png\")'",
+      'powershell.exe -command \'$content = Get-Clipboard -Format Image; $content.Save("%s", "png")\'',
       file_path
     )
-    return os.execute(command) == 0
+    local _, exit_code = util.execute(command)
+    return exit_code == 0
   end
 
   return false
