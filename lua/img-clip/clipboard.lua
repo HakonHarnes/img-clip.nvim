@@ -83,8 +83,10 @@ M.check_if_content_is_image = function(cmd)
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    -- TODO: Implement clipboard check for Windows
-    return false
+    local command =
+      'powershell.exe -command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::ContainsImage()"'
+    local output = util.execute(command)
+    return output and output:find("True") ~= nil
   end
 
   return false
@@ -123,8 +125,12 @@ M.save_clipboard_image = function(cmd, file_path)
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    -- TODO: Implement clipboard write for Windows
-    return false
+    local command = string.format(
+      "powershell.exe -command \"Get-Clipboard -Format Image | Out-File -FilePath '%s' -Encoding byte\"",
+      file_path
+    )
+    local exit_code = os.execute(command)
+    return exit_code == 0
   end
 
   return false
