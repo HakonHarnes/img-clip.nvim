@@ -8,27 +8,18 @@ M.get_clip_cmd = function()
   if util.has("win32") or util.has("wsl") then
     if util.executable("powershell.exe") then
       return "powershell.exe"
-    else
-      util.error("Dependency check failed. 'powershell.exe' is not installed.")
-      return nil
     end
 
     -- Linux (X11)
   elseif os.getenv("DISPLAY") then
     if util.executable("xclip") then
       return "xclip"
-    else
-      util.error("Dependency check failed. 'xclip' is not installed.")
-      return nil
     end
 
     -- Linux (Wayland)
   elseif os.getenv("WAYLAND_DISPLAY") then
     if util.executable("wl-paste") then
       return "wl-paste"
-    else
-      util.error("Dependency check failed. 'wl-clipboard' is not installed.")
-      return nil
     end
 
     -- MacOS
@@ -37,14 +28,8 @@ M.get_clip_cmd = function()
       return "pngpaste"
     elseif util.executable("osascript") then
       return "osascript"
-    else
-      util.error("Dependency check failed. 'osascript' is not installed.")
-      return nil
     end
 
-    -- Other OS
-  else
-    util.error("Operating system is not supported.")
     return nil
   end
 end
