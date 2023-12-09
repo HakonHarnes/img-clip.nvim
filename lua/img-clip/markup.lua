@@ -70,6 +70,10 @@ function M.insert_markup(file_path, opts)
   vim.api.nvim_put(lines, "l", true, true)
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
+  if config.get_option("cursor_insert_mode", opts) then
+    vim.cmd("startinsert")
+  end
+
   return true
 end
 
