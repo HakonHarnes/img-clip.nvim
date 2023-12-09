@@ -6,12 +6,17 @@ local defaults = {
   prompt_for_filename = true,
   include_path_in_prompt = false,
   absolute_path = false,
-  cursor_insert_mode = false,
+  cursor_insert_mode = true,
   template = "$FILEPATH",
 
   markdown = {
     template = "![$CURSOR]($FILEPATH)",
   },
+
+  html = {
+    template = '<img src="$FILEPATH" alt="$CURSOR">',
+  },
+
   tex = {
     template = [[
 \begin{figure}[h]
@@ -20,6 +25,15 @@ local defaults = {
   \caption{$CURSOR}
   \label{fig:$LABEL}
 \end{figure}
+    ]],
+  },
+
+  typst = {
+    template = [[
+#figure(
+  image("$FILEPATH", width: 80%),
+  caption: [$CURSOR],
+) <fig-$LABEL>
     ]],
   },
 }
