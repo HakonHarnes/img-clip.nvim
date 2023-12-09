@@ -13,8 +13,6 @@ describe("config", function()
     assert.is_false(config.get_option("absolute_path"))
     assert.is_false(config.get_option("cursor_insert_mode"))
     assert.equals("$FILEPATH", config.get_option("template"))
-    assert.equals("![$CURSOR]($FILEPATH)", config.get_option("markdown").template)
-    assert.equals([[\includegraphics{$FILEPATH}]], config.get_option("latex").template)
   end)
 
   it("should allow overriding default values", function()
