@@ -7,6 +7,7 @@ local defaults = {
   include_path_in_prompt = false,
   absolute_path = false,
   cursor_insert_mode = true,
+  cursor_disable = false,
   template = "$FILEPATH",
 
   markdown = {

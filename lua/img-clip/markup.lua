@@ -62,6 +62,10 @@ function M.insert_markup(file_path, opts)
   template = template:gsub("$FILEPATH", file_path)
   template = template:gsub("$LABEL", label)
 
+  if config.get_option("cursor_disable", opts) then
+    template = template:gsub("$CURSOR", "")
+  end
+
   local lines = M.split_lines(template)
 
   local cur_pos = vim.api.nvim_win_get_cursor(0)
@@ -73,9 +77,10 @@ function M.insert_markup(file_path, opts)
   lines[index] = line:gsub("$CURSOR", "")
 
   vim.api.nvim_put(lines, "l", true, true)
+
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
-  if config.get_option("cursor_insert_mode", opts) then
+  if config.get_option("cursor_insert_mode", opts) and not config.get_option("cursor_disable", opts) then
     vim.cmd("startinsert")
   end
 
