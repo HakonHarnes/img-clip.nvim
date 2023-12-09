@@ -68,6 +68,7 @@ M.check_if_content_is_image = function(cmd)
     return exit_code == 0
 
     -- MacOS (osascript) as a fallback
+    -- TOOD: Add correct quotes aroudn class PNGf
   elseif cmd == "osascript" then
     local output = util.execute("osascript -e 'clipboard info'")
     return output ~= nil and output:find("class PNGf") ~= nil
