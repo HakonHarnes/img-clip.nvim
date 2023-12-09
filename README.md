@@ -1,6 +1,8 @@
 # 📸 img-clip.nvim
 
-Paste images from your clipboard for any markup language, like LaTeX or Markdown
+Paste images directly from your clipboard into any markup language, like LaTeX, Markdown or Typst.
+
+![retry](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/c1d2a46e-7212-4049-931c-bb77eb753592)
 
 ## Features
 
