@@ -12,8 +12,15 @@ local defaults = {
   markdown = {
     template = "![$CURSOR]($FILEPATH)",
   },
-  latex = {
-    template = [[\includegraphics{$FILEPATH}]],
+  tex = {
+    template = [[
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{$FILEPATH}
+  \caption{$CURSOR}
+  \label{fig:$LABEL}
+\end{figure}
+    ]],
   },
 }
 

@@ -18,19 +18,19 @@ function M.split_lines(template)
   return lines
 end
 
----@param row number
+---@param cur_row number
 ---@param lines string[]
 ---@return number new_row The new cursor row pos
 ---@return string matched_line The matched line in the tempalte (or the last line if no match)
 ---@return number matched_line_index The index of the matched line
-function M.get_new_cursor_row(row, lines)
+function M.get_new_cursor_row(cur_row, lines)
   for i, line in ipairs(lines) do
     if line:match("$CURSOR") then
-      return row + i, line, i
+      return cur_row + i, line, i
     end
   end
 
-  return row + #lines, lines[#lines], #lines
+  return cur_row + #lines, lines[#lines], #lines
 end
 
 ---@param line string
@@ -54,9 +54,14 @@ function M.insert_markup(file_path, opts)
   end
 
   local file_name = vim.fn.fnamemodify(file_path, ":t")
+  local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
+  local label = file_name_no_ext:gsub("%s+", "-"):lower()
 
-  template = template:gsub("$FILEPATH", file_path)
+  template = template:gsub("$FILENAME_NO_EXT", file_name_no_ext)
   template = template:gsub("$FILENAME", file_name)
+  template = template:gsub("$FILEPATH", file_path)
+  template = template:gsub("$LABEL", label)
+
   local lines = M.split_lines(template)
 
   local cur_pos = vim.api.nvim_win_get_cursor(0)
