@@ -36,7 +36,7 @@ M.get_file_path = function(ext, opts)
 
   local file_path
   if config.get_option("prompt_for_filename", opts) then
-    if config.get_option("include_filepath_in_prompt", opts) then
+    if config.get_option("include_path_in_prompt", opts) then
       local input_file_path = util.input({
         prompt = "File path: ",
         default = dir_path,

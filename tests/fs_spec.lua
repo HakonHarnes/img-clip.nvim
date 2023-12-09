@@ -19,8 +19,8 @@ describe("fs.get_file_path", function()
     assert.equals(expected, actual)
   end)
 
-  it("prompts for full file path when 'prompt_for_filename' and 'include_filepath_in_prompt' are true", function()
-    config.setup({ prompt_for_filename = true, include_filepath_in_prompt = true })
+  it("prompts for full file path when 'prompt_for_filename' and 'include_path_in_prompt' are true", function()
+    config.setup({ prompt_for_filename = true, include_path_in_prompt = true })
 
     util.input = function()
       return "custom" .. fs.sep .. "dir" .. fs.sep .. "custom-file"
@@ -33,26 +33,23 @@ describe("fs.get_file_path", function()
     assert.equals(expected, actual)
   end)
 
-  it(
-    "prompts only for filename when 'prompt_for_filename' is true and 'include_filepath_in_prompt' is false",
-    function()
-      config.setup({ prompt_for_filename = true, include_filepath_in_prompt = false })
+  it("prompts only for filename when 'prompt_for_filename' is true and 'include_path_in_prompt' is false", function()
+    config.setup({ prompt_for_filename = true, include_path_in_prompt = false })
 
-      util.input = function()
-        return "custom-file"
-      end
-
-      local ext = "png"
-      local dir_path = config.get_option("dir_path") .. fs.sep
-      local expected = dir_path .. "custom-file.png"
-      local actual = fs.get_file_path(ext)
-
-      assert.equals(expected, actual)
+    util.input = function()
+      return "custom-file"
     end
-  )
 
-  it("prompts for file path when 'include_filepath_in_prompt' is true", function()
-    config.setup({ include_filepath_in_prompt = true })
+    local ext = "png"
+    local dir_path = config.get_option("dir_path") .. fs.sep
+    local expected = dir_path .. "custom-file.png"
+    local actual = fs.get_file_path(ext)
+
+    assert.equals(expected, actual)
+  end)
+
+  it("prompts for file path when 'include_path_in_prompt' is true", function()
+    config.setup({ include_path_in_prompt = true })
 
     util.input = function()
       return "custom-path" .. fs.sep .. "custom-file.png"

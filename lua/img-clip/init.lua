@@ -30,7 +30,7 @@ M.pasteImage = function(opts)
   -- get the file path
   local file_path = fs.get_file_path("png", opts)
   if not file_path then
-    return util.error("Could not determine filepath.")
+    return util.error("Could not determine file path.")
   end
 
   -- mkdir if not exists

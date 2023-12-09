@@ -53,10 +53,10 @@ function M.insert_markup(file_path, opts)
     return false
   end
 
-  local filename = vim.fn.fnamemodify(file_path, ":t")
+  local file_name = vim.fn.fnamemodify(file_path, ":t")
 
   template = template:gsub("$FILEPATH", file_path)
-  template = template:gsub("$FILENAME", filename)
+  template = template:gsub("$FILENAME", file_name)
   local lines = M.split_lines(template)
 
   local cur_pos = vim.api.nvim_win_get_cursor(0)
