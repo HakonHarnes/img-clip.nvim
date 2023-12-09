@@ -2,27 +2,28 @@ local M = {}
 
 local defaults = {
   dir_path = "assets",
-  filename = "%Y-%m-%d-%H-%M-%S",
-  prompt_for_filename = true,
-  include_path_in_prompt = false,
-  absolute_path = false,
-  cursor_insert_mode = true,
-  cursor_disable = false,
-  template = "$FILEPATH",
+  file_name = "%Y-%m-%d-%H-%M-%S",
+  use_absolute_path = false,
+  prompt_for_file_name = true,
+  show_dir_path_in_prompt = false,
+  insert_mode_after_paste = true,
+  respect_cursor_placment_in_template = true,
+
+  template = "$FILE_PATH",
 
   markdown = {
-    template = "![$CURSOR]($FILEPATH)",
+    template = "![$CURSOR]($FILE_PATH)",
   },
 
   html = {
-    template = '<img src="$FILEPATH" alt="$CURSOR">',
+    template = '<img src="$FILE_PATH" alt="$CURSOR">',
   },
 
   tex = {
     template = [[
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{$FILEPATH}
+  \includegraphics[width=0.8\textwidth]{$FILE_PATH}
   \caption{$CURSOR}
   \label{fig:$LABEL}
 \end{figure}
@@ -32,7 +33,7 @@ local defaults = {
   typst = {
     template = [[
 #figure(
-  image("$FILEPATH", width: 80%),
+  image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
     ]],

@@ -67,7 +67,7 @@ describe("markup", function()
       assert.is_true(success)
     end)
 
-    it("inserts markup into a markdown file", function()
+    it("inserts markup into a LaTeX file", function()
       vim.bo.filetype = "tex"
 
       local success = markup.insert_markup("/path/to/example file.png")

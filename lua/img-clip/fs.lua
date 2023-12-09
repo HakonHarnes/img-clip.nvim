@@ -25,18 +25,18 @@ end
 ---@return string
 M.get_file_path = function(ext, opts)
   local config_dir_path = config.get_option("dir_path", opts)
-  local config_filename = os.date(config.get_option("filename", opts))
+  local config_file_name = os.date(config.get_option("file_name", opts))
 
   local dir_path = config_dir_path
-  if config.get_option("absolute_path", opts) then
+  if config.get_option("use_absolute_path", opts) then
     dir_path = vim.fn.fnamemodify(dir_path, ":p")
   end
 
   dir_path = M.normalize_path(dir_path)
 
   local file_path
-  if config.get_option("prompt_for_filename", opts) then
-    if config.get_option("include_path_in_prompt", opts) then
+  if config.get_option("prompt_for_file_name", opts) then
+    if config.get_option("show_dir_path_in_prompt", opts) then
       local input_file_path = util.input({
         prompt = "File path: ",
         default = dir_path,
@@ -47,7 +47,7 @@ M.get_file_path = function(ext, opts)
       end
     else
       local input_filename = util.input({
-        prompt = "Filename: ",
+        prompt = "File name: ",
         completion = "file",
       })
       if input_filename and input_filename ~= "" then
@@ -58,7 +58,7 @@ M.get_file_path = function(ext, opts)
 
   -- use default path and filename if none was provided
   if not file_path then
-    file_path = dir_path .. config_filename
+    file_path = dir_path .. config_file_name
   end
 
   file_path = M.add_file_ext(file_path, ext)

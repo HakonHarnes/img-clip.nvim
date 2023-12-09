@@ -57,12 +57,12 @@ function M.insert_markup(file_path, opts)
   local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
   local label = file_name_no_ext:gsub("%s+", "-"):lower()
 
-  template = template:gsub("$FILENAME_NO_EXT", file_name_no_ext)
-  template = template:gsub("$FILENAME", file_name)
-  template = template:gsub("$FILEPATH", file_path)
+  template = template:gsub("$FILE_NAME_NO_EXT", file_name_no_ext)
+  template = template:gsub("$FILE_NAME", file_name)
+  template = template:gsub("$FILE_PATH", file_path)
   template = template:gsub("$LABEL", label)
 
-  if config.get_option("cursor_disable", opts) then
+  if not config.get_option("respect_cursor_placment_in_template", opts) then
     template = template:gsub("$CURSOR", "")
   end
 
@@ -80,7 +80,7 @@ function M.insert_markup(file_path, opts)
 
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
-  if config.get_option("cursor_insert_mode", opts) and not config.get_option("cursor_disable", opts) then
+  if config.get_option("insert_mode_after_paste", opts) then
     vim.cmd("startinsert")
   end
 
