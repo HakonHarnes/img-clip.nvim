@@ -1,12 +1,12 @@
 local M = {}
 
 local defaults = {
-  dir_path = "assets", -- directory path to save images to, can be relative or absolute
-  file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
-  use_absolute_path = false, -- expands dir_path to absolute path
-  prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
-  show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-  insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
+  dir_path = "assets",                        -- directory path to save images to, can be relative or absolute
+  file_name = "%Y-%m-%d-%H-%M-%S",            -- file name format (see lua.org/pil/22.1.html)
+  use_absolute_path = false,                  -- expands dir_path to absolute path
+  prompt_for_file_name = true,                -- ask user for file name before saving, leave empty to use default
+  show_dir_path_in_prompt = false,            -- show dir_path in prompt when prompting for file name
+  insert_mode_after_paste = true,             -- enter insert mode after pasting the markup code
   respect_cursor_placment_in_template = true, -- jump to cursor position in template after pasting
 
   -- default template when filetype-specific template is not defined
@@ -47,6 +47,8 @@ local defaults = {
   },
 }
 
+defaults.plaintex = defaults.tex
+
 M.options = {}
 
 ---@param key string
@@ -60,15 +62,15 @@ M.get_option = function(key, opts)
   if opts and opts[key] ~= nil then
     val = opts[key]
 
-  -- otherwise chck for filetype-specific option
+    -- otherwise chck for filetype-specific option
   elseif M.options[ft] and M.options[ft][key] ~= nil then
     val = M.options[ft][key]
 
-  -- otherwise check for global option
+    -- otherwise check for global option
   elseif M.options[key] ~= nil then
     val = M.options[key]
 
-  -- return nil if no option found
+    -- return nil if no option found
   else
     vim.notify("No option found for " .. key .. ".", vim.log.levels.WARN, { title = "img-clip" })
     return nil
