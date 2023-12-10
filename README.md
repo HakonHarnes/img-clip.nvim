@@ -2,7 +2,7 @@
 
 Paste images directly from your clipboard into any markup language, like LaTeX, Markdown or Typst.
 
-![demo of plugin](doc/demo.gif)
+![demo of plugin](assets/demo.gif)
 
 ## Features
 
