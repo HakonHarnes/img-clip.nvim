@@ -7,13 +7,9 @@ Paste images directly from your clipboard into any markup language, like LaTeX, 
 ## Features
 
 - **Directly** paste images from the **clipboard**.
-- **Automatically** generate file names.
-- Fully **configurable templates** with:
-  - Cursor placement.
-  - Figure labels.
-  - File name.
-  - File path.
+- Fully **configurable templates** with cursor placement and figure labels.
 - **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
+- **Automatically** generated file names.
 - **Cross-compatibility** with Linux, Windows, and MacOS.
 
 ## Requirements
