@@ -51,7 +51,7 @@ return {
 
 The plugin comes with the following commands:
 
-- `PasteImage`: Inserts the image from the clipboard into the document.
+- `PasteImage` Inserts the image from the clipboard into the document.
 
 Consider binding `PasteImage` to something like `<leader>p`.
 
@@ -153,7 +153,7 @@ The plugin comes with the following defaults:
 | `relative_to_current_file` | `Boolean` | `false`               | Make `dir_path` relative to current file rather than the cwd.                        |
 | `template`                 | `String`  | `"$FILE_PATH"`        | Default template.                                                                    |
 
-You can configure the options either as static values (e.g. "assets"), or dynamically generate them using functions. For example, if you want to set `dir_path` to match the name of the currently opened file, you can achieve this through:
+The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions. For example, to set the `dir_path` to match the name of the currently opened file:
 
 ```lua
 dir_path = function()
@@ -183,7 +183,7 @@ File type-specific options are determined by the _file type_ (see `:help filetyp
 
 Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime. For available placeholders, see the following table:
 
-| **Placeholder**     | **Description**                                                                                         | **Example**                        |
+| Placeholder         | Description                                                                                             | Example                            |
 | ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | `$FILE_NAME`        | File name, including its extension.                                                                     | `image.png`                        |
 | `$FILE_NAME_NO_EXT` | File name, excluding its extension.                                                                     | `image`                            |
