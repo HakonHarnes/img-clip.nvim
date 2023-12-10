@@ -173,7 +173,7 @@ OPTIONS ~
                                                              absolute.
 
   file_name                  String    "%Y-%m-%d-%H-%M-%S"   File name format (see
-                                                             lua.org/pil/22.1.html.
+                                                             lua.org/pil/22.1.html).
 
   use_absolute_path          Boolean   false                 Expands dir_path to an absolute path.
 
