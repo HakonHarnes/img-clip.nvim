@@ -1,30 +1,24 @@
 local M = {}
 
 local defaults = {
-  dir_path = "assets",                        -- directory path to save images to, can be relative or absolute
-  file_name = "%Y-%m-%d-%H-%M-%S",            -- file name format (see lua.org/pil/22.1.html)
-  use_absolute_path = false,                  -- expands dir_path to absolute path
-  prompt_for_file_name = true,                -- ask user for file name before saving, leave empty to use default
-  show_dir_path_in_prompt = false,            -- show dir_path in prompt when prompting for file name
-  insert_mode_after_paste = true,             -- enter insert mode after pasting the markup code
+  dir_path = "assets", -- directory path to save images to, can be relative or absolute
+  file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
+  use_absolute_path = false, -- expands dir_path to absolute path
+  prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
+  show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
+  insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   respect_cursor_placment_in_template = true, -- jump to cursor position in template after pasting
 
-  -- default template when filetype-specific template is not defined
   template = "$FILE_PATH",
 
-  -- markdown specific options
   markdown = {
-    -- any opt can be passed here to override the global config
-    -- e.g. insert_mode_after_paste = false,
     template = "![$CURSOR]($FILE_PATH)",
   },
 
-  -- html specific options
   html = {
     template = '<img src="$FILE_PATH" alt="$CURSOR">',
   },
 
-  -- latex specific options
   tex = {
     template = [[
 \begin{figure}[h]
@@ -36,7 +30,6 @@ local defaults = {
     ]],
   },
 
-  -- typst specific options
   typst = {
     template = [[
 #figure(
@@ -45,9 +38,32 @@ local defaults = {
 ) <fig-$LABEL>
     ]],
   },
+
+  rst = {
+    template = [[
+.. image:: $FILE_PATH
+   :alt: $CURSOR
+   :width: 80%
+    ]],
+  },
+
+  asciidoc = {
+    template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+  },
+
+  org = {
+    template = [=[
+#+BEGIN_FIGURE
+[[file:$FILE_PATH]]
+#+CAPTION: $CURSOR
+#+NAME: fig:$LABEL
+#+END_FIGURE
+    ]=],
+  },
 }
 
 defaults.plaintex = defaults.tex
+defaults.rmd = defaults.markdown
 
 M.options = {}
 
