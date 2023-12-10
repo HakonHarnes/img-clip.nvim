@@ -20,6 +20,14 @@ M.add_file_ext = function(str, ext)
   return str .. "." .. ext
 end
 
+--@param url string
+---@return string
+M.url_encode = function(url)
+  url = url:gsub("\n", "\r\n")
+  url = url:gsub(" ", "+")
+  return url
+end
+
 ---@param ext string
 ---@param opts? table
 ---@return string
@@ -68,7 +76,14 @@ M.get_file_path = function(ext, opts)
     file_path = dir_path .. config_file_name
   end
 
+  -- add file ext
   file_path = M.add_file_ext(file_path, ext)
+
+  -- url encode path
+  if config.get_option("url_encode_path", opts) then
+    file_path = M.url_encode(file_path)
+  end
+
   return file_path
 end
 

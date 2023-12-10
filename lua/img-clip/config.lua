@@ -3,6 +3,7 @@ local M = {}
 local defaults = {
   dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
   file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
+  url_encode_path = false, -- encode spaces and special characters in file path
   use_absolute_path = false, -- expands dir_path to an absolute path
   prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
@@ -13,6 +14,7 @@ local defaults = {
   template = "$FILE_PATH",
 
   markdown = {
+    url_encode_path = true,
     template = "![$CURSOR]($FILE_PATH)",
   },
 
