@@ -91,7 +91,6 @@ The plugin comes with the following defaults:
   },
 
   html = {
-    url_encode_path = true,
     template = '<img src="$FILE_PATH" alt="$CURSOR">',
   },
 
