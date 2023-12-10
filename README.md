@@ -45,6 +45,24 @@ return {
 }
 ```
 
+## Usage
+
+### Commands
+
+The plugin comes with the following commands:
+
+- `PasteImage`: Inserts the image from the clipboard into the document.
+
+Consider binding `PasteImage` to something like `<leader>p`.
+
+### API
+
+You can also use the Lua equivalent, which allows you to override your configuration by passing the options directly to the function:
+
+```lua
+require("img-clip").pasteImage({ use_absolute_path = false, file_name = "image.png" })
+```
+
 ## Configuration
 
 ### Setup
@@ -121,6 +139,8 @@ The plugin comes with the following defaults:
   },
 ```
 
+### Static and dynamic options
+
 You can configure the options either as static values (e.g. "assets"), or dynamically generate them using functions. For example, if you want to set `dir_path` to match the name of the currently opened file, you can achieve this through:
 
 ```lua
@@ -128,6 +148,8 @@ dir_path = function()
   return vim.fn.expand("%:t:r")
 end,
 ```
+
+### File types
 
 The options can also be scoped to specific file types. In the default configuration the templates for the `markdown`, `html`, `tex` ..., files override the template defined in the global settings. Any option can be added under the specific file type, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
 
@@ -137,7 +159,7 @@ tex = {
 }
 ```
 
-File type-specific options are determined by the _filetype_ (see `:help filetype`). You can override settings for any filetype by specifying it as the key in your configuration:
+File type-specific options are determined by the _file type_ (see `:help filetype`). You can override settings for any file type by specifying it as the key in your configuration:
 
 ```lua
 <filetype> = { -- obtained from "set filetype?"
@@ -147,7 +169,7 @@ File type-specific options are determined by the _filetype_ (see `:help filetype
 
 ### Templates
 
-Templates in the plugin use placeholders that are dynamically replaced with specific values during runtime. See the following table:
+Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime. For available placeholders, see the following table:
 
 | **Placeholder**     | **Description**                                                                                         | **Example**                        |
 | ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
@@ -155,18 +177,4 @@ Templates in the plugin use placeholders that are dynamically replaced with spec
 | `$FILE_NAME_NO_EXT` | File name, excluding its extension.                                                                     | `image`                            |
 | `$FILE_PATH`        | File path.                                                                                              | `/path/to/image.png`               |
 | `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
-| `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          | -                                  |
-
-## Usage
-
-> 💡 Consider binding `PasteImage` to something like `<leader>p`.
-
-The plugin comes with the following commands:
-
-- `PasteImage`: Inserts the image from the clipboard into the document.
-
-You can also use the Lua equivalent, which allows you to override your configuration by passing the options directly to the function:
-
-```lua
-require("img-clip").pasteImage({ use_absolute_path = false, file_name = "image.png" })
-```
+| `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          |                                    |
