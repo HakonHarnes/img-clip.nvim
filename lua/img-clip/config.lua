@@ -8,6 +8,7 @@ local defaults = {
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
   use_cursor_in_template = true, -- jump to cursor position in template after pasting
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
+  relative_to_current_file = true, -- dir_path is relative to current file
 
   template = "$FILE_PATH",
 
