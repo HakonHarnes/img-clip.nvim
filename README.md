@@ -22,7 +22,7 @@ Paste images directly from your clipboard into any markup language, like LaTeX, 
 - **MacOS:** `pngpaste` (optional, but recommended).
 - **Windows:** No requirements.
 
-> ⚠️ Run `checkhealth img-clip` after installation. to ensure requirements are satisfied
+> ⚠️ Run `:checkhealth img-clip` after installation. to ensure requirements are satisfied
 
 ## Installation
 
