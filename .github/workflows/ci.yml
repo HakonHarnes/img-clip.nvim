@@ -8,10 +8,9 @@ jobs:
       matrix:
         # minute mulitpliers - linux: 1, windows: 2, macos: 10
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        # nvim_version: ["stable", "nightly"]
 
         os: [ubuntu-latest]
-        nvim_version: ["stable"]
+        nvim_version: ["stable", "nightly"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
