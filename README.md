@@ -144,6 +144,7 @@ The plugin comes with the following defaults:
 | -------------------------- | --------- | --------------------- | ------------------------------------------------------------------------------------ |
 | `dir_path`                 | `String`  | `"assets"`            | Directory path to save images to, can be relative (cwd or current file) or absolute. |
 | `file_name`                | `String`  | `"%Y-%m-%d-%H-%M-%S"` | File name format (see [lua.org/pil/22.1.html](https://www.lua.org/pil/22.1.html)).   |
+| `url_encode_path`          | `Boolean`  | `false`              | Encode spaces and special characters in file path.                                   |
 | `use_absolute_path`        | `Boolean` | `false`               | Expands `dir_path` to an absolute path.                                              |
 | `prompt_for_file_name`     | `Boolean` | `true`                | Ask user for file name before saving, leave empty to use default.                    |
 | `show_dir_path_in_prompt`  | `Boolean` | `false`               | Show `dir_path` in prompt when prompting for file name.                              |
