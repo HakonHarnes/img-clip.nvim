@@ -92,7 +92,9 @@ M.save_clipboard_image = function(cmd, file_path)
     -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local command = string.format(
-      [[osascript -e 'set theFile to (open for access POSIX file "%s" with write permission)' -e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile']],
+      [[osascript -e 'set theFile to (open for access POSIX file "%s" with write permission)' ]]
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
+        .. [[-e 'close access theFile']],
       file_path
     )
     local _, exit_code = util.execute(command)
