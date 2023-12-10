@@ -2,7 +2,7 @@
 
 Paste images directly from your clipboard into any markup language, like LaTeX, Markdown or Typst.
 
-![gif of plugin](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/c1d2a46e-7212-4049-931c-bb77eb753592)
+![demo of plugin](doc/demo.gif)
 
 ## Features
 
