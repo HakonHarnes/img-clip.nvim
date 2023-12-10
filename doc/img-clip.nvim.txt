@@ -20,13 +20,9 @@ Markdown or Typst.
 FEATURES                                *img-clip.nvim-img-clip.nvim-features*
 
 - **Directly** paste images from the **clipboard**.
-- **Automatically** generate file names.
-- Fully **configurable templates** with:
-    - Cursor placement.
-    - Figure labels.
-    - File name.
-    - File path.
+- Fully **configurable templates** with cursor placement and figure labels.
 - **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
+- **Automatically** generated file names.
 - **Cross-compatibility** with Linux, Windows, and MacOS.
 
 
@@ -70,7 +66,7 @@ COMMANDS ~
 
 The plugin comes with the following commands:
 
-- `PasteImage`Inserts the image from the clipboard into the document.
+- `PasteImage` Inserts the image from the clipboard into the document.
 
 Consider binding `PasteImage` to something like `<leader>p`.
 
@@ -194,10 +190,9 @@ OPTIONS ~
 
   template                   String    "$FILE_PATH"          Default template.
   -----------------------------------------------------------------------------------------------------
-You can configure the options either as static values (e.g. "assets"), or
-dynamically generate them using functions. For example, if you want to set
-`dir_path` to match the name of the currently opened file, you can achieve this
-through:
+The options can be configured as either static values (e.g. "assets"), or by
+dynamically generating them through functions. For example, to set the
+`dir_path` to match the name of the currently opened file:
 
 >lua
     dir_path = function()
