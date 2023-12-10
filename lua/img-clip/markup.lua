@@ -49,7 +49,7 @@ end
 M.url_encode = function(str)
   if str then
     str = str:gsub("\\", "/")
-    str = str:gsub("[ :]", function(c)
+    str = str:gsub("[ ]", function(c)
       return string.format("%%%02X", string.byte(c))
     end)
   end
