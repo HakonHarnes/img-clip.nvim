@@ -139,7 +139,19 @@ The plugin comes with the following defaults:
   },
 ```
 
-### Static and dynamic options
+### Options
+
+| Option                     | Type      | Default               | Description                                                                          |
+| -------------------------- | --------- | --------------------- | ------------------------------------------------------------------------------------ |
+| `dir_path`                 | `String`  | `"assets"`            | Directory path to save images to, can be relative (cwd or current file) or absolute. |
+| `file_name`                | `String`  | `"%Y-%m-%d-%H-%M-%S"` | File name format (see lua.org/pil/22.1.html).                                        |
+| `use_absolute_path`        | `Boolean` | `false`               | Expands `dir_path` to an absolute path.                                              |
+| `prompt_for_file_name`     | `Boolean` | `true`                | Ask user for file name before saving, leave empty to use default.                    |
+| `show_dir_path_in_prompt`  | `Boolean` | `false`               | Show `dir_path` in prompt when prompting for file name.                              |
+| `use_cursor_in_template`   | `Boolean` | `true`                | Jump to cursor position in template after pasting.                                   |
+| `insert_mode_after_paste`  | `Boolean` | `true`                | Enter insert mode after pasting the markup code.                                     |
+| `relative_to_current_file` | `Boolean` | `false`               | Make `dir_path` relative to current file rather than the cwd.                        |
+| `template`                 | `String`  | `"$FILE_PATH"`        | Default template.                                                                    |
 
 You can configure the options either as static values (e.g. "assets"), or dynamically generate them using functions. For example, if you want to set `dir_path` to match the name of the currently opened file, you can achieve this through:
 
