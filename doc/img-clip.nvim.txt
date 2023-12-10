@@ -174,6 +174,9 @@ OPTIONS ~
   file_name                  String    "%Y-%m-%d-%H-%M-%S"   File name format (see
                                                              lua.org/pil/22.1.html).
 
+  url_encode_path            Boolean   false                 Encode spaces and special characters in
+                                                             file path.
+
   use_absolute_path          Boolean   false                 Expands dir_path to an absolute path.
 
   prompt_for_file_name       Boolean   true                  Ask user for file name before saving,
