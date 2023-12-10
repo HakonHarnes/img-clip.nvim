@@ -60,23 +60,22 @@ The plugin comes with the following defaults:
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   respect_cursor_placment_in_template = true, -- jump to cursor position in template after pasting
+  template = "$FILE_PATH", -- default template
 
-  -- default template when filetype-specific template is not defined
-  template = "$FILE_PATH",
+  -- file-type specific options
+  -- any options that are passed here will override the global config
+  -- for instance, setting use_absolute_path = true for markdown will
+  -- only enable that for this particular file type
+  -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
 
-  -- markdown specific options
   markdown = {
-    -- any opt can be passed here to override the global config
-    -- e.g. insert_mode_after_paste = false,
     template = "![$CURSOR]($FILE_PATH)",
   },
 
-  -- html specific options
   html = {
     template = '<img src="$FILE_PATH" alt="$CURSOR">',
   },
 
-  -- latex specific options
   tex = {
     template = [[
 \begin{figure}[h]
@@ -88,7 +87,6 @@ The plugin comes with the following defaults:
     ]],
   },
 
-  -- typst specific options
   typst = {
     template = [[
 #figure(
@@ -97,7 +95,28 @@ The plugin comes with the following defaults:
 ) <fig-$LABEL>
     ]],
   },
-}
+
+  rst = {
+    template = [[
+.. image:: $FILE_PATH
+   :alt: $CURSOR
+   :width: 80%
+    ]],
+  },
+
+  asciidoc = {
+    template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+  },
+
+  org = {
+    template = [=[
+#+BEGIN_FIGURE
+[[file:$FILE_PATH]]
+#+CAPTION: $CURSOR
+#+NAME: fig:$LABEL
+#+END_FIGURE
+    ]=],
+  },
 ```
 
 The options can be static values (e.g. "assets"), or be dynamically generated using functions. For instance, to set the `dir_path` to be relative to the current file (rather than the current working directory):
@@ -108,7 +127,7 @@ dir_path = function()
 end
 ```
 
-The options can also be scoped to specific file types. In the default configuration the templates for the `markdown`, `html`, `tex` and `typst` files override the template defined in the global settings. Any option can be added under the specific file type, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
+The options can also be scoped to specific file types. In the default configuration the templates for the `markdown`, `html`, `tex` ..., files override the template defined in the global settings. Any option can be added under the specific file type, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
 
 ```lua
 tex = {
