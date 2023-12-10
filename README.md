@@ -60,7 +60,7 @@ The plugin comes with the following defaults:
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   use_cursor_in_template = true, -- jump to cursor position in template after pasting
-  relative_to_current_file = true, -- dir_path is relative to current file
+  relative_to_current_file = false, -- dir_path is relative to current file
   template = "$FILE_PATH", -- default template
 
   -- file-type specific options
