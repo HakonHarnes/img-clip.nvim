@@ -69,7 +69,7 @@ defaults.rmd = defaults.markdown
 M.options = {}
 
 ---@param key string
----@param opts? table the options passed to pasteImage function
+---@param opts? table The options passed to pasteImage function
 ---@return string | nil
 M.get_option = function(key, opts)
   local ft = vim.bo.filetype
@@ -79,15 +79,15 @@ M.get_option = function(key, opts)
   if opts and opts[key] ~= nil then
     val = opts[key]
 
-    -- otherwise chck for filetype-specific option
+  -- otherwise chck for filetype-specific option
   elseif M.options[ft] and M.options[ft][key] ~= nil then
     val = M.options[ft][key]
 
-    -- otherwise check for global option
+  -- otherwise check for global option
   elseif M.options[key] ~= nil then
     val = M.options[key]
 
-    -- return nil if no option found
+  -- return nil if no option found
   else
     vim.notify("No option found for " .. key .. ".", vim.log.levels.WARN, { title = "img-clip" })
     return nil
