@@ -44,12 +44,16 @@ function M.get_new_cursor_col(line)
   return string.len(line) - 1
 end
 
---@param url string
+---@param str string
 ---@return string
--- TODO: Improve this to handle more than just spaces
-M.url_encode = function(url)
-  url = url:gsub(" ", "%%%%20")
-  return url
+M.url_encode = function(str)
+  if str then
+    str = str:gsub("\\", "/")
+    str = str:gsub("[ :]", function(c)
+      return string.format("%%%02X", string.byte(c))
+    end)
+  end
+  return str
 end
 
 ---@param file_path string
@@ -68,7 +72,10 @@ function M.insert_markup(file_path, opts)
   -- url encode path
   if config.get_option("url_encode_path", opts) then
     file_path = M.url_encode(file_path)
+    file_path = file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
   end
+
+  print(file_path)
 
   template = template:gsub("$FILE_NAME_NO_EXT", file_name_no_ext)
   template = template:gsub("$FILE_NAME", file_name)
