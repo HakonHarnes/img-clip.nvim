@@ -62,7 +62,7 @@ function M.insert_markup(file_path, opts)
   template = template:gsub("$FILE_PATH", file_path)
   template = template:gsub("$LABEL", label)
 
-  if not config.get_option("respect_cursor_placment_in_template", opts) then
+  if not config.get_option("use_cursor_in_template", opts) then
     template = template:gsub("$CURSOR", "")
   end
 

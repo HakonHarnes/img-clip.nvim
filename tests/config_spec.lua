@@ -12,7 +12,7 @@ describe("config", function()
     assert.is_false(config.get_option("show_dir_path_in_prompt"))
     assert.is_false(config.get_option("use_absolute_path"))
     assert.is_true(config.get_option("insert_mode_after_paste"))
-    assert.is_true(config.get_option("respect_cursor_placment_in_template"))
+    assert.is_true(config.get_option("use_cursor_in_template"))
     assert.equals("$FILE_PATH", config.get_option("template"))
   end)
 

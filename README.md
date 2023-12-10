@@ -59,7 +59,7 @@ The plugin comes with the following defaults:
   prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-  respect_cursor_placment_in_template = true, -- jump to cursor position in template after pasting
+  use_cursor_in_template = true, -- jump to cursor position in template after pasting
   template = "$FILE_PATH", -- default template
 
   -- file-type specific options
@@ -147,13 +147,13 @@ File type-specific options are determined by the _filetype_ (see `:help filetype
 
 Templates in the plugin use placeholders that are dynamically replaced with specific values during runtime. See the following table:
 
-| **Placeholder**     | **Description**                                                                                              | **Example**                        |
-| ------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| `$FILE_NAME`        | File name, including its extension.                                                                          | `image.png`                        |
-| `$FILE_NAME_NO_EXT` | File name, excluding its extension.                                                                          | `image`                            |
-| `$FILE_PATH`        | File path.                                                                                                   | `/path/to/image.png`               |
-| `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes.      | `the-image` (from `the image.png`) |
-| `$CURSOR`           | Indicates where the cursor will be placed after insertion if `respect_cursor_placement_in_template` is true. | -                                  |
+| **Placeholder**     | **Description**                                                                                         | **Example**                        |
+| ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `$FILE_NAME`        | File name, including its extension.                                                                     | `image.png`                        |
+| `$FILE_NAME_NO_EXT` | File name, excluding its extension.                                                                     | `image`                            |
+| `$FILE_PATH`        | File path.                                                                                              | `/path/to/image.png`               |
+| `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
+| `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          | -                                  |
 
 ## Usage
 

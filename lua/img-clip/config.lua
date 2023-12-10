@@ -6,8 +6,8 @@ local defaults = {
   use_absolute_path = false, -- expands dir_path to absolute path
   prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
+  use_cursor_in_template = true, -- jump to cursor position in template after pasting
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-  respect_cursor_placment_in_template = true, -- jump to cursor position in template after pasting
 
   template = "$FILE_PATH",
 
