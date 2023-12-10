@@ -120,12 +120,12 @@ The plugin comes with the following defaults:
   },
 ```
 
-The options can be static values (e.g. "assets"), or be dynamically generated using functions. For instance, to set the `dir_path` to be relative to the current file (rather than the current working directory):
+You can configure the options either as static values (e.g. "assets"), or dynamically generate them using functions. For example, if you want to set `dir_path` to match the name of the currently opened file, you can achieve this through:
 
 ```lua
 dir_path = function()
-  return vim.fn.fnamemodify(vim.fn.expand("%:p"), ":h") .. "/assets"
-end
+  return vim.fn.expand("%:t:r")
+end,
 ```
 
 The options can also be scoped to specific file types. In the default configuration the templates for the `markdown`, `html`, `tex` ..., files override the template defined in the global settings. Any option can be added under the specific file type, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
