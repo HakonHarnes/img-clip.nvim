@@ -146,7 +146,8 @@ M.get_clipboard_image_base64 = function(cmd)
   -- Windows
   elseif cmd == "powershell.exe" then
     local output, exit_code = util.execute(
-      [[powershell.exe -command "[System.Convert]::ToBase64String([System.IO.MemoryStream]::new((Get-Clipboard -Format Image).Bmp).ToArray()) | ForEach-Object {$_ -replace '`n',''}"]]
+      [[powershell.exe -command "[System.Convert]::ToBase64String([System.IO.MemoryStream]]
+        .. [[::new((Get-Clipboard -Format Image).Bmp).ToArray()) | ForEach-Object {$_ -replace '`n',''}"]]
     )
     if exit_code == 0 then
       return output
