@@ -8,6 +8,7 @@ local spy = require("luassert.spy")
 describe("img-clip.init", function()
   describe("pasteImage", function()
     before_each(function()
+      init.clip_cmd = nil
       clipboard.get_clip_cmd = function()
         return "xclip"
       end
@@ -40,9 +41,15 @@ describe("img-clip.init", function()
       clipboard.get_clip_cmd = function()
         return nil
       end
+
       local success = init.pasteImage()
       assert.is_false(success)
       assert.spy(util.error).was_called_with("Could not get clipboard command. See :checkhealth img-clip.")
+    end)
+
+    it("successfully pastes an image", function()
+      local success = init.pasteImage()
+      assert.is_true(success)
     end)
 
     it("warns if clipboard content is not an image", function()
@@ -90,9 +97,63 @@ describe("img-clip.init", function()
       assert.spy(util.error).was_called_with("Could not insert markup code.")
     end)
 
-    it("successfully pastes an image", function()
-      local success = init.pasteImage()
+    it("pastes as base64 when paste_as_base64 is true and filetype supports base64", function()
+      local opts = { paste_as_base64 = true }
+      vim.bo.filetype = "markdown"
+
+      clipboard.get_clipboard_image_base64 = function()
+        return "base64string"
+      end
+
+      local success = init.pasteImage(opts)
       assert.is_true(success)
+    end)
+
+    it("pastes as file when paste_as_base64 is true but filetype does not support base64", function()
+      local opts = { paste_as_base64 = true }
+      vim.bo.filetype = "txt"
+
+      local success = init.pasteImage(opts)
+      assert.is_true(success)
+      assert.spy(util.warn).was_called_with("Base64 is not supported in this filetype. Pasting as file instead.")
+    end)
+
+    it("pastes as file when paste_as_base64 is false", function()
+      local opts = { paste_as_base64 = false }
+      vim.bo.filetype = "markdown"
+
+      local success = init.pasteImage(opts)
+      assert.is_true(success)
+    end)
+
+    it("errors if base64 encoding fails", function()
+      local opts = { paste_as_base64 = true }
+      vim.bo.filetype = "markdown"
+
+      clipboard.get_clipboard_image_base64 = function()
+        return nil
+      end
+
+      local success = init.pasteImage(opts)
+      assert.is_false(success)
+      assert.spy(util.error).was_called_with("Could not get base64 string.")
+    end)
+
+    it("errors if base64 markup cannot be inserted", function()
+      local opts = { paste_as_base64 = true }
+      vim.bo.filetype = "markdown"
+
+      clipboard.get_clipboard_image_base64 = function()
+        return "base64string"
+      end
+
+      markup.insert_markup = function()
+        return false
+      end
+
+      local success = init.pasteImage(opts)
+      assert.is_false(success)
+      assert.spy(util.error).was_called_with("Could not insert markup code.")
     end)
   end)
 end)
