@@ -7,6 +7,7 @@ Paste images directly from your clipboard into any markup language, like LaTeX, 
 ## Features
 
 - **Directly** paste images from the **clipboard**.
+- **Save** images as files or embed them directly as **Base64**.
 - Fully **configurable templates** with cursor placement and figure labels.
 - **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
 - **Automatically** generated file names.
@@ -151,7 +152,7 @@ The plugin comes with the following defaults:
 | `use_cursor_in_template`   | `Boolean` | `true`                | Jump to cursor position in template after pasting.                                   |
 | `insert_mode_after_paste`  | `Boolean` | `true`                | Enter insert mode after pasting the markup code.                                     |
 | `relative_to_current_file` | `Boolean` | `false`               | Make `dir_path` relative to current file rather than the cwd.                        |
-| `paste_as_base64`          | `Boolean` | `false`               | Pastes the image as base64 rather than saving as file.                               |
+| `paste_as_base64`          | `Boolean` | `false`               | Embeds the image as Base64 rather than saving as file. Only supported in Markdown.   |
 | `template`                 | `String`  | `"$FILE_PATH"`        | Default template.                                                                    |
 
 The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions. For example, to set the `dir_path` to match the name of the currently opened file:
