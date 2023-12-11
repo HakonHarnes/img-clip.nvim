@@ -132,7 +132,7 @@ end
 
 M._handle_image_url = function(url)
   -- get the file path
-  local file_path = fs.get_file_path("png", opts)
+  local file_path = fs.get_file_path("png")
   if not file_path then
     util.error("Could not determine file path.")
     return false
