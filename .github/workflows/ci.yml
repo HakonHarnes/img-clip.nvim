@@ -39,6 +39,7 @@ jobs:
           vimdoc: img-clip.nvim
           demojify: true
           treesitter: true
+          titledatepattern: "%B %Y"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
