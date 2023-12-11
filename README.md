@@ -77,7 +77,7 @@ The plugin comes with the following defaults:
   use_cursor_in_template = true, -- jump to cursor position in template after pasting
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-  paste_as_base64 = false, -- paste image as base64 string instead of saving to file
+  embed_as_base64 = false, -- paste image as base64 string instead of saving to file
 
   template = "$FILE_PATH", -- default template
 
@@ -152,7 +152,7 @@ The plugin comes with the following defaults:
 | `use_cursor_in_template`   | `Boolean` | `true`                | Jump to cursor position in template after pasting.                                   |
 | `insert_mode_after_paste`  | `Boolean` | `true`                | Enter insert mode after pasting the markup code.                                     |
 | `relative_to_current_file` | `Boolean` | `false`               | Make `dir_path` relative to current file rather than the cwd.                        |
-| `paste_as_base64`          | `Boolean` | `false`               | Embeds the image as Base64 rather than saving as file. Only supported in Markdown.   |
+| `embed_as_base64`          | `Boolean` | `false`               | Embeds the image as Base64 rather than saving as file. Only supported in Markdown.   |
 | `template`                 | `String`  | `"$FILE_PATH"`        | Default template.                                                                    |
 
 The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions. For example, to set the `dir_path` to match the name of the currently opened file:
