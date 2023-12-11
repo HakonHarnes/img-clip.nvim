@@ -150,7 +150,7 @@ M.get_clipboard_image_base64 = function(cmd)
       .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())]]
     )
     if exit_code == 0 then
-      return output:gsub("\n", "")
+      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
     end
 
     -- Windows WSL
@@ -160,7 +160,7 @@ M.get_clipboard_image_base64 = function(cmd)
       .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())']]
     )
     if exit_code == 0 then
-      return output:gsub("\n", "")
+      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
     end
   end
 
