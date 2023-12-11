@@ -124,6 +124,13 @@ M.get_clipboard_image_base64 = function(cmd)
     if exit_code == 0 then
       return output
     end
+
+  -- MacOS (pngpaste)
+  elseif cmd == "pngpaste" then
+    local output, exit_code = util.execute("pngpaste - | base64 | tr -d '\n'")
+    if exit_code == 0 then
+      return output
+    end
   end
 
   return nil
