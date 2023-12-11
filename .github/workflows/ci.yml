@@ -39,13 +39,15 @@ jobs:
           vimdoc: img-clip.nvim
           demojify: true
           treesitter: true
-      - name: Push changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
         with:
-          commit_message: "chore(build): auto-generate vimdoc"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          title: "chore(build): auto-generate vimdoc"
+          commit-message: "chore(build): auto-generate vimdoc"
+          branch: "docs-${{ github.run_id }}"
+          body: "This is an auto-generated PR with documentation updates."
+          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
   luacheck:
     runs-on: ubuntu-latest
