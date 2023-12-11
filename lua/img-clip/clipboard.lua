@@ -10,16 +10,16 @@ M.get_clip_cmd = function()
       return "powershell.exe"
     end
 
-  -- Linux (X11)
-  elseif os.getenv("DISPLAY") then
-    if util.executable("xclip") then
-      return "xclip"
-    end
-
   -- Linux (Wayland)
   elseif os.getenv("WAYLAND_DISPLAY") then
     if util.executable("wl-paste") then
       return "wl-paste"
+    end
+
+  -- Linux (X11)
+  elseif os.getenv("DISPLAY") then
+    if util.executable("xclip") then
+      return "xclip"
     end
 
   -- MacOS
