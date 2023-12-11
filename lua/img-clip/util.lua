@@ -7,7 +7,7 @@ M.executable = function(command)
 end
 
 ---@param cmd string
----@return string output
+---@return string | nil output
 ---@return number exit_code
 M.execute = function(cmd)
   return vim.fn.system(cmd), vim.v.shell_error
@@ -46,6 +46,21 @@ M.input = function(args)
   end
 
   return output
+end
+
+---@param str string
+---@return boolean
+-- lua pattern matching doesn't support the | operator, hence the repetition
+M._is_image_url = function(str)
+  return str:match("^https?://.*%.png") ~= nil
+    or str:match("^https?://.*%.jpg") ~= nil
+    or str:match("^https?://.*%.jpeg") ~= nil
+end
+
+---@param str string
+---@return boolean
+M._is_image_path = function(str)
+  return str:match("^.*%.(png)$") ~= nil or str:match("^.*%.(jpg)$") ~= nil or str:match("^.*%.(jpeg)$") ~= nil
 end
 
 return M
