@@ -32,7 +32,7 @@ M.pasteImage = function(opts)
 
   -- paste as base 64
   if config.get_option("paste_as_base64", opts) then
-    if M._language_supports_base64(vim.bo.filetype) then
+    if M._language_supports_base64_embedding(vim.bo.filetype) then
       return M._paste_as_base64(opts)
     else
       util.warn("Base64 is not supported in this filetype. Pasting as file instead.")
@@ -42,10 +42,14 @@ M.pasteImage = function(opts)
   return M._paste_as_file(opts)
 end
 
-M._language_supports_base64 = function(ft)
+---@param ft string
+---@return boolean
+M._language_supports_base64_embedding = function(ft)
   return ft == "markdown" or ft == "rmd"
 end
 
+---@param opts? table
+---@return boolean
 M._paste_as_file = function(opts)
   -- get the file path
   local file_path = fs.get_file_path("png", opts)
@@ -79,6 +83,8 @@ M._paste_as_file = function(opts)
   return true
 end
 
+---@param opts? table
+---@return boolean
 M._paste_as_base64 = function(opts)
   -- get the base64 string
   local base64 = clipboard.get_clipboard_image_base64(clip_cmd)
@@ -99,6 +105,8 @@ M._paste_as_base64 = function(opts)
   return true
 end
 
+---@param ft string
+---@return string
 M._get_base64_prefix = function(ft)
   if ft == "markdown" or ft == "rmd" then
     return "data:image/png;base64,"

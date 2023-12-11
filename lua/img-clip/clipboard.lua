@@ -10,19 +10,19 @@ M.get_clip_cmd = function()
       return "powershell.exe"
     end
 
-    -- Linux (Wayland)
+  -- Linux (Wayland)
   elseif os.getenv("WAYLAND_DISPLAY") then
     if util.executable("wl-paste") then
       return "wl-paste"
     end
 
-    -- Linux (X11)
+  -- Linux (X11)
   elseif os.getenv("DISPLAY") then
     if util.executable("xclip") then
       return "xclip"
     end
 
-    -- MacOS
+  -- MacOS
   elseif util.has("mac") then
     if util.executable("pngpaste") then
       return "pngpaste"
@@ -42,23 +42,23 @@ M.check_if_content_is_image = function(cmd)
     local output = util.execute("xclip -selection clipboard -t TARGETS -o")
     return output ~= nil and output:find("image/png") ~= nil
 
-    -- Linux (Wayland)
+  -- Linux (Wayland)
   elseif cmd == "wl-paste" then
     local output = util.execute("wl-paste --list-types")
     return output ~= nil and output:find("image/png") ~= nil
 
-    -- MacOS (pngpaste) which is faster than osascript
+  -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local _, exit_code = util.execute("pngpaste -")
     return exit_code == 0
 
-    -- MacOS (osascript) as a fallback
-    -- TODO: Add correct quotes aroudn class PNGf
+  -- MacOS (osascript) as a fallback
+  -- TODO: Add correct quotes aroudn class PNGf
   elseif cmd == "osascript" then
     local output = util.execute("osascript -e 'clipboard info'")
     return output ~= nil and output:find("class PNGf") ~= nil
 
-    -- Windows
+  -- Windows
   elseif cmd == "powershell.exe" then
     local output = util.execute("powershell.exe Get-Clipboard -Format Image")
     return output ~= nil and output:find("ImageFormat") ~= nil
@@ -77,30 +77,30 @@ M.save_clipboard_image = function(cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
-    -- Linux (Wayland)
+  -- Linux (Wayland)
   elseif cmd == "wl-paste" then
     local command = string.format('wl-paste --type image/png > "%s"', file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
-    -- MacOS (pngpaste) which is faster than osascript
+  -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
     local command = string.format('pngpaste "%s"', file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
-    -- MacOS (osascript) as a fallback
+  -- MacOS (osascript) as a fallback
   elseif cmd == "osascript" then
     local command = string.format(
       [[osascript -e 'set theFile to (open for access POSIX file "%s" with write permission)' ]]
-      .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
-      .. [[-e 'close access theFile']],
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
+        .. [[-e 'close access theFile']],
       file_path
     )
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
-    -- Windows
+  -- Windows
   elseif cmd == "powershell.exe" then
     local command = string.format([[powershell.exe "(Get-Clipboard -Format Image).Save('%s')"]], file_path)
     local _, exit_code = util.execute(command)
@@ -118,46 +118,46 @@ M.get_clipboard_image_base64 = function(cmd)
       return output
     end
 
-    -- Linux (Wayland)
+  -- Linux (Wayland)
   elseif cmd == "wl-paste" then
     local output, exit_code = util.execute("wl-paste --type image/png | base64 | tr -d '\n'")
     if exit_code == 0 then
       return output
     end
 
-    -- MacOS (pngpaste)
+  -- MacOS (pngpaste)
   elseif cmd == "pngpaste" then
     local output, exit_code = util.execute("pngpaste - | base64 | tr -d '\n'")
     if exit_code == 0 then
       return output
     end
 
-    -- MacOS (osascript)
+  -- MacOS (osascript)
   elseif cmd == "osascript" then
     local output, exit_code = util.execute(
       [[osascript -e 'set theFile to (open for access POSIX file "/tmp/image.png" with write permission)' ]]
-      .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
-      .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
+        .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
     )
     if exit_code == 0 then
       return output
     end
 
-    -- Windows native
+  -- Windows native
   elseif cmd == "powershell.exe" and util.has("win32") then
     local output, exit_code = util.execute(
       [[powershell.exe $ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
-      .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())]]
+        .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())]]
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
     end
 
-    -- Windows WSL
+  -- Windows WSL
   elseif cmd == "powershell.exe" and util.has("wsl") then
     local output, exit_code = util.execute(
       [[powershell.exe '$ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
-      .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())']]
+        .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())']]
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
