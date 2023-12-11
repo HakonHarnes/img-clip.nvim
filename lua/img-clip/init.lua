@@ -15,6 +15,18 @@ local clip_cmd = nil
 ---@param opts? table
 ---@return boolean
 M.pasteImage = function(opts)
+  vim.paste = (function(overridden)
+    return function(lines, phase)
+      if #lines > 1 then
+        return overridden(lines, phase)
+      end
+    end
+  end)(vim.paste)
+
+  if true then
+    return true
+  end
+
   if not clip_cmd then
     clip_cmd = clipboard.get_clip_cmd()
     if not clip_cmd then
