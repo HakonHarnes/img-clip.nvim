@@ -50,7 +50,7 @@ describe("clipboard", function()
   describe("wayland", function()
     before_each(function()
       os.getenv = function(env)
-        return env == "WAYLAND_DISPLAY"
+        return env == "WAYLAND_DISPLAY" or env == "DISPLAY"
       end
       util.has = function()
         return false
