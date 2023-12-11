@@ -111,8 +111,16 @@ M.save_clipboard_image = function(cmd, file_path)
 end
 
 M.get_clipboard_image_base64 = function(cmd)
+  -- Linux (X11)
   if cmd == "xclip" then
     local output, exit_code = util.execute("xclip -selection clipboard -o -t image/png | base64 | tr -d '\n'")
+    if exit_code == 0 then
+      return output
+    end
+
+  -- Linux (Wayland)
+  elseif cmd == "wl-paste" then
+    local output, exit_code = util.execute("wl-paste --type image/png | base64 | tr -d '\n'")
     if exit_code == 0 then
       return output
     end
