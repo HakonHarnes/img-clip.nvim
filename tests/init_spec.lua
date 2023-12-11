@@ -97,8 +97,8 @@ describe("img-clip.init", function()
       assert.spy(util.error).was_called_with("Could not insert markup code.")
     end)
 
-    it("pastes as base64 when embed_as_base64 is true and filetype supports base64", function()
-      local opts = { embed_as_base64 = true }
+    it("pastes as base64 when embed_image_as_base64 is true and filetype supports base64", function()
+      local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
       clipboard.get_clipboard_image_base64 = function()
@@ -109,8 +109,8 @@ describe("img-clip.init", function()
       assert.is_true(success)
     end)
 
-    it("pastes as file when embed_as_base64 is true but filetype does not support base64", function()
-      local opts = { embed_as_base64 = true }
+    it("pastes as file when embed_image_as_base64 is true but filetype does not support base64", function()
+      local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "txt"
 
       local success = init.pasteImage(opts)
@@ -118,8 +118,8 @@ describe("img-clip.init", function()
       assert.spy(util.warn).was_called_with("Base64 is not supported in this filetype. Pasting as file instead.")
     end)
 
-    it("pastes as file when embed_as_base64 is false", function()
-      local opts = { embed_as_base64 = false }
+    it("pastes as file when embed_image_as_base64 is false", function()
+      local opts = { embed_image_as_base64 = false }
       vim.bo.filetype = "markdown"
 
       local success = init.pasteImage(opts)
@@ -127,7 +127,7 @@ describe("img-clip.init", function()
     end)
 
     it("errors if base64 encoding fails", function()
-      local opts = { embed_as_base64 = true }
+      local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
       clipboard.get_clipboard_image_base64 = function()
@@ -140,7 +140,7 @@ describe("img-clip.init", function()
     end)
 
     it("errors if base64 markup cannot be inserted", function()
-      local opts = { embed_as_base64 = true }
+      local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
       clipboard.get_clipboard_image_base64 = function()

@@ -10,7 +10,7 @@ local defaults = {
   use_cursor_in_template = true, -- jump to cursor position in template after pasting
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-  embed_as_base64 = false, -- paste image as base64 string instead of saving to file
+  embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
 
   template = "$FILE_PATH",
 

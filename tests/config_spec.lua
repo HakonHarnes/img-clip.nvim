@@ -13,7 +13,7 @@ describe("config", function()
     assert.is_false(config.get_option("use_absolute_path"))
     assert.is_true(config.get_option("insert_mode_after_paste"))
     assert.is_true(config.get_option("use_cursor_in_template"))
-    assert.is_false(config.get_option("embed_as_base64"))
+    assert.is_false(config.get_option("embed_image_as_base64"))
     assert.equals("$FILE_PATH", config.get_option("template"))
   end)
 
