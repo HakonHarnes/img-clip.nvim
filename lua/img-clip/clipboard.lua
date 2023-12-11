@@ -135,8 +135,9 @@ M.get_clipboard_image_base64 = function(cmd)
   -- MacOS (osascript)
   elseif cmd == "osascript" then
     local output, exit_code = util.execute(
-      [[osascript -e 'set content to the clipboard as «class PNGf»' ]]
-        .. [[-e 'do shell script "echo " & content | base64 | tr -d "\n"' ]]
+      [[osascript -e 'set theFile to (open for access POSIX file "/tmp/image.png" with write permission)' ]]
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
+        .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
     )
     if exit_code == 0 then
       return output
