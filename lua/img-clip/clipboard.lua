@@ -60,7 +60,7 @@ M.check_if_content_is_image = function(cmd)
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    local output = util.execute("powershell.exe -c Get-Clipboard -Format Image")
+    local output = util.execute("powershell.exe Get-Clipboard -Format Image")
     return output ~= nil and output:find("ImageFormat") ~= nil
   end
 
@@ -102,12 +102,69 @@ M.save_clipboard_image = function(cmd, file_path)
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    local command = string.format([[powershell.exe "(Get-Clipboard -Format Image).save('%s')"]], file_path)
+    local command = string.format([[powershell.exe "(Get-Clipboard -Format Image).Save('%s')"]], file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
   end
 
   return false
+end
+
+M.get_clipboard_image_base64 = function(cmd)
+  -- Linux (X11)
+  if cmd == "xclip" then
+    local output, exit_code = util.execute("xclip -selection clipboard -o -t image/png | base64 | tr -d '\n'")
+    if exit_code == 0 then
+      return output
+    end
+
+  -- Linux (Wayland)
+  elseif cmd == "wl-paste" then
+    local output, exit_code = util.execute("wl-paste --type image/png | base64 | tr -d '\n'")
+    if exit_code == 0 then
+      return output
+    end
+
+  -- MacOS (pngpaste)
+  elseif cmd == "pngpaste" then
+    local output, exit_code = util.execute("pngpaste - | base64 | tr -d '\n'")
+    if exit_code == 0 then
+      return output
+    end
+
+  -- MacOS (osascript)
+  elseif cmd == "osascript" then
+    local output, exit_code = util.execute(
+      [[osascript -e 'set theFile to (open for access POSIX file "/tmp/image.png" with write permission)' ]]
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
+        .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
+    )
+    if exit_code == 0 then
+      return output
+    end
+
+  -- Windows native
+  elseif cmd == "powershell.exe" and util.has("win32") then
+    local output, exit_code = util.execute(
+      [[powershell.exe $ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
+        .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())]]
+    )
+    if exit_code == 0 then
+      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
+    end
+
+  -- Windows WSL
+  elseif cmd == "powershell.exe" and util.has("wsl") then
+    local output, exit_code = util.execute(
+      [[powershell.exe '$ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
+        .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())']]
+    )
+    if exit_code == 0 then
+      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
+    end
+  end
+
+  return nil
 end
 
 return M

@@ -56,30 +56,28 @@ M.url_encode = function(str)
   return str
 end
 
----@param file_path string
+---@param file string the file path or base64 string
 ---@param opts? table
 ---@return boolean
-function M.insert_markup(file_path, opts)
+function M.insert_markup(file, opts)
   local template = config.get_option("template", opts)
   if not template then
     return false
   end
 
-  local file_name = vim.fn.fnamemodify(file_path, ":t")
-  local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
+  local file_name = vim.fn.fnamemodify(file, ":t")
+  local file_name_no_ext = vim.fn.fnamemodify(file, ":t:r")
   local label = file_name_no_ext:gsub("%s+", "-"):lower()
 
   -- url encode path
   if config.get_option("url_encode_path", opts) then
-    file_path = M.url_encode(file_path)
-    file_path = file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
+    file = M.url_encode(file)
+    file = file:gsub("%%", "%%%%") -- escape % so we can call gsub again
   end
-
-  print(file_path)
 
   template = template:gsub("$FILE_NAME_NO_EXT", file_name_no_ext)
   template = template:gsub("$FILE_NAME", file_name)
-  template = template:gsub("$FILE_PATH", file_path)
+  template = template:gsub("$FILE_PATH", file)
   template = template:gsub("$LABEL", label)
 
   if not config.get_option("use_cursor_in_template", opts) then
