@@ -12,6 +12,7 @@ local defaults = {
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
   embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
   max_base64_size = 10, -- max size of base64 string in KB
+  download_image_from_link = false, -- download image from url instead of just embedding the url
 
   template = "$FILE_PATH",
 
@@ -25,6 +26,7 @@ local defaults = {
   },
 
   tex = {
+    download_image_from_link = true, -- download image from url and embed it as an image file
     template = [[
 \begin{figure}[h]
   \centering

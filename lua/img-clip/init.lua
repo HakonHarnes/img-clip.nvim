@@ -131,35 +131,46 @@ M._handle_paste = function(input)
 end
 
 M._handle_image_url = function(url)
-  -- get the file path
-  local file_path = fs.get_file_path("png")
-  if not file_path then
-    util.error("Could not determine file path.")
-    return false
-  end
+  -- download the image in the link and insert the markup
+  if config.get_option("download_image_from_link") then
+    -- get the file path
+    local file_path = fs.get_file_path("png")
+    if not file_path then
+      util.error("Could not determine file path.")
+      return false
+    end
 
-  -- mkdir if not exists
-  local dir_path = vim.fn.fnamemodify(file_path, ":h")
-  local dir_ok = fs.mkdirp(dir_path)
-  if not dir_ok then
-    util.error("Could not create directories.")
-    return false
-  end
+    -- mkdir if not exists
+    local dir_path = vim.fn.fnamemodify(file_path, ":h")
+    local dir_ok = fs.mkdirp(dir_path)
+    if not dir_ok then
+      util.error("Could not create directories.")
+      return false
+    end
 
-  -- download image to specified file path
-  local _, exit_code = util.execute(string.format("curl -o '%s' '%s'", file_path, url))
-  if exit_code ~= 0 then
-    util.error("Could not download image.")
-    return false
-  end
+    -- download image to specified file path
+    local _, exit_code = util.execute(string.format("curl -o '%s' '%s'", file_path, url))
+    if exit_code ~= 0 then
+      util.error("Could not download image.")
+      return false
+    end
 
-  -- get the markup for the image
-  local markup_ok = markup.insert_markup(file_path)
-  if not markup_ok then
-    util.error("Could not insert markup code.")
-    return false
-  end
+    -- get the markup for the image
+    local markup_ok = markup.insert_markup(file_path)
+    if not markup_ok then
+      util.error("Could not insert markup code.")
+      return false
+    end
 
+  -- just insert the url as markup
+  else
+    -- get the markup for the image
+    local markup_ok = markup.insert_markup(url)
+    if not markup_ok then
+      util.error("Could not insert markup code.")
+      return false
+    end
+  end
   return true
 end
 
