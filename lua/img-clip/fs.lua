@@ -100,4 +100,12 @@ M.mkdirp = function(dir, mode)
   return true
 end
 
+---@param src string
+---@param dest string
+---@return string | nil output
+---@return number exit_code
+M.copy_file = function(src, dest)
+  return util.execute(string.format("cp '%s' '%s'", src, dest))
+end
+
 return M

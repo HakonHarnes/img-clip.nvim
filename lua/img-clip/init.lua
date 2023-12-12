@@ -175,6 +175,30 @@ M._handle_image_url = function(url)
 end
 
 M._handle_image_path = function(path)
+  -- copy the image to the dir_path and insert the markup
+  if config.get_option("copy_dropped_files_to_dir_path") then
+    -- get the file path
+    local file_path = fs.get_file_path("png")
+    if file_path then
+      -- mkdir if not exists
+      local dir_path = vim.fn.fnamemodify(file_path, ":h")
+      local dirs_created = fs.mkdirp(dir_path)
+      if not dirs_created then
+        util.error("Could not create directories.")
+        return false
+      end
+
+      -- copy image to specified file path
+      local copy_ok = fs.copy_file(path, file_path)
+      if not copy_ok then
+        util.error("Could not copy image.")
+        return false
+      end
+
+      path = file_path
+    end
+  end
+
   -- get the markup for the image
   local markup_ok = markup.insert_markup(path)
   if not markup_ok then
