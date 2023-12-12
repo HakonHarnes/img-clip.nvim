@@ -15,6 +15,9 @@ local clip_cmd = nil
 ---@param opts? table
 ---@return boolean
 M.pasteImage = function(opts)
+  -- get the clipboard command
+  -- but only the first time the function is called
+  -- unless the clipboard command is nil, then retry
   if not clip_cmd then
     clip_cmd = clipboard.get_clip_cmd()
     if not clip_cmd then
@@ -24,8 +27,7 @@ M.pasteImage = function(opts)
   end
 
   -- check if clipboard content is an image
-  local is_image = clipboard.check_if_content_is_image(clip_cmd)
-  if not is_image then
+  if not clipboard.content_is_image(clip_cmd) then
     util.warn("Clipboard content is not an image.")
     return false
   end
@@ -53,22 +55,19 @@ M._paste_as_file = function(opts)
 
   -- mkdir if not exists
   local dir_path = vim.fn.fnamemodify(file_path, ":h")
-  local dir_ok = fs.mkdirp(dir_path)
-  if not dir_ok then
+  if not fs.mkdirp(dir_path) then
     util.error("Could not create directories.")
     return false
   end
 
   -- save image to specified file path
-  local save_ok = clipboard.save_clipboard_image(clip_cmd, file_path)
-  if not save_ok then
+  if not clipboard.save_image(clip_cmd, file_path) then
     util.error("Could not save image to disk.")
     return false
   end
 
   -- get the markup for the image
-  local markup_ok = markup.insert_markup(file_path, opts)
-  if not markup_ok then
+  if not markup.insert_markup(file_path, opts) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -86,7 +85,7 @@ end
 ---@return boolean
 M._embed_image_as_base64 = function(opts)
   -- get the base64 string
-  local base64 = clipboard.get_clipboard_image_base64(clip_cmd)
+  local base64 = clipboard.get_base64_encoded_image(clip_cmd)
   if not base64 then
     util.error("Could not get base64 string.")
     return false
@@ -100,8 +99,7 @@ M._embed_image_as_base64 = function(opts)
   local prefix = M._get_base64_prefix(vim.bo.filetype)
 
   -- get the markup for the image
-  local markup_ok = markup.insert_markup(prefix .. base64, opts)
-  if not markup_ok then
+  if not markup.insert_markup(prefix .. base64, opts) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -120,7 +118,7 @@ M._get_base64_prefix = function(ft)
 end
 
 ---@param input string
----@return boolean status if the input was handled or not
+---@return boolean status if the input was handled successfully or not
 M._handle_paste = function(input)
   if config.get_option("enable_drag_and_drop") == false then
     return false
@@ -141,6 +139,8 @@ M._handle_paste = function(input)
   return false
 end
 
+---@param url string
+---@return boolean status if the input was handled successfully or not
 M._handle_image_url = function(url)
   -- download the image in the link and insert the markup
   if config.get_option("download_dropped_images") then
@@ -185,6 +185,8 @@ M._handle_image_url = function(url)
   return true
 end
 
+---@param path string
+---@return boolean status if the input was handled successfully or not
 M._handle_image_path = function(path)
   -- copy the image to the dir_path and insert the markup
   if config.get_option("copy_dropped_images") then
@@ -211,8 +213,7 @@ M._handle_image_path = function(path)
   end
 
   -- get the markup for the image
-  local markup_ok = markup.insert_markup(path)
-  if not markup_ok then
+  if not markup.insert_markup(path) then
     util.error("Could not insert markup code.")
     return false
   end

@@ -30,7 +30,7 @@ end
 
 ---@param cmd string
 ---@return boolean
-M.check_if_content_is_image = function(cmd)
+M.content_is_image = function(cmd)
   -- Linux (X11)
   if cmd == "xclip" then
     local output = util.execute("xclip -selection clipboard -t TARGETS -o")
@@ -64,7 +64,7 @@ end
 ---@param cmd string
 ---@param file_path string
 ---@return boolean
-M.save_clipboard_image = function(cmd, file_path)
+M.save_image = function(cmd, file_path)
   -- Linux (X11)
   if cmd == "xclip" then
     local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
@@ -104,7 +104,7 @@ M.save_clipboard_image = function(cmd, file_path)
   return false
 end
 
-M.get_clipboard_image_base64 = function(cmd)
+M.get_base64_encoded_image = function(cmd)
   -- Linux (X11)
   if cmd == "xclip" then
     local output, exit_code = util.execute("xclip -selection clipboard -o -t image/png | base64 | tr -d '\n'")

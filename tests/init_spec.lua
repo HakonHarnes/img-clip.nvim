@@ -12,7 +12,7 @@ describe("img-clip.init", function()
       clipboard.get_clip_cmd = function()
         return "xclip"
       end
-      clipboard.check_if_content_is_image = function(cmd)
+      clipboard.content_is_image = function(cmd)
         return cmd == "xclip"
       end
       fs.get_file_path = function()
@@ -21,7 +21,7 @@ describe("img-clip.init", function()
       fs.mkdirp = function()
         return true
       end
-      clipboard.save_clipboard_image = function()
+      clipboard.save_image = function()
         return true
       end
       markup.insert_markup = function()
@@ -55,7 +55,7 @@ describe("img-clip.init", function()
     end)
 
     it("warns if clipboard content is not an image", function()
-      clipboard.check_if_content_is_image = function()
+      clipboard.content_is_image = function()
         return false
       end
       local success = init.pasteImage()
@@ -82,7 +82,7 @@ describe("img-clip.init", function()
     end)
 
     it("errors if image cannot be saved to disk", function()
-      clipboard.save_clipboard_image = function()
+      clipboard.save_image = function()
         return false
       end
       local success = init.pasteImage()
@@ -103,7 +103,7 @@ describe("img-clip.init", function()
       local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
-      clipboard.get_clipboard_image_base64 = function()
+      clipboard.get_base64_encoded_image = function()
         return "base64string"
       end
 
@@ -131,7 +131,7 @@ describe("img-clip.init", function()
       local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
-      clipboard.get_clipboard_image_base64 = function()
+      clipboard.get_base64_encoded_image = function()
         return nil
       end
 
@@ -144,7 +144,7 @@ describe("img-clip.init", function()
       vim.bo.filetype = "markdown"
 
       -- creates a base64 string > 15 KB
-      clipboard.get_clipboard_image_base64 = function()
+      clipboard.get_base64_encoded_image = function()
         return string.rep("a", 20000)
       end
 
@@ -156,7 +156,7 @@ describe("img-clip.init", function()
       local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
-      clipboard.get_clipboard_image_base64 = function()
+      clipboard.get_base64_encoded_image = function()
         return "base64string"
       end
 
