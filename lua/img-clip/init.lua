@@ -119,7 +119,17 @@ M._get_base64_prefix = function(ft)
   return ""
 end
 
+---@param input string
+---@return boolean status if the input was handled or not
 M._handle_paste = function(input)
+  if config.get_option("enable_drag_and_drop") == false then
+    return false
+  end
+
+  if config.get_option("enable_in_insert_mode") == false and vim.fn.mode() == "i" then
+    return false
+  end
+
   if util._is_image_url(input) then
     return M._handle_image_url(input)
   end
@@ -127,12 +137,13 @@ M._handle_paste = function(input)
     return M._handle_image_path(input)
   end
 
+  -- input was not handled -- continue with the default paste
   return false
 end
 
 M._handle_image_url = function(url)
   -- download the image in the link and insert the markup
-  if config.get_option("download_image_from_link") then
+  if config.get_option("download_dropped_images") then
     -- get the file path
     local file_path = fs.get_file_path("png")
     if not file_path then
@@ -176,7 +187,7 @@ end
 
 M._handle_image_path = function(path)
   -- copy the image to the dir_path and insert the markup
-  if config.get_option("copy_dropped_files_to_dir_path") then
+  if config.get_option("copy_dropped_images") then
     -- get the file path
     local file_path = fs.get_file_path("png")
     if file_path then

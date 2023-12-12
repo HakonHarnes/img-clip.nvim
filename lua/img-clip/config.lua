@@ -12,13 +12,18 @@ local defaults = {
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
   embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
   max_base64_size = 10, -- max size of base64 string in KB
-  download_image_from_link = false, -- download image from url instead of just embedding the url
-  copy_dropped_files_to_dir_path = false, -- copy dropped files to dir_path instead of just including the original path
+
+  -- drag and drop options
+  enable_drag_and_drop = true, -- enable drag and drop support
+  enable_in_insert_mode = false, -- enable drag and drop support in insert mode
+  download_dropped_images = true, -- download image from url instead of just embedding the url
+  copy_dropped_images = false, -- copy dropped images to dir_path instead of just including the original path
 
   template = "$FILE_PATH",
 
   markdown = {
     url_encode_path = true,
+    download_dropped_images = false, -- just include the link to the image
     template = "![$CURSOR]($FILE_PATH)",
   },
 
@@ -27,7 +32,6 @@ local defaults = {
   },
 
   tex = {
-    download_image_from_link = true, -- download image from url and embed it as an image file
     template = [[
 \begin{figure}[h]
   \centering
