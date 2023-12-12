@@ -30,11 +30,13 @@ describe("img-clip.init", function()
 
       spy.on(util, "warn")
       spy.on(util, "error")
+      spy.on(init, "_paste_as_file")
     end)
 
     after_each(function()
       util.warn:revert()
       util.error:revert()
+      init._paste_as_file:revert()
     end)
 
     it("errors if clipboard command is not found", function()
@@ -115,7 +117,6 @@ describe("img-clip.init", function()
 
       local success = init.pasteImage(opts)
       assert.is_true(success)
-      assert.spy(util.warn).was_called_with("Base64 is not supported in this filetype. Pasting as file instead.")
     end)
 
     it("pastes as file when embed_image_as_base64 is false", function()
@@ -126,7 +127,7 @@ describe("img-clip.init", function()
       assert.is_true(success)
     end)
 
-    it("errors if base64 encoding fails", function()
+    it("pastes as file if base64 encoding fails", function()
       local opts = { embed_image_as_base64 = true }
       vim.bo.filetype = "markdown"
 
@@ -134,9 +135,21 @@ describe("img-clip.init", function()
         return nil
       end
 
-      local success = init.pasteImage(opts)
-      assert.is_false(success)
-      assert.spy(util.error).was_called_with("Could not get base64 string.")
+      init.pasteImage(opts)
+      assert.spy(init._paste_as_file).was_called()
+    end)
+
+    it("pastes as file if base64 string is too long", function()
+      local opts = { embed_image_as_base64 = true, max_base64_size = 15 }
+      vim.bo.filetype = "markdown"
+
+      -- creates a base64 string > 15 KB
+      clipboard.get_clipboard_image_base64 = function()
+        return string.rep("a", 20000)
+      end
+
+      init.pasteImage(opts)
+      assert.spy(init._paste_as_file).was_called()
     end)
 
     it("errors if base64 markup cannot be inserted", function()
