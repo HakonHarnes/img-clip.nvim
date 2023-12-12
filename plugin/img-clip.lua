@@ -1,4 +1,5 @@
 local img_clip = require("img-clip")
+local drag_and_drop = require("img-clip.drag_and_drop")
 
 vim.api.nvim_create_user_command("PasteImage", function()
   img_clip.pasteImage()
@@ -13,7 +14,7 @@ vim.paste = (function(overridden)
       return overridden(lines, phase)
     end
 
-    if not img_clip.handle_paste(lines[1]) then
+    if not drag_and_drop.handle_paste(lines[1]) then
       return overridden(lines, phase)
     end
   end

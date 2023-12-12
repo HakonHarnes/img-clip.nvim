@@ -4,48 +4,18 @@ local config = require("img-clip.config")
 local util = require("img-clip.util")
 local fs = require("img-clip.fs")
 
+local clip_cmd = nil
+
 local M = {}
 
 M.setup = function(opts)
   config.setup(opts)
 end
 
-local clip_cmd = nil
-
+---@private
 ---@param opts? table
 ---@return boolean
-M.pasteImage = function(opts)
-  -- get the clipboard command
-  -- but only the first time the function is called
-  -- unless the clipboard command is nil, then retry
-  if not clip_cmd then
-    clip_cmd = clipboard.get_clip_cmd()
-    if not clip_cmd then
-      util.error("Could not get clipboard command. See :checkhealth img-clip.")
-      return false
-    end
-  end
-
-  -- check if clipboard content is an image
-  if not clipboard.content_is_image(clip_cmd) then
-    util.warn("Clipboard content is not an image.")
-    return false
-  end
-
-  -- paste as base 64 if enabled and supported, otherwise paste as file
-  if config.get_option("embed_image_as_base64", opts) and M._language_supports_base64_embedding(vim.bo.filetype) then
-    if M._embed_image_as_base64(opts) then
-      return true
-    end
-  end
-
-  -- paste as file otherwise
-  return M._paste_as_file(opts)
-end
-
----@param opts? table
----@return boolean
-M._paste_as_file = function(opts)
+local paste_as_file = function(opts)
   -- get the file path
   local file_path = fs.get_file_path("png", opts)
   if not file_path then
@@ -75,15 +45,28 @@ M._paste_as_file = function(opts)
   return true
 end
 
+---@private
 ---@param ft string
 ---@return boolean
-M._language_supports_base64_embedding = function(ft)
+local language_supports_base64_embedding = function(ft)
   return ft == "markdown" or ft == "rmd"
 end
 
+---@private
+---@param ft string
+---@return string
+local get_base64_prefix = function(ft)
+  if ft == "markdown" or ft == "rmd" then
+    return "data:image/png;base64,"
+  end
+
+  return ""
+end
+
+---@private
 ---@param opts? table
 ---@return boolean
-M._embed_image_as_base64 = function(opts)
+local embed_image_as_base64 = function(opts)
   -- get the base64 string
   local base64 = clipboard.get_base64_encoded_image(clip_cmd)
   if not base64 then
@@ -96,7 +79,7 @@ M._embed_image_as_base64 = function(opts)
     return false
   end
 
-  local prefix = M._get_base64_prefix(vim.bo.filetype)
+  local prefix = get_base64_prefix(vim.bo.filetype)
 
   -- get the markup for the image
   if not markup.insert_markup(prefix .. base64, opts) then
@@ -107,116 +90,35 @@ M._embed_image_as_base64 = function(opts)
   return true
 end
 
----@param ft string
----@return string
-M._get_base64_prefix = function(ft)
-  if ft == "markdown" or ft == "rmd" then
-    return "data:image/png;base64,"
+---@param opts? table
+---@return boolean
+M.pasteImage = function(opts)
+  -- get the clipboard command
+  -- but only the first time the function is called
+  -- unless the clipboard command is nil, then retry
+  if not clip_cmd then
+    clip_cmd = clipboard.get_clip_cmd()
+    if not clip_cmd then
+      util.error("Could not get clipboard command. See :checkhealth img-clip.")
+      return false
+    end
   end
 
-  return ""
-end
-
----@param input string
----@return boolean status if the input was handled successfully or not
-M.handle_paste = function(input)
-  if config.get_option("enable_drag_and_drop") == false then
+  -- check if clipboard content is an image
+  if not clipboard.content_is_image(clip_cmd) then
+    util.warn("Clipboard content is not an image.")
     return false
   end
 
-  if config.get_option("enable_in_insert_mode") == false and vim.fn.mode() == "i" then
-    return false
-  end
-
-  if util._is_image_url(input) then
-    return M._handle_image_url(input)
-  end
-  if util._is_image_path(input) then
-    return M._handle_image_path(input)
-  end
-
-  -- input was not handled -- continue with the default paste
-  return false
-end
-
----@param url string
----@return boolean status if the input was handled successfully or not
-M._handle_image_url = function(url)
-  -- download the image in the link and insert the markup
-  if config.get_option("download_dropped_images") then
-    -- get the file path
-    local file_path = fs.get_file_path("png")
-    if not file_path then
-      util.error("Could not determine file path.")
-      return false
-    end
-
-    -- mkdir if not exists
-    local dir_path = vim.fn.fnamemodify(file_path, ":h")
-    local dir_ok = fs.mkdirp(dir_path)
-    if not dir_ok then
-      util.error("Could not create directories.")
-      return false
-    end
-
-    -- download image to specified file path
-    local _, exit_code = util.execute(string.format("curl -o '%s' '%s'", file_path, url))
-    if exit_code ~= 0 then
-      util.error("Could not download image.")
-      return false
-    end
-
-    -- get the markup for the image
-    if not markup.insert_markup(file_path) then
-      util.error("Could not insert markup code.")
-      return false
-    end
-
-  -- just insert the url as markup
-  else
-    -- get the markup for the image
-    if not markup.insert_markup(url) then
-      util.error("Could not insert markup code.")
-      return false
-    end
-  end
-  return true
-end
-
----@param path string
----@return boolean status if the input was handled successfully or not
-M._handle_image_path = function(path)
-  -- copy the image to the dir_path and insert the markup
-  if config.get_option("copy_dropped_images") then
-    -- get the file path
-    local file_path = fs.get_file_path("png")
-    if file_path then
-      -- mkdir if not exists
-      local dir_path = vim.fn.fnamemodify(file_path, ":h")
-      local dirs_created = fs.mkdirp(dir_path)
-      if not dirs_created then
-        util.error("Could not create directories.")
-        return false
-      end
-
-      -- copy image to specified file path
-      local copy_ok = fs.copy_file(path, file_path)
-      if not copy_ok then
-        util.error("Could not copy image.")
-        return false
-      end
-
-      path = file_path
+  -- paste as base 64 if enabled and supported, otherwise paste as file
+  if config.get_option("embed_image_as_base64", opts) and language_supports_base64_embedding(vim.bo.filetype) then
+    if embed_image_as_base64(opts) then
+      return true
     end
   end
 
-  -- get the markup for the image
-  if not markup.insert_markup(path) then
-    util.error("Could not insert markup code.")
-    return false
-  end
-
-  return true
+  -- paste as file otherwise
+  return paste_as_file(opts)
 end
 
 return M
