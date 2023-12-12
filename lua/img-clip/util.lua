@@ -70,7 +70,14 @@ end
 ---@param str string
 ---@return boolean
 M.is_image_path = function(str)
-  return str:match("^.*%.(png)$") ~= nil or str:match("^.*%.(jpg)$") ~= nil or str:match("^.*%.(jpeg)$") ~= nil
+  str = string.lower(str)
+
+  local has_path_sep = str:find("/") ~= nil or str:find("\\") ~= nil
+  local has_image_ext = str:match("^.*%.(png)$") ~= nil
+    or str:match("^.*%.(jpg)$") ~= nil
+    or str:match("^.*%.(jpeg)$") ~= nil
+
+  return has_path_sep and has_image_ext
 end
 
 return M
