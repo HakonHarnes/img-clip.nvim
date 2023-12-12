@@ -98,7 +98,7 @@ function M.insert_markup(file, opts)
 
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
-  if config.get_option("insert_mode_after_paste", opts) then
+  if config.get_option("insert_mode_after_paste", opts) and vim.api.nvim_get_mode().mode ~= "i" then
     if new_col == string.len(line) - 1 then
       vim.api.nvim_input("a")
     else
