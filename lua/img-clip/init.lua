@@ -30,12 +30,10 @@ M.pasteImage = function(opts)
     return false
   end
 
-  -- paste as base 64
-  if config.get_option("embed_image_as_base64", opts) then
-    if M._language_supports_base64_embedding(vim.bo.filetype) then
-      return M._embed_image_as_base64(opts)
-    else
-      util.warn("Base64 is not supported in this filetype. Pasting as file instead.")
+  -- paste as base 64 if enabled and supported, otherwise paste as file
+  if config.get_option("embed_image_as_base64", opts) and M._language_supports_base64_embedding(vim.bo.filetype) then
+    if M._embed_image_as_base64(opts) then
+      return true
     end
   end
 
@@ -90,6 +88,11 @@ M._embed_image_as_base64 = function(opts)
   local base64 = clipboard.get_clipboard_image_base64(clip_cmd)
   if not base64 then
     util.error("Could not get base64 string.")
+    return false
+  end
+
+  -- check if base64 string is too long - max_base64_size is in KB
+  if string.len(base64) > config.get_option("max_base64_size", opts) * 1024 then
     return false
   end
 

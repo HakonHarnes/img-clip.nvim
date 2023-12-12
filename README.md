@@ -78,6 +78,7 @@ The plugin comes with the following defaults:
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
   embed_image_as_base64 = false, -- embed image as base64 string instead of saving to file
+  max_base64_size = 15, -- max size of base64 string in KB
 
   template = "$FILE_PATH", -- default template
 
@@ -153,6 +154,7 @@ The plugin comes with the following defaults:
 | `insert_mode_after_paste`  | `Boolean` | `true`                | Enter insert mode after pasting the markup code.                                     |
 | `relative_to_current_file` | `Boolean` | `false`               | Make `dir_path` relative to current file rather than the cwd.                        |
 | `embed_image_as_base64`    | `Boolean` | `false`               | Embeds the image as Base64 rather than saving as file. Only supported in Markdown.   |
+| `max_base64_size`          | `Integer` | `15`                  | Max size of Base64 string in KB. Pastes as file if Base64 string is too large.       |
 | `template`                 | `String`  | `"$FILE_PATH"`        | Default template.                                                                    |
 
 The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions. For example, to set the `dir_path` to match the name of the currently opened file:
