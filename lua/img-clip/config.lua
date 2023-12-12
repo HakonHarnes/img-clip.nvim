@@ -11,7 +11,7 @@ local defaults = {
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
   embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
-  max_base64_size = 15, -- max size of base64 string in KB
+  max_base64_size = 10, -- max size of base64 string in KB
 
   template = "$FILE_PATH",
 
