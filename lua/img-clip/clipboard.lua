@@ -5,22 +5,16 @@ local M = {}
 ---@return string | nil
 M.get_clip_cmd = function()
   -- Windows
-  if util.has("win32") or util.has("wsl") then
-    if util.executable("powershell.exe") then
-      return "powershell.exe"
-    end
+  if (util.has("win32") or util.has("wsl")) and util.executable("powershell.exe") then
+    return "powershell.exe"
 
   -- Linux (Wayland)
-  elseif os.getenv("WAYLAND_DISPLAY") then
-    if util.executable("wl-paste") then
-      return "wl-paste"
-    end
+  elseif os.getenv("WAYLAND_DISPLAY") and util.executable("wl-paste") then
+    return "wl-paste"
 
   -- Linux (X11)
-  elseif os.getenv("DISPLAY") then
-    if util.executable("xclip") then
-      return "xclip"
-    end
+  elseif os.getenv("DISPLAY") and util.executable("xclip") then
+    return "xclip"
 
   -- MacOS
   elseif util.has("mac") then
@@ -29,9 +23,9 @@ M.get_clip_cmd = function()
     elseif util.executable("osascript") then
       return "osascript"
     end
-
-    return nil
   end
+
+  return nil
 end
 
 ---@param cmd string
