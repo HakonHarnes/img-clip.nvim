@@ -6,16 +6,10 @@ local defaults = {
   url_encode_path = false, -- encode spaces and special characters in file path
   use_absolute_path = false, -- expands dir_path to an absolute path
   relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-
-  -- user input
   prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
   show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-
-  -- miscallaneous options
   use_cursor_in_template = true, -- jump to cursor position in template after pasting
   insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-
-  -- base64 options
   embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
   max_base64_size = 10, -- max size of base64 string in KB
 

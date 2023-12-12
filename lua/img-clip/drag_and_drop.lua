@@ -98,10 +98,10 @@ M.handle_paste = function(input)
     return false
   end
 
-  if util._is_image_url(input) then
+  if util.is_image_url(input) then
     return handle_image_url(input)
   end
-  if util._is_image_path(input) then
+  if util.is_image_path(input) then
     return handle_image_path(input)
   end
 

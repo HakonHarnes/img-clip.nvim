@@ -51,7 +51,7 @@ end
 ---@param str string
 ---@return boolean
 -- lua pattern matching doesn't support the | operator, hence the repetition
-M._is_image_url = function(str)
+M.is_image_url = function(str)
   return str:match("^https?://.*%.png") ~= nil
     or str:match("^https?://.*%.jpg") ~= nil
     or str:match("^https?://.*%.jpeg") ~= nil
@@ -59,7 +59,7 @@ end
 
 ---@param str string
 ---@return boolean
-M._is_image_path = function(str)
+M.is_image_path = function(str)
   return str:match("^.*%.(png)$") ~= nil or str:match("^.*%.(jpg)$") ~= nil or str:match("^.*%.(jpeg)$") ~= nil
 end
 

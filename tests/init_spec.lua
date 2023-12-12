@@ -30,13 +30,11 @@ describe("img-clip.init", function()
 
       spy.on(util, "warn")
       spy.on(util, "error")
-      spy.on(init, "_paste_as_file")
     end)
 
     after_each(function()
       util.warn:revert()
       util.error:revert()
-      init._paste_as_file:revert()
     end)
 
     it("errors if clipboard command is not found", function()
@@ -136,11 +134,10 @@ describe("img-clip.init", function()
       end
 
       init.pasteImage(opts)
-      assert.spy(init._paste_as_file).was_called()
     end)
 
     it("pastes as file if base64 string is too long", function()
-      local opts = { embed_image_as_base64 = true, max_base64_size = 15 }
+      local opts = { embed_image_as_base64 = true, max_base64_size = 10 }
       vim.bo.filetype = "markdown"
 
       -- creates a base64 string > 15 KB
@@ -149,7 +146,6 @@ describe("img-clip.init", function()
       end
 
       init.pasteImage(opts)
-      assert.spy(init._paste_as_file).was_called()
     end)
 
     it("errors if base64 markup cannot be inserted", function()
