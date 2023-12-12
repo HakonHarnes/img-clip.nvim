@@ -14,6 +14,13 @@ vim.paste = (function(overridden)
       return overridden(lines, phase)
     end
 
+    local line = lines[1]
+
+    -- probably not a file path or url to an image if the input is this long
+    if string.len(line) > 512 then
+      return overridden(lines, phase)
+    end
+
     if not drag_and_drop.handle_paste(lines[1]) then
       return overridden(lines, phase)
     end
