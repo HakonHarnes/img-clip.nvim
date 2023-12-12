@@ -119,7 +119,7 @@ end
 
 ---@param input string
 ---@return boolean status if the input was handled successfully or not
-M._handle_paste = function(input)
+M.handle_paste = function(input)
   if config.get_option("enable_drag_and_drop") == false then
     return false
   end
@@ -167,8 +167,7 @@ M._handle_image_url = function(url)
     end
 
     -- get the markup for the image
-    local markup_ok = markup.insert_markup(file_path)
-    if not markup_ok then
+    if not markup.insert_markup(file_path) then
       util.error("Could not insert markup code.")
       return false
     end
@@ -176,8 +175,7 @@ M._handle_image_url = function(url)
   -- just insert the url as markup
   else
     -- get the markup for the image
-    local markup_ok = markup.insert_markup(url)
-    if not markup_ok then
+    if not markup.insert_markup(url) then
       util.error("Could not insert markup code.")
       return false
     end

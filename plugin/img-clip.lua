@@ -13,7 +13,7 @@ vim.paste = (function(overridden)
       return overridden(lines, phase)
     end
 
-    if not img_clip._handle_paste(lines[1]) then
+    if not img_clip.handle_paste(lines[1]) then
       return overridden(lines, phase)
     end
   end
