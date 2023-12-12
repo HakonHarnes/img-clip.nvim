@@ -50,11 +50,21 @@ end
 
 ---@param str string
 ---@return boolean
--- lua pattern matching doesn't support the | operator, hence the repetition
 M.is_image_url = function(str)
-  return str:match("^https?://.*%.png") ~= nil
-    or str:match("^https?://.*%.jpg") ~= nil
-    or str:match("^https?://.*%.jpeg") ~= nil
+  -- return early if not a valid url to a subdomain
+  if not str:match("^https?://[^/]+/[^.]+") then
+    return false
+  end
+
+  -- assume its a valid image link if it the url ends with an extension
+  if str:match("%.png$") or str:match("%.jpg$") or str:match("%.jpeg$") then
+    return true
+  end
+
+  -- send a head request to the url and check content type
+  local command = string.format("curl -s -o /dev/null -I -w '%%{content_type}' '%s'", str)
+  local output, exit_code = M.execute(command)
+  return exit_code == 0 and output ~= nil and (output:match("image/png") or output:match("image/jpeg"))
 end
 
 ---@param str string
