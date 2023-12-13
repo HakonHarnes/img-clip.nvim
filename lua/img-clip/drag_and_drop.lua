@@ -98,11 +98,11 @@ end
 ---@param input string
 ---@return boolean status
 M.handle_paste = function(input)
-  if config.get_option("enable_drag_and_drop") == false then
+  if config.get_option("drag_and_drop") == false then
     return false
   end
 
-  if config.get_option("enable_drag_and_drop_insert_mode") == false and vim.fn.mode() == "i" then
+  if config.get_option("drag_and_drop_insert_mode") == false and vim.fn.mode() == "i" then
     return false
   end
 

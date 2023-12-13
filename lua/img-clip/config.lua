@@ -14,8 +14,8 @@ local defaults = {
   max_base64_size = 10, -- max size of base64 string in KB
 
   -- drag and drop options
-  enable_drag_and_drop = true, -- enable drag and drop support
-  enable_drag_and_drop_insert_mode = false, -- enable drag and drop support in insert mode
+  drag_and_drop = true, -- enable drag and drop support
+  drag_and_drop_insert_mode = false, -- enable drag and drop support in insert mode
   download_dropped_images = true, -- download image from url instead of just embedding the url
   copy_dropped_images = false, -- copy dropped images to dir_path instead of just including the original path
 
