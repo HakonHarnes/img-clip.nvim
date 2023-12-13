@@ -15,7 +15,7 @@ local defaults = {
 
   -- drag and drop options
   enable_drag_and_drop = true, -- enable drag and drop support
-  enable_in_insert_mode = false, -- enable drag and drop support in insert mode
+  enable_drag_and_drop_insert_mode = false, -- enable drag and drop support in insert mode
   download_dropped_images = true, -- download image from url instead of just embedding the url
   copy_dropped_images = false, -- copy dropped images to dir_path instead of just including the original path
 

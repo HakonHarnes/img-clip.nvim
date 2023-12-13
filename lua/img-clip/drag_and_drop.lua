@@ -7,7 +7,7 @@ local M = {}
 
 ---@private
 ---@param url string
----@return boolean status if the input was handled successfully or not
+---@return boolean status
 local handle_image_url = function(url)
   -- download the image in the link and insert the markup
   if config.get_option("download_dropped_images") then
@@ -38,8 +38,6 @@ local handle_image_url = function(url)
       util.error("Could not insert markup code.")
       return false
     end
-
-  -- just insert the url as markup
   else
     -- get the markup for the image
     if not markup.insert_markup(url) then
@@ -52,7 +50,7 @@ end
 
 ---@private
 ---@param path string
----@return boolean status if the input was handled successfully or not
+---@return boolean status
 local handle_image_path = function(path)
   -- copy the image to the dir_path and insert the markup
   if config.get_option("copy_dropped_images") then
@@ -88,24 +86,23 @@ local handle_image_path = function(path)
 end
 
 ---@param input string
----@return boolean status if the input was handled successfully or not
+---@return boolean status
 M.handle_paste = function(input)
   if config.get_option("enable_drag_and_drop") == false then
     return false
   end
 
-  if config.get_option("enable_in_insert_mode") == false and vim.fn.mode() == "i" then
+  if config.get_option("enable_drag_and_drop_insert_mode") == false and vim.fn.mode() == "i" then
     return false
   end
 
   if util.is_image_url(input) then
     return handle_image_url(input)
-  end
-  if util.is_image_path(input) then
+  elseif util.is_image_path(input) then
     return handle_image_path(input)
   end
 
-  -- input was not handled -- continue with the default paste
+  -- input was not handled -- continue with the default vim.paste()
   return false
 end
 
