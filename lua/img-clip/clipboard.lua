@@ -157,8 +157,9 @@ M.get_clipboard_image_base64 = function(cmd)
     -- Windows (native)
   elseif cmd == "powershell.exe" and util.has("win32") then
     local output, exit_code = util.execute(
-      [[powershell.exe $ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
-      .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())]]
+      [[powershell.exe "Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
+      .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
+      .. [[ [System.Convert]::ToBase64String($ms.ToArray())"]]
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
@@ -167,8 +168,9 @@ M.get_clipboard_image_base64 = function(cmd)
     -- Windows (WSL)
   elseif cmd == "powershell.exe" and util.has("wsl") then
     local output, exit_code = util.execute(
-      [[powershell.exe '$ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
-      .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())']]
+      [[powershell.exe 'Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
+      .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
+      .. [[ [System.Convert]::ToBase64String($ms.ToArray())']]
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
