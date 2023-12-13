@@ -95,13 +95,24 @@ M.save_clipboard_image = function(cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
-    -- Windows
-  elseif cmd == "powershell.exe" then
+    -- Windows (native)
+  elseif cmd == "powershell.exe" and util.has("win32") then
     local command = string.format([[
     powershell.exe "Add-Type -AssemblyName System.Windows.Forms;
     Add-Type -AssemblyName System.Drawing;
     $img = [System.Windows.Forms.Clipboard]::GetImage();
     $img.Save('%s', [System.Drawing.Imaging.ImageFormat]::Png);"
+  ]], file_path)
+    local _, exit_code = util.execute(command)
+    return exit_code == 0
+
+    -- Windows (WSL)
+  elseif cmd == "powershell.exe" and util.has("wsl") then
+    local command = string.format([[
+    powershell.exe 'Add-Type -AssemblyName System.Windows.Forms;
+    Add-Type -AssemblyName System.Drawing;
+    $img = [System.Windows.Forms.Clipboard]::GetImage();
+    $img.Save("%s", [System.Drawing.Imaging.ImageFormat]::Png);'
   ]], file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
@@ -143,7 +154,7 @@ M.get_clipboard_image_base64 = function(cmd)
       return output
     end
 
-    -- Windows native
+    -- Windows (native)
   elseif cmd == "powershell.exe" and util.has("win32") then
     local output, exit_code = util.execute(
       [[powershell.exe $ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
@@ -153,7 +164,7 @@ M.get_clipboard_image_base64 = function(cmd)
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
     end
 
-    -- Windows WSL
+    -- Windows (WSL)
   elseif cmd == "powershell.exe" and util.has("wsl") then
     local output, exit_code = util.execute(
       [[powershell.exe '$ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
