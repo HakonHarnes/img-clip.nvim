@@ -7,10 +7,43 @@ M.executable = function(command)
 end
 
 ---@param cmd string
+---@param powershell boolean
 ---@return string | nil output
 ---@return number exit_code
-M.execute = function(cmd)
-  return vim.fn.system(cmd), vim.v.shell_error
+M.execute = function(cmd, powershell)
+  local shell = vim.o.shell:lower()
+  local command
+
+  -- execute command directly if not powershell
+  if not powershell then
+    command = cmd
+
+  -- execute command directly if shell is powershell or pwsh
+  elseif shell:match("powershell") or shell:match("pwsh") then
+    command = cmd
+
+  -- WSL requires the command to have the format:
+  -- powershell.exe -Command 'command "path/to/file"'
+  elseif M.has("wsl") then
+    command = "powershell.exe -Command '" .. cmd:gsub("'", '"') .. "'"
+
+  -- cmd.exe requires the command to have the format:
+  -- powershell.exe -Command "command 'path/to/file'"
+  else
+    command = 'powershell.exe -Command "' .. cmd:gsub('"', "'") .. '"'
+  end
+
+  local output = vim.fn.system(command)
+  local exit_code = vim.v.shell_error
+
+  if config.get_option("debug") then
+    print("Shell: " .. shell)
+    print("Command: " .. command)
+    print("Exit code: " .. exit_code)
+    print("Output: " .. output)
+  end
+
+  return output, exit_code
 end
 
 ---@param feature string
