@@ -18,7 +18,7 @@ local defaults = {
     template = "$FILE_PATH",
 
     drag_and_drop = {
-      enabled = false,
+      enabled = true,
       insert_mode = false,
       copy_images = false,
       download_images = true,
