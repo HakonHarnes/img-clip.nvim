@@ -54,8 +54,8 @@ M.check_if_content_is_image = function(cmd)
 
     -- Windows
   elseif cmd == "powershell.exe" then
-    local output = util.execute(
-      'powershell.exe "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()"')
+    local output =
+      util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
     return output ~= nil and output:find("ImageFormat") ~= nil
   end
 
@@ -88,33 +88,20 @@ M.save_clipboard_image = function(cmd, file_path)
   elseif cmd == "osascript" then
     local command = string.format(
       [[osascript -e 'set theFile to (open for access POSIX file "%s" with write permission)' ]]
-      .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
-      .. [[-e 'close access theFile']],
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
+        .. [[-e 'close access theFile']],
       file_path
     )
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
-    -- Windows (native)
-  elseif cmd == "powershell.exe" and util.has("win32") then
-    local command = string.format([[
-    powershell.exe "Add-Type -AssemblyName System.Windows.Forms;
-    Add-Type -AssemblyName System.Drawing;
-    $img = [System.Windows.Forms.Clipboard]::GetImage();
-    $img.Save('%s', [System.Drawing.Imaging.ImageFormat]::Png);"
-  ]], file_path)
-    local _, exit_code = util.execute(command)
-    return exit_code == 0
-
-    -- Windows (WSL)
-  elseif cmd == "powershell.exe" and util.has("wsl") then
-    local command = string.format([[
-    powershell.exe 'Add-Type -AssemblyName System.Windows.Forms;
-    Add-Type -AssemblyName System.Drawing;
-    $img = [System.Windows.Forms.Clipboard]::GetImage();
-    $img.Save("%s", [System.Drawing.Imaging.ImageFormat]::Png);'
-  ]], file_path)
-    local _, exit_code = util.execute(command)
+    -- Windows
+  elseif cmd == "powershell.exe" then
+    local command = string.format(
+      "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage().Save('%s')",
+      file_path
+    )
+    local _, exit_code = util.execute(command, true)
     return exit_code == 0
   end
 
@@ -147,30 +134,20 @@ M.get_clipboard_image_base64 = function(cmd)
   elseif cmd == "osascript" then
     local output, exit_code = util.execute(
       [[osascript -e 'set theFile to (open for access POSIX file "/tmp/image.png" with write permission)' ]]
-      .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
-      .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
+        .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
+        .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
     )
     if exit_code == 0 then
       return output
     end
 
-    -- Windows (native)
-  elseif cmd == "powershell.exe" and util.has("win32") then
+    -- Windows
+  elseif cmd == "powershell.exe" then
     local output, exit_code = util.execute(
-      [[powershell.exe "Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
-      .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
-      .. [[ [System.Convert]::ToBase64String($ms.ToArray())"]]
-    )
-    if exit_code == 0 then
-      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
-    end
-
-    -- Windows (WSL)
-  elseif cmd == "powershell.exe" and util.has("wsl") then
-    local output, exit_code = util.execute(
-      [[powershell.exe 'Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
-      .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
-      .. [[ [System.Convert]::ToBase64String($ms.ToArray())']]
+      [[Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
+        .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
+        .. [[ [System.Convert]::ToBase64String($ms.ToArray())]],
+      true
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
