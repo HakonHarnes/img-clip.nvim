@@ -194,3 +194,16 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 | `$FILE_PATH`        | File path.                                                                                              | `/path/to/image.png`               |
 | `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
 | `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          |                                    |
+
+## Drag and drop
+
+### Terminal support
+
+|                                                     |    X11    |   ...    |    WAY    |   ...    |    MAC    |   ...    |    WIN    |   ...    |    WSL    |   ...    |
+| --------------------------------------------------- | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: |
+| **Terminal**                                        | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** |
+| [Kitty](https://github.com/kovidgoyal/kitty)        |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
+| [Konsole](https://github.com/goblinfactory/konsole) |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
+| [Alacritty](https://github.com/alacritty/alacritty) |    Yes    |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
+| [Wezterm](https://github.com/wez/wezterm)           |    No     |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
+| XTerm                                               |    No     |    No    |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |
