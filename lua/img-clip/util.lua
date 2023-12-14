@@ -7,10 +7,31 @@ M.executable = function(command)
 end
 
 ---@param cmd string
----@return string output
+---@param powershell boolean
+---@return string | nil output
 ---@return number exit_code
-M.execute = function(cmd)
-  return vim.fn.system(cmd), vim.v.shell_error
+M.execute = function(cmd, powershell)
+  if not powershell then
+    return vim.fn.system(cmd), vim.v.shell_error
+  end
+
+  -- Powershell and pwsh can execute .NET commands directly
+  local shell = vim.o.shell:lower()
+  if shell:match("powershell") or shell:match("pwsh") then
+    return vim.fn.system(cmd), vim.v.shell_error
+
+  -- WSL requires the command to have the format:
+  -- powershell.exe -Command 'command "path/to/file"'
+  elseif M.has("wsl") then
+    cmd = cmd:gsub("'", '"')
+    return vim.fn.system("powershell.exe -Command '" .. cmd .. "'"), vim.v.shell_error
+
+    -- cmd.exe requires the command to have the format:
+    -- powershell.exe -Command "command 'path/to/file'"
+  else
+    cmd = cmd:gsub('"', "'")
+    return vim.fn.system('powershell.exe -Command "' .. cmd .. '"'), vim.v.shell_error
+  end
 end
 
 ---@param feature string
