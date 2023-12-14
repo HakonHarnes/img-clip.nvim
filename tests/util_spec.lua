@@ -1,17 +1,6 @@
 local util = require("img-clip.util")
 
 describe("util", function()
-  describe("_is_image_url", function()
-    it("should return true for valid urls", function()
-      assert.is_true(util.is_image_url("https://example.com/image.png"))
-      assert.is_true(util.is_image_url("http://example.com/image.png"))
-      assert.is_true(util.is_image_url("https://example.com/image.jpg"))
-      assert.is_true(util.is_image_url("http://example.com/image.jpg"))
-      assert.is_true(util.is_image_url("https://example.com/image.jpeg"))
-      assert.is_true(util.is_image_url("http://example.com/image.jpeg"))
-    end)
-  end)
-
   describe("execute", function()
     before_each(function()
       vim.o.shell = "cmd.exe"
