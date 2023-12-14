@@ -200,20 +200,33 @@ describe("clipboard", function()
       assert.equals("powershell.exe", clipboard.get_clip_cmd())
     end)
 
-    -- TODO: Get correct output of powershell
     it("returns true if clipboard content is an image", function()
-      util.execute = function(command)
-        assert(command:match("powershell.exe"))
-        return "ImageFormat", 0 -- output of powershell
+      -- pwsh output, see issue https://github.com/HakonHarnes/img-clip.nvim/issues/13
+      util.execute = function()
+        return [[
+�[32;1mTag                  : �[0m
+�[32;1mPhysicalDimension    : �[0m{Width=93, Height=189}
+�[32;1mSize                 : �[0m{Width=93, Height=189}
+�[32;1mWidth                : �[0m93
+�[32;1mHeight               : �[0m189
+�[32;1mHorizontalResolution : �[0m96
+�[32;1mVerticalResolution   : �[0m96
+�[32;1mFlags                : �[0m335888
+�[32;1mRawFormat            : �[0mMemoryBMP
+�[32;1mPixelFormat          : �[0mFormat32bppRgb
+�[32;1mPropertyIdList       : �[0m{}
+�[32;1mPropertyItems        : �[0m{}
+�[32;1mPalette              : �[0mSystem.Drawing.Imaging.ColorPalette
+�[32;1mFrameDimensionsList  : �[0m{7462dc86-6180-4c7e-8e3f-ee7333a7a483}
+]],
+          0
       end
 
       assert.is_true(clipboard.check_if_content_is_image("powershell.exe"))
     end)
 
-    -- TODO: Get correct output of powershell
     it("returns false if clipboard content is not an image", function()
-      util.execute = function(command)
-        assert(command:match("powershell.exe"))
+      util.execute = function()
         return "", 0 -- output of powershell
       end
 
@@ -221,8 +234,7 @@ describe("clipboard", function()
     end)
 
     it("successfully saves an image", function()
-      util.execute = function(command)
-        assert(command:match("powershell.exe"))
+      util.execute = function()
         return nil, 0 -- simulate successful execution
       end
 

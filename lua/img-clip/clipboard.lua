@@ -54,8 +54,9 @@ M.check_if_content_is_image = function(cmd)
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    local output = util.execute("powershell.exe Get-Clipboard -Format Image")
-    return output ~= nil and output:find("ImageFormat") ~= nil
+    local output =
+      util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
+    return output ~= nil and output:find("Width") ~= nil
   end
 
   return false
@@ -96,8 +97,11 @@ M.save_clipboard_image = function(cmd, file_path)
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    local command = string.format([[powershell.exe "(Get-Clipboard -Format Image).Save('%s')"]], file_path)
-    local _, exit_code = util.execute(command)
+    local command = string.format(
+      "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage().Save('%s')",
+      file_path
+    )
+    local _, exit_code = util.execute(command, true)
     return exit_code == 0
   end
 
@@ -137,21 +141,13 @@ M.get_clipboard_image_base64 = function(cmd)
       return output
     end
 
-  -- Windows native
-  elseif cmd == "powershell.exe" and util.has("win32") then
+  -- Windows
+  elseif cmd == "powershell.exe" then
     local output, exit_code = util.execute(
-      [[powershell.exe $ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
-        .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())]]
-    )
-    if exit_code == 0 then
-      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
-    end
-
-  -- Windows WSL
-  elseif cmd == "powershell.exe" and util.has("wsl") then
-    local output, exit_code = util.execute(
-      [[powershell.exe '$ms = New-Object System.IO.MemoryStream; (Get-Clipboard -Format Image)]]
-        .. [[.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png); [System.Convert]::ToBase64String($ms.ToArray())']]
+      [[Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
+        .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
+        .. [[ [System.Convert]::ToBase64String($ms.ToArray())]],
+      true
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
