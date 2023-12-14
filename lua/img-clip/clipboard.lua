@@ -56,7 +56,7 @@ M.check_if_content_is_image = function(cmd)
   elseif cmd == "powershell.exe" then
     local output =
       util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
-    return output ~= nil and output:find("ImageFormat") ~= nil
+    return output ~= nil and output:find("Width") ~= nil
   end
 
   return false
