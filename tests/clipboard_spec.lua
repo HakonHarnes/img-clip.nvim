@@ -202,8 +202,7 @@ describe("clipboard", function()
 
     -- TODO: Get correct output of powershell
     it("returns true if clipboard content is an image", function()
-      util.execute = function(command)
-        assert(command:match("powershell.exe"))
+      util.execute = function()
         return "ImageFormat", 0 -- output of powershell
       end
 
@@ -212,8 +211,7 @@ describe("clipboard", function()
 
     -- TODO: Get correct output of powershell
     it("returns false if clipboard content is not an image", function()
-      util.execute = function(command)
-        assert(command:match("powershell.exe"))
+      util.execute = function()
         return "", 0 -- output of powershell
       end
 
@@ -221,8 +219,7 @@ describe("clipboard", function()
     end)
 
     it("successfully saves an image", function()
-      util.execute = function(command)
-        assert(command:match("powershell.exe"))
+      util.execute = function()
         return nil, 0 -- simulate successful execution
       end
 

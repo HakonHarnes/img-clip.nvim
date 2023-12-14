@@ -11,27 +11,39 @@ end
 ---@return string | nil output
 ---@return number exit_code
 M.execute = function(cmd, powershell)
-  if not powershell then
-    return vim.fn.system(cmd), vim.v.shell_error
-  end
-
-  -- Powershell and pwsh can execute .NET commands directly
   local shell = vim.o.shell:lower()
-  if shell:match("powershell") or shell:match("pwsh") then
-    return vim.fn.system(cmd), vim.v.shell_error
+  local command
+
+  -- execute command directly if not powershell
+  if not powershell then
+    command = cmd
+
+  -- execute command directly if shell is powershell or pwsh
+  elseif shell:match("powershell") or shell:match("pwsh") then
+    command = cmd
 
   -- WSL requires the command to have the format:
   -- powershell.exe -Command 'command "path/to/file"'
   elseif M.has("wsl") then
-    cmd = cmd:gsub("'", '"')
-    return vim.fn.system("powershell.exe -Command '" .. cmd .. "'"), vim.v.shell_error
+    command = "powershell.exe -Command '" .. cmd:gsub("'", '"') .. "'"
 
-    -- cmd.exe requires the command to have the format:
-    -- powershell.exe -Command "command 'path/to/file'"
+  -- cmd.exe requires the command to have the format:
+  -- powershell.exe -Command "command 'path/to/file'"
   else
-    cmd = cmd:gsub('"', "'")
-    return vim.fn.system('powershell.exe -Command "' .. cmd .. '"'), vim.v.shell_error
+    command = 'powershell.exe -Command "' .. cmd:gsub('"', "'") .. '"'
   end
+
+  local output = vim.fn.system(command)
+  local exit_code = vim.v.shell_error
+
+  if config.get_option("debug") then
+    print("Shell: " .. shell)
+    print("Command: " .. command)
+    print("Exit code: " .. exit_code)
+    print("Output: " .. output)
+  end
+
+  return output, exit_code
 end
 
 ---@param feature string
