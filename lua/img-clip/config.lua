@@ -14,16 +14,21 @@ local defaults = {
     insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
     embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
     max_base64_size = 10, -- max size of base64 string in KB
-
-    template = "$FILE_PATH",
+    template = "$FILE_PATH", -- default template
 
     drag_and_drop = {
-      enabled = true,
-      insert_mode = false,
-      copy_images = false,
-      download_images = true,
+      enabled = true, -- enable drag and drop mode
+      insert_mode = false, -- enable drag and drop in insert mode
+      copy_images = false, -- copy images instead of using the original file
+      download_images = true, -- download images and save them to dir_path instead of using the URL
     },
   },
+
+  -- file-type specific options
+  -- any options that are passed here will override the default config
+  -- for instance, setting use_absolute_path = true for markdown will
+  -- only enable that for this particular file type
+  -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
 
   markdown = {
     url_encode_path = true,

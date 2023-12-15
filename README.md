@@ -68,22 +68,31 @@ The plugin comes with the following defaults:
 
 ```lua
 {
-  dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
-  file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
-  url_encode_path = false, -- encode spaces and special characters in file path
-  use_absolute_path = false, -- expands dir_path to an absolute path
-  prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
-  show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-  use_cursor_in_template = true, -- jump to cursor position in template after pasting
-  insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-  relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-  embed_image_as_base64 = false, -- embed image as base64 string instead of saving to file
-  max_base64_size = 10, -- max size of base64 string in KB
+  default = {
+    debug = false, -- enable debug mode
+    dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
+    file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
+    url_encode_path = false, -- encode spaces and special characters in file path
+    use_absolute_path = false, -- expands dir_path to an absolute path
+    relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
+    prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
+    show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
+    use_cursor_in_template = true, -- jump to cursor position in template after pasting
+    insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
+    embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
+    max_base64_size = 10, -- max size of base64 string in KB
+    template = "$FILE_PATH", -- default template
 
-  template = "$FILE_PATH", -- default template
+    drag_and_drop = {
+      enabled = true, -- enable drag and drop mode
+      insert_mode = false, -- enable drag and drop in insert mode
+      copy_images = false, -- copy images instead of using the original file
+      download_images = true, -- download images and save them to dir_path instead of using the URL
+    },
+  },
 
   -- file-type specific options
-  -- any options that are passed here will override the global config
+  -- any options that are passed here will override the default config
   -- for instance, setting use_absolute_path = true for markdown will
   -- only enable that for this particular file type
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
@@ -91,6 +100,10 @@ The plugin comes with the following defaults:
   markdown = {
     url_encode_path = true,
     template = "![$CURSOR]($FILE_PATH)",
+
+    drag_and_drop = {
+      download_images = false,
+    },
   },
 
   html = {
@@ -138,24 +151,10 @@ The plugin comes with the following defaults:
 #+END_FIGURE
     ]=],
   },
+}
 ```
 
 ### Options
-
-| Option                     | Type      | Default               | Description                                                                          |
-| -------------------------- | --------- | --------------------- | ------------------------------------------------------------------------------------ |
-| `dir_path`                 | `String`  | `"assets"`            | Directory path to save images to, can be relative (cwd or current file) or absolute. |
-| `file_name`                | `String`  | `"%Y-%m-%d-%H-%M-%S"` | File name format (see [lua.org/pil/22.1.html](https://www.lua.org/pil/22.1.html)).   |
-| `url_encode_path`          | `Boolean` | `false`               | Encode spaces and special characters in file path.                                   |
-| `use_absolute_path`        | `Boolean` | `false`               | Expands `dir_path` to an absolute path.                                              |
-| `prompt_for_file_name`     | `Boolean` | `true`                | Ask user for file name before saving, leave empty to use default.                    |
-| `show_dir_path_in_prompt`  | `Boolean` | `false`               | Show `dir_path` in prompt when prompting for file name.                              |
-| `use_cursor_in_template`   | `Boolean` | `true`                | Jump to cursor position in template after pasting.                                   |
-| `insert_mode_after_paste`  | `Boolean` | `true`                | Enter insert mode after pasting the markup code.                                     |
-| `relative_to_current_file` | `Boolean` | `false`               | Make `dir_path` relative to current file rather than the cwd.                        |
-| `embed_image_as_base64`    | `Boolean` | `false`               | Embeds the image as Base64 rather than saving as file. Only supported in Markdown.   |
-| `max_base64_size`          | `Integer` | `10`                  | Max size of Base64 string in KB. Pastes as file if Base64 string is too large.       |
-| `template`                 | `String`  | `"$FILE_PATH"`        | Default template.                                                                    |
 
 The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions. For example, to set the `dir_path` to match the name of the currently opened file:
 
