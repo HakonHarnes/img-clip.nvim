@@ -128,7 +128,7 @@ M.get_option = function(key, opts)
     return nil
   end
 
-  return type(val) == "function" and val() or val -- execute if it's a function and return its result, otherwise return the value
+  return type(val) == "function" and val() or val -- execute if function
 end
 
 function M.setup(opts)
