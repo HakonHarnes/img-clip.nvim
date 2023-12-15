@@ -199,15 +199,37 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 
 ### Terminal support
 
-|                                                     |    X11    |   ...    |    WAY    |   ...    |    MAC    |   ...    |    WIN    |   ...    |
-| --------------------------------------------------- | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: |
-| **Terminal**                                        | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** |
-| [Kitty](https://github.com/kovidgoyal/kitty)        |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/A    |   N/A    |
-| [Konsole](https://github.com/goblinfactory/konsole) |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/A    |   N/A    |
-| [Alacritty](https://github.com/alacritty/alacritty) |    Yes    |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    Yes    |    No    |
-| [Wezterm](https://github.com/wez/wezterm)           |    No     |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    Yes    |    No    |
-| XTerm                                               |    No     |    No    |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |
-| Powershell                                          |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
-| Hyper                                               |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
-| Cmder                                               |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
-| ConEmu                                              |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
+|                                                                  |    X11    |          |    WAY    |          |    MAC    |          |    WIN    |          |
+| ---------------------------------------------------------------- | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: |
+| **Terminal**                                                     | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** |
+| [Kitty](https://github.com/kovidgoyal/kitty)                     |    ✅     |    ✅    |    ❓️    |   ❓️    |    ✅     |    ✅    |    ➖     |    ➖    |
+| [Konsole](https://github.com/goblinfactory/konsole)              |    ✅     |    ✅    |    ❓️    |   ❓️    |    ➖     |    ➖    |    ➖     |    ➖    |
+| [Alacritty](https://github.com/alacritty/alacritty)              |    ✅     |    ❌    |    ❓️    |   ❓️    |    ✅     |    ❌    |    ✅     |    ❌    |
+| [Wezterm](https://github.com/wez/wezterm)                        |    ❌     |    ❌    |    ❓️    |   ❓️    |    ✅     |    ❌    |    ✅     |    ❌    |
+| [Terminal.app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>) |    ➖     |    ➖    |    ➖     |    ➖    |    ✅     |    ✅    |    ➖     |    ➖    |
+| [iTerm.app](https://iterm2.com/)                                 |    ➖     |    ➖    |    ➖     |    ➖    |    ✅     |    ✅    |    ➖     |    ➖    |
+| [Hyper](https://github.com/vercel/hyper)                         |    ❌     |    ❌    |    ❓️    |   ❓️    |    ❌     |    ❌    |    ❌     |    ❌    |
+| [XTerm](https://en.wikipedia.org/wiki/Xterm)                     |    ❌     |    ❌    |    ➖     |    ➖    |    ➖     |    ➖    |    ➖     |    ➖    |
+| [PowerShell](https://en.wikipedia.org/wiki/PowerShell)           |    ➖     |    ➖    |    ➖     |    ➖    |    ➖     |    ➖    |    ❌     |    ❌    |
+| [Cmder](https://github.com/cmderdev/cmder)                       |    ➖     |    ➖    |    ➖     |    ➖    |    ➖     |    ➖    |    ❌     |    ❌    |
+| [ConEmu](https://github.com/Maximus5/ConEmu)                     |    ➖     |    ➖    |    ➖     |    ➖    |    ➖     |    ➖    |    ❌     |    ❌    |
+
+<!-- |                                                                  |    X11    |          |    WAY    |          |    MAC    |          |    WIN    |          | -->
+<!-- | ---------------------------------------------------------------- | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: | -->
+<!-- | **Terminal**                                                     | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | -->
+<!-- | [Kitty](https://github.com/kovidgoyal/kitty)                     |  ✅ Yes   |  ✅ Yes  |  ❓️ N/T  | ❓️ N/T  |  ✅ Yes   |  ✅ Yes  |  ➖ N/A   |  ➖ N/A  | -->
+<!-- | [Konsole](https://github.com/goblinfactory/konsole)              |  ✅ Yes   |  ✅ Yes  |  ❓️ N/T  |  ❓️N/T  |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  | -->
+<!-- | [Alacritty](https://github.com/alacritty/alacritty)              |  ✅ Yes   |  ❌ No   |  ❓️ N/T  |  ❓️N/T  |  ✅ Yes   |  ❌ No   |  ✅ Yes   |  ❌ No   | -->
+<!-- | [Wezterm](https://github.com/wez/wezterm)                        |   ❌ No   |  ❌ No   |  ❓️ N/T  |  ❓️N/T  |  ✅ Yes   |  ❌ No   |  ✅ Yes   |  ❌ No   | -->
+<!-- | [Terminal.app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>) |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |  ✅ Yes   |  ✅ Yes  |  ➖ N/A   |  ➖ N/A  | -->
+<!-- | [iTerm.app](https://iterm2.com/)                                 |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |  ✅ Yes   |  ✅ Yes  |  ➖ N/A   |  ➖ N/A  | -->
+<!-- | [Hyper](https://github.com/vercel/hyper)                         |   ❌ No   |  ❌ No   |  ❓️ N/T  |  ❓️N/T  |   ❌ No   |  ❌ No   |   ❌ No   |  ❌ No   | -->
+<!-- | [XTerm](https://en.wikipedia.org/wiki/Xterm)                     |   ❌ No   |  ❌ No   |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  | -->
+<!-- | [PowerShell](https://en.wikipedia.org/wiki/PowerShell)           |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |   ❌ No   |  ❌ No   | -->
+<!-- | [Cmder](https://github.com/cmderdev/cmder)                       |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |   ❌ No   |  ❌ No   | -->
+<!-- | [ConEmu](https://github.com/Maximus5/ConEmu)                     |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |  ➖ N/A   |  ➖ N/A  |   ❌ No   |  ❌ No   | -->
+<!---->
+
+> 🌎️ MacOS URLs only work in Safari.
+
+> ⚠️ WSL is currently not supported.
