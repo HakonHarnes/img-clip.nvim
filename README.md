@@ -202,8 +202,12 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 |                                                     |    X11    |   ...    |    WAY    |   ...    |    MAC    |   ...    |    WIN    |   ...    |    WSL    |   ...    |
 | --------------------------------------------------- | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: |
 | **Terminal**                                        | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** |
-| [Kitty](https://github.com/kovidgoyal/kitty)        |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
-| [Konsole](https://github.com/goblinfactory/konsole) |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
-| [Alacritty](https://github.com/alacritty/alacritty) |    Yes    |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
-| [Wezterm](https://github.com/wez/wezterm)           |    No     |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |    N/T    |   N/T    |
+| [Kitty](https://github.com/kovidgoyal/kitty)        |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/A    |   N/A    |    N/A    |   N/A    |
+| [Konsole](https://github.com/goblinfactory/konsole) |    Yes    |   Yes    |    N/T    |   N/T    |    N/T    |   N/T    |    N/A    |   N/A    |    N/A    |   N/A    |
+| [Alacritty](https://github.com/alacritty/alacritty) |    Yes    |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    Yes    |   No     |    N/T    |   N/T    |
+| [Wezterm](https://github.com/wez/wezterm)           |    No     |    No    |    N/T    |   N/T    |    N/T    |   N/T    |    Yes    |   No     |    N/T    |   N/T    |
 | XTerm                                               |    No     |    No    |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |
+| Powershell                                          |    N/A    |     N/A  |    N/A    |   N/A    |    N/A    |   N/A    |    No     |   No     |    No     |   No     |
+| Hyper                                               |    N/A    |     N/A  |    N/A    |   N/A    |    N/A    |   N/A    |    No     |   No     |    No     |   No     |
+| Cmder                                               |    N/A    |     N/A  |    N/A    |   N/A    |    N/A    |   N/A    |    No     |   No     |    No     |   No     |
+| ConEmu                                              |    N/A    |     N/A  |    N/A    |   N/A    |    N/A    |   N/A    |    No     |   No     |    No     |   No     |
