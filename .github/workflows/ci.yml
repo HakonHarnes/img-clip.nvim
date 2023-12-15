@@ -33,25 +33,14 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v2
-
-      - name: Replace Symbols in README
-        run: |
-          sed -i 's/✅/Yes/g' README.md
-          sed -i 's/❌/No/g' README.md
-          sed -i 's/➖/N\/A/g' README.md
-          sed -i 's/❓/N\/T/g' README.md
-          git commit README.md -m "chore(build): replace emojies in readme"
-
       - name: panvimdoc
         uses: kdheepak/panvimdoc@main
         with:
           vimdoc: img-clip.nvim
+          pandoc: "vimdoc.md"
           demojify: true
           treesitter: true
           titledatepattern: "%B %Y"
-
-      - name: Revert readme changes
-        run: git reset HEAD^
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
@@ -60,7 +49,6 @@ jobs:
           commit-message: "chore(build): auto-generate vimdoc"
           branch: "docs-${{ github.run_id }}"
           body: "This is an auto-generated PR with documentation updates."
-          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
   luacheck:
     runs-on: ubuntu-latest

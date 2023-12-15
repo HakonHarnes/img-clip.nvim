@@ -199,150 +199,20 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 
 ### Terminal support
 
-<table>
-  <thead>
-    <tr>
-      <th rowspan="2" style="text-align:center;">Terminal</th>
-      <th colspan="2" style="text-align:center;">X11</th>
-      <th colspan="2" style="text-align:center;">Wayland</th>
-      <th colspan="2" style="text-align:center;">MacOS</th>
-      <th colspan="2" style="text-align:center;">Windows</th>
-    </tr>
-    <tr>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/goblinfactory/konsole">Konsole</a></td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/alacritty/alacritty">Alacritty</a></td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/wez/wezterm">Wezterm</a></td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://en.wikipedia.org/wiki/Terminal_(macOS)">Terminal.app</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://iterm2.com/">iTerm.app</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/vercel/hyper">Hyper</a></td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://en.wikipedia.org/wiki/Xterm">XTerm</a></td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://en.wikipedia.org/wiki/PowerShell">PowerShell</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/cmderdev/cmder">Cmder</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/Maximus5/ConEmu">ConEmu</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-  </tbody>
-</table>
+|                                                                  |    X11    |          |  Wayland  |          |   MacOS   |          |  Windows  |          |
+| ---------------------------------------------------------------- | :-------: | :------: | :-------: | :------: | :-------: | :------: | :-------: | :------: |
+| **Terminal**                                                     | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** | **Files** | **URLs** |
+| [Kitty](https://github.com/kovidgoyal/kitty)                     |    Yes    |   Yes    |    N/T    |   N/T    |    Yes    |   Yes    |    N/A    |   N/A    |
+| [Konsole](https://github.com/goblinfactory/konsole)              |    Yes    |   Yes    |    N/T    |   N/T    |    N/A    |   N/A    |    N/A    |   N/A    |
+| [Alacritty](https://github.com/alacritty/alacritty)              |    Yes    |    No    |    N/T    |   N/T    |    Yes    |    No    |    Yes    |    No    |
+| [Wezterm](https://github.com/wez/wezterm)                        |    No     |    No    |    N/T    |   N/T    |    Yes    |    No    |    Yes    |    No    |
+| [Terminal.app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>) |    N/A    |   N/A    |    N/A    |   N/A    |    Yes    |   Yes    |    N/A    |   N/A    |
+| [iTerm.app](https://iterm2.com/)                                 |    N/A    |   N/A    |    N/A    |   N/A    |    Yes    |   Yes    |    N/A    |   N/A    |
+| [Hyper](https://github.com/vercel/hyper)                         |    No     |    No    |    N/T    |   N/T    |    No     |    No    |    No     |    No    |
+| [XTerm](https://en.wikipedia.org/wiki/Xterm)                     |    No     |    No    |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |
+| [PowerShell](https://en.wikipedia.org/wiki/PowerShell)           |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
+| [Cmder](https://github.com/cmderdev/cmder)                       |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
+| [ConEmu](https://github.com/Maximus5/ConEmu)                     |    N/A    |   N/A    |    N/A    |   N/A    |    N/A    |   N/A    |    No     |    No    |
 
 > 🌎️ MacOS URLs only work in Safari.
 
