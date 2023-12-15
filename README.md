@@ -197,7 +197,12 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 
 ## Drag and drop
 
-### Terminal support
+The drag and drop feature enables users to drag images from their internet browser or file explorer into the terminal to automatically embed them. For this to work correctly, the following is required by the terminal emulator:
+
+1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
+2. The text must be inserted in [bracketed paste mode](https://cirw.in/blog/bracketed-paste), which allows Neovim to differentiate pasted text from typed-in text. This is required because the drag and drop feature is implemented by overriding `vim.paste()`.
+
+A list of terminal emulators and their capabilities is given below.
 
 <table>
   <thead>
@@ -344,6 +349,6 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
   </tbody>
 </table>
 
-> 🌎️ MacOS URLs only work in Safari.
+_\*MacOS URLs only work in Safari._
 
-> ⚠️ WSL is currently not supported.
+_\*WSL is currently not supported._
