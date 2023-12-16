@@ -351,3 +351,10 @@ A list of terminal emulators and their capabilities is given below.
 _\*MacOS URLs only work in Safari._
 
 _\*WSL is currently not supported._
+
+## Demo 
+
+### Drag and drop 
+![drag-and-drop](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/7ca4543c-e68e-4ec6-b723-46c959833e6e)
+
+
