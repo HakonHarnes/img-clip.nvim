@@ -7,7 +7,7 @@ M.executable = function(command)
 end
 
 ---@param cmd string
----@param powershell boolean
+---@param powershell? boolean
 ---@return string | nil output
 ---@return number exit_code
 M.execute = function(cmd, powershell)
@@ -79,6 +79,38 @@ M.input = function(args)
   end
 
   return output
+end
+
+---@param str string
+---@return boolean
+M.is_image_url = function(str)
+  -- return early if not a valid url to a subdomain
+  if not str:match("^https?://[^/]+/[^.]+") then
+    return false
+  end
+
+  -- assume its a valid image link if it the url ends with an extension
+  if str:match("%.png$") or str:match("%.jpg$") or str:match("%.jpeg$") then
+    return true
+  end
+
+  -- send a head request to the url and check content type
+  local command = string.format("curl -s -o /dev/null -I -w '%%{content_type}' '%s'", str)
+  local output, exit_code = M.execute(command)
+  return exit_code == 0 and output ~= nil and (output:match("image/png") ~= nil or output:match("image/jpeg") ~= nil)
+end
+
+---@param str string
+---@return boolean
+M.is_image_path = function(str)
+  str = string.lower(str)
+
+  local has_path_sep = str:find("/") ~= nil or str:find("\\") ~= nil
+  local has_image_ext = str:match("^.*%.(png)$") ~= nil
+    or str:match("^.*%.(jpg)$") ~= nil
+    or str:match("^.*%.(jpeg)$") ~= nil
+
+  return has_path_sep and has_image_ext
 end
 
 return M

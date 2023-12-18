@@ -32,7 +32,7 @@ Install the plugin with your preferred package manager:
 ```lua
 return {
   "HakonHarnes/img-clip.nvim",
-  event = "BufEnter",
+  cmd = "PasteImage",
   opts = {
     -- add options here
     -- or leave it empty to use the default settings
@@ -205,182 +205,22 @@ The drag and drop feature enables users to drag images from the web browser or f
 
 A list of terminal emulators and their capabilities is given below.
 
-<table>
-  <thead>
-    <tr>
-      <th rowspan="2" style="text-align:center;">Terminal</th>
-      <th colspan="2" style="text-align:center;">X11</th>
-      <th colspan="2" style="text-align:center;">Wayland</th>
-      <th colspan="2" style="text-align:center;">MacOS</th>
-      <th colspan="2" style="text-align:center;">Windows</th>
-    </tr>
-    <tr>
-      <th style="text-align:center;">File</th>
-      <th style="text-align:center;">URL</th>
-      <th style="text-align:center;">File</th>
-      <th style="text-align:center;">URL</th>
-      <th style="text-align:center;">File</th>
-      <th style="text-align:center;">URL</th>
-      <th style="text-align:center;">File</th>
-      <th style="text-align:center;">URL</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/goblinfactory/konsole">Konsole</a></td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/alacritty/alacritty">Alacritty</a></td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/wez/wezterm">Wezterm</a></td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://codeberg.org/dnkl/foot">Foot</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://en.wikipedia.org/wiki/Terminal_(macOS)">Terminal.app</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://iterm2.com/">iTerm.app</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/vercel/hyper">Hyper</a></td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://en.wikipedia.org/wiki/Xterm">XTerm</a></td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-    </tr>
-    <tr>
-      <td><a href="https://en.wikipedia.org/wiki/PowerShell">PowerShell</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/cmderdev/cmder">Cmder</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/Maximus5/ConEmu">ConEmu</a></td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">➖</td>
-      <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❌</td>
-    </tr>
-  </tbody>
-</table>
+|                                                                  |   X11    |         | Wayland  |         |  MacOS   |         | Windows  |         |
+| ---------------------------------------------------------------- | :------: | :-----: | :------: | :-----: | :------: | :-----: | :------: | :-----: |
+| **Terminal**                                                     | **File** | **URL** | **File** | **URL** | **File** | **URL** | **File** | **URL** |
+| [Kitty](https://github.com/kovidgoyal/kitty)                     |   Yes    |   Yes   |   Yes    |   Yes   |   Yes    |   Yes   |   N/A    |   N/A   |
+| [Konsole](https://github.com/goblinfactory/konsole)              |   Yes    |   Yes   |   N/T    |   N/T   |   N/A    |   N/A   |   N/A    |   N/A   |
+| [Alacritty](https://github.com/alacritty/alacritty)              |   Yes    |   No    |    No    |   No    |   Yes    |   No    |   Yes    |   No    |
+| [Wezterm](https://github.com/wez/wezterm)                        |    No    |   No    |   N/T    |   N/T   |   Yes    |   No    |   Yes    |   No    |
+| [Foot](https://codeberg.org/dnkl/foot)                           |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |   N/A    |   N/A   |
+| [Terminal.app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>) |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |
+| [iTerm.app](https://iterm2.com/)                                 |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |
+| [Hyper](https://github.com/vercel/hyper)                         |    No    |   No    |   N/T    |   N/T   |    No    |   No    |    No    |   No    |
+| [XTerm](https://en.wikipedia.org/wiki/Xterm)                     |    No    |   No    |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |
+| [PowerShell](https://en.wikipedia.org/wiki/PowerShell)           |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
+| [Cmder](https://github.com/cmderdev/cmder)                       |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
+| [ConEmu](https://github.com/Maximus5/ConEmu)                     |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
 
 _\*MacOS URLs only work in Safari._
 
 _\*WSL is currently not supported._
-
-## Demonstration
-
-### Drag and drop
-
-![drag-and-drop](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/7ca4543c-e68e-4ec6-b723-46c959833e6e)
-
-### Paste from clipboard
-
-![clipboard-screenshot](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/6ecbdbf8-b382-434b-ad92-a09776309864)
-![clipboard-copy](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/05c3f0e3-3d73-45d6-a2ad-d8f43a298943)
-
-### Templates
-
-![template](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/af10a690-cea9-4776-88aa-1f793c1552e6)
-![template-image](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/fd996028-adc0-4706-9340-63ba33f6e252)
-
-### Base64
-
-![base64-encoding](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/504fc4bd-bb91-456c-b580-2ec8c05e2aea)

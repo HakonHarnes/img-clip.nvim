@@ -1,3 +1,4 @@
 .tests
 .luarc.json
+.markdownlint.json
 doc/tags

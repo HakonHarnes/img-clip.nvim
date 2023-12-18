@@ -19,7 +19,7 @@ describe("config", function()
   end)
 
   it("should allow overriding default values", function()
-    config.setup({ dir_path = "new_assets", file_name = "new_format", cursor_insert_mode = true })
+    config.setup({ default = { dir_path = "new_assets", file_name = "new_format", insert_mode_after_paste = true } })
 
     assert.equals("new_assets", config.get_option("dir_path"))
     assert.equals("new_format", config.get_option("file_name"))

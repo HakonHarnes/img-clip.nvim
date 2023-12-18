@@ -21,7 +21,7 @@ describe("fs", function()
     end)
 
     it("prompts for full file path when 'prompt_for_file_name' and 'show_dir_path_in_prompt' are true", function()
-      config.setup({ prompt_for_file_name = true, show_dir_path_in_prompt = true })
+      config.setup({ default = { prompt_for_file_name = true, show_dir_path_in_prompt = true } })
 
       util.input = function()
         return "custom" .. fs.sep .. "dir" .. fs.sep .. "custom-file"
@@ -37,7 +37,7 @@ describe("fs", function()
     it(
       "prompts only for filename when 'prompt_for_file_name' is true and 'show_dir_path_in_prompt' is false",
       function()
-        config.setup({ prompt_for_file_name = true, show_dir_path_in_prompt = false })
+        config.setup({ default = { prompt_for_file_name = true, show_dir_path_in_prompt = false } })
 
         util.input = function()
           return "custom-file"
@@ -53,7 +53,7 @@ describe("fs", function()
     )
 
     it("prompts for file path when 'show_dir_path_in_prompt' is true", function()
-      config.setup({ show_dir_path_in_prompt = true })
+      config.setup({ default = { show_dir_path_in_prompt = true } })
 
       util.input = function()
         return "custom-path" .. fs.sep .. "custom-file.png"
@@ -67,7 +67,7 @@ describe("fs", function()
     end)
 
     it("uses an absolute path when 'use_absolute_path' option is true", function()
-      config.setup({ use_absolute_path = true }) -- set absolute_path option to true
+      config.setup({ default = { use_absolute_path = true } }) -- set absolute_path option to true
 
       local ext = "png"
       local path = config.get_option("dir_path") .. fs.sep .. os.date(config.get_option("file_name")) .. "." .. ext
@@ -79,7 +79,7 @@ describe("fs", function()
     end)
 
     it("returns path with trailing separator when dir_path has no trailing separator", function()
-      config.setup({ dir_path = "custom" .. fs.sep .. "path" })
+      config.setup({ default = { dir_path = "custom" .. fs.sep .. "path" } })
 
       local ext = "png"
       local expected = "custom" .. fs.sep .. "path" .. fs.sep .. os.date(config.get_option("file_name")) .. "." .. ext
@@ -101,7 +101,7 @@ describe("fs", function()
     end)
 
     it("correctly processes different date formats in filename", function()
-      config.setup({ file_name = "%Y-%m-%d" })
+      config.setup({ default = { file_name = "%Y-%m-%d" } })
 
       local ext = "png"
       local expected = config.get_option("dir_path") .. fs.sep .. os.date("%Y-%m-%d") .. "." .. ext

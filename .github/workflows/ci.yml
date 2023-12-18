@@ -37,6 +37,7 @@ jobs:
         uses: kdheepak/panvimdoc@main
         with:
           vimdoc: img-clip.nvim
+          pandoc: "vimdoc.md"
           demojify: true
           treesitter: true
           titledatepattern: "%B %Y"
@@ -48,7 +49,6 @@ jobs:
           commit-message: "chore(build): auto-generate vimdoc"
           branch: "docs-${{ github.run_id }}"
           body: "This is an auto-generated PR with documentation updates."
-          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
   luacheck:
     runs-on: ubuntu-latest
