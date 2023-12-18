@@ -37,8 +37,11 @@ describe("drag and drop", function()
     end)
 
     it("should return true if input is image path", function()
-      local result = drag_and_drop.handle_paste("path/to/image/image.png")
-      assert.is_true(result)
+      local r1 = drag_and_drop.handle_paste("path/to/image/image.png")
+      assert.is_true(r1)
+
+      local r2 = drag_and_drop.handle_paste("file:///home/user/Pictures/wallpapers/test.jpg")
+      assert.is_true(r2)
     end)
 
     it("should return true if input is a valid url", function()
