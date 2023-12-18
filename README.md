@@ -2,7 +2,7 @@
 
 Paste images directly from your clipboard into any markup language, like LaTeX, Markdown or Typst.
 
-![demo of plugin](assets/demo.gif)
+![demo](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/1ed038f6-4989-4ba4-994e-8064e563517c)
 
 ## Features
 
@@ -356,5 +356,17 @@ _\*WSL is currently not supported._
 
 ### Drag and drop 
 ![drag-and-drop](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/7ca4543c-e68e-4ec6-b723-46c959833e6e)
+
+### Clipboard 
+![clipboard-screenshot](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/6ecbdbf8-b382-434b-ad92-a09776309864)
+![clipboard-copy](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/05c3f0e3-3d73-45d6-a2ad-d8f43a298943)
+
+### Templates 
+![template](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/af10a690-cea9-4776-88aa-1f793c1552e6)
+![template-image](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/034c227c-e7e3-4b84-80c5-7fcf30ddfc9d)
+
+
+### Base64
+![base64-encoding](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/504fc4bd-bb91-456c-b580-2ec8c05e2aea)
 
 
