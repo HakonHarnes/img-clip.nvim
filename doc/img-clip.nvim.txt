@@ -9,28 +9,31 @@ Table of Contents                            *img-clip.nvim-table-of-contents*
   - Installation                    |img-clip.nvim-img-clip.nvim-installation|
   - Usage                                  |img-clip.nvim-img-clip.nvim-usage|
   - Configuration                  |img-clip.nvim-img-clip.nvim-configuration|
+  - Drag and drop                  |img-clip.nvim-img-clip.nvim-drag-and-drop|
 
 ==============================================================================
 1. img-clip.nvim                                 *img-clip.nvim-img-clip.nvim*
 
-Paste images directly from your clipboard into any markup language, like LaTeX,
-Markdown or Typst.
+Effortlessly embed images into any markup language, like LaTeX, Markdown or
+Typst.
 
 
 FEATURES                                *img-clip.nvim-img-clip.nvim-features*
 
-- **Directly** paste images from the **clipboard**.
-- **Save** images as files or embed them directly as **Base64**.
-- Fully **configurable templates** with cursor placement and figure labels.
+- Paste images **directly** from the system **clipboard**.
+- **Drag and drop** images from your web browser or file explorer to embed them.
+- Embed images as **files**, **URLs**, or directly as **Base64**.
+- **Configurable templates** with cursor positioning and figure labels.
 - **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
-- **Automatically** generated file names.
 - **Cross-compatibility** with Linux, Windows, and MacOS.
+
+See these features in action in the |img-clip.nvim-demonstration-section|!
 
 
 REQUIREMENTS                        *img-clip.nvim-img-clip.nvim-requirements*
 
-- **Linux:** `xclip` (x11) or `wl-clipboard` (wayland).
-- **MacOS:** `pngpaste` (optional, but recommended).
+- **Linux:** xclip <https://github.com/astrand/xclip> (x11) or wl-clipboard <https://github.com/bugaevc/wl-clipboard> (wayland).
+- **MacOS:** pngpaste <https://github.com/jcsalterego/pngpaste> (optional, but recommended).
 - **Windows:** No requirements.
 
 
@@ -91,22 +94,31 @@ The plugin comes with the following defaults:
 
 >lua
     {
-      dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
-      file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
-      url_encode_path = false, -- encode spaces and special characters in file path
-      use_absolute_path = false, -- expands dir_path to an absolute path
-      prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
-      show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-      use_cursor_in_template = true, -- jump to cursor position in template after pasting
-      insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-      relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-      embed_image_as_base64 = false, -- embed image as base64 string instead of saving to file
-      max_base64_size = 10, -- max size of base64 string in KB
+      default = {
+        debug = false, -- enable debug mode
+        dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
+        file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
+        url_encode_path = false, -- encode spaces and special characters in file path
+        use_absolute_path = false, -- expands dir_path to an absolute path
+        relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
+        prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
+        show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
+        use_cursor_in_template = true, -- jump to cursor position in template after pasting
+        insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
+        embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
+        max_base64_size = 10, -- max size of base64 string in KB
+        template = "$FILE_PATH", -- default template
     
-      template = "$FILE_PATH", -- default template
+        drag_and_drop = {
+          enabled = true, -- enable drag and drop mode
+          insert_mode = false, -- enable drag and drop in insert mode
+          copy_images = false, -- copy images instead of using the original file
+          download_images = true, -- download images and save them to dir_path instead of using the URL
+        },
+      },
     
       -- file-type specific options
-      -- any options that are passed here will override the global config
+      -- any options that are passed here will override the default config
       -- for instance, setting use_absolute_path = true for markdown will
       -- only enable that for this particular file type
       -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
@@ -114,6 +126,10 @@ The plugin comes with the following defaults:
       markdown = {
         url_encode_path = true,
         template = "![$CURSOR]($FILE_PATH)",
+    
+        drag_and_drop = {
+          download_images = false,
+        },
       },
     
       html = {
@@ -161,50 +177,12 @@ The plugin comes with the following defaults:
     #+END_FIGURE
         ]=],
       },
+    }
 <
 
 
 OPTIONS ~
 
-  -----------------------------------------------------------------------------------------------------
-  Option                     Type      Default               Description
-  -------------------------- --------- --------------------- ------------------------------------------
-  dir_path                   String    "assets"              Directory path to save images to, can be
-                                                             relative (cwd or current file) or
-                                                             absolute.
-
-  file_name                  String    "%Y-%m-%d-%H-%M-%S"   File name format (see
-                                                             lua.org/pil/22.1.html).
-
-  url_encode_path            Boolean   false                 Encode spaces and special characters in
-                                                             file path.
-
-  use_absolute_path          Boolean   false                 Expands dir_path to an absolute path.
-
-  prompt_for_file_name       Boolean   true                  Ask user for file name before saving,
-                                                             leave empty to use default.
-
-  show_dir_path_in_prompt    Boolean   false                 Show dir_path in prompt when prompting for
-                                                             file name.
-
-  use_cursor_in_template     Boolean   true                  Jump to cursor position in template after
-                                                             pasting.
-
-  insert_mode_after_paste    Boolean   true                  Enter insert mode after pasting the markup
-                                                             code.
-
-  relative_to_current_file   Boolean   false                 Make dir_path relative to current file
-                                                             rather than the cwd.
-
-  embed_image_as_base64      Boolean   false                 Embeds the image as Base64 rather than
-                                                             saving as file. Only supported in
-                                                             Markdown.
-
-  max_base64_size            Integer   10                    Max size of Base64 string in KB. Pastes as
-                                                             file if Base64 string is too large.
-
-  template                   String    "$FILE_PATH"          Default template.
-  -----------------------------------------------------------------------------------------------------
 The options can be configured as either static values (e.g. "assets"), or by
 dynamically generating them through functions. For example, to set the
 `dir_path` to match the name of the currently opened file:
@@ -244,12 +222,13 @@ key in your configuration:
 TEMPLATES ~
 
 Templates in the plugin use placeholders that are dynamically replaced with the
-correct values at runtime. For available placeholders, see the following table:
+correct values at runtime. For available placeholders, see the following table
+and the |img-clip.nvim-demonstration|
 
   ---------------------------------------------------------------------------------------
   Placeholder         Description                                    Example
   ------------------- ---------------------------------------------- --------------------
-  $FILE_NAME          File name, including its extension.            image.png
+  $FILE_NAME          Filename, including its extension.             image.png
 
   $FILE_NAME_NO_EXT   File name, excluding its extension.            image
 
@@ -263,10 +242,56 @@ correct values at runtime. For available placeholders, see the following table:
                       after insertion if use_cursor_in_template is   
                       true.                                          
   ---------------------------------------------------------------------------------------
+
+DRAG AND DROP                      *img-clip.nvim-img-clip.nvim-drag-and-drop*
+
+The drag and drop feature enables users to drag images from the web browser or
+file explorer into the terminal to automatically embed them, in **normal
+mode**. For this to work correctly, the following is required by the terminal
+emulator:
+
+1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
+2. The text must be inserted in bracketed paste mode <https://cirw.in/blog/bracketed-paste>, which allows Neovim to differentiate pasted text from typed-in text. This is required because the drag and drop feature is implemented by overriding `vim.paste()`.
+
+A list of terminal emulators and their capabilities is given below.
+
+  -----------------------------------------------------------------------------------------------
+                                        X11          Wayland         MacOS         Windows  
+  ------------------------------------ ------ ----- --------- ----- ------- ----- --------- -----
+  Terminal                              File   URL    File     URL   File    URL    File     URL
+
+  Kitty                                 Yes    Yes     Yes     Yes    Yes    Yes     N/A     N/A
+
+  Konsole                               Yes    Yes     N/T     N/T    N/A    N/A     N/A     N/A
+
+  Alacritty                             Yes    No      No      No     Yes    No      Yes     No
+
+  Wezterm                                No    No      N/T     N/T    Yes    No      Yes     No
+
+  Foot                                  N/A    N/A     Yes     Yes    N/A    N/A     N/A     N/A
+
+  Terminal.app                          N/A    N/A     N/A     N/A    Yes    Yes     N/A     N/A
+
+  iTerm.app                             N/A    N/A     N/A     N/A    Yes    Yes     N/A     N/A
+
+  Hyper                                  No    No      N/T     N/T    No     No      No      No
+
+  XTerm                                  No    No      N/A     N/A    N/A    N/A     N/A     N/A
+
+  PowerShell                            N/A    N/A     N/A     N/A    N/A    N/A     No      No
+
+  Cmder                                 N/A    N/A     N/A     N/A    N/A    N/A     No      No
+
+  ConEmu                                N/A    N/A     N/A     N/A    N/A    N/A     No      No
+  -----------------------------------------------------------------------------------------------
+_MacOS URLs only work in Safari._
+
+_WSL is currently not supported._
+
 ==============================================================================
 2. Links                                                 *img-clip.nvim-links*
 
-1. *demo of plugin*: assets/demo.gif
+1. *demo*: https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/db364ae2-f966-43d2-8f15-34654e03e0f4
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
