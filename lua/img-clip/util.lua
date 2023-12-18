@@ -7,7 +7,7 @@ M.executable = function(command)
 end
 
 ---@param cmd string
----@param powershell boolean
+---@param powershell? boolean
 ---@return string | nil output
 ---@return number exit_code
 M.execute = function(cmd, powershell)
@@ -97,7 +97,7 @@ M.is_image_url = function(str)
   -- send a head request to the url and check content type
   local command = string.format("curl -s -o /dev/null -I -w '%%{content_type}' '%s'", str)
   local output, exit_code = M.execute(command)
-  return exit_code == 0 and output ~= nil and (output:match("image/png") or output:match("image/jpeg"))
+  return exit_code == 0 and output ~= nil and (output:match("image/png") ~= nil or output:match("image/jpeg") ~= nil)
 end
 
 ---@param str string

@@ -22,7 +22,7 @@ vim.paste = (function(overridden)
     end
 
     if not drag_and_drop.handle_paste(lines[1]) then
-      return overridden(lines, phase)
+      return overridden(lines, phase) -- if drag and drop did not handle the paste, call the original vim.paste function
     end
   end
 end)(vim.paste)

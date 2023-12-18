@@ -65,4 +65,58 @@ describe("util", function()
       assert.equal(exit_code, 0)
     end)
   end)
+
+  describe("is_image_path", function()
+    it("should return true for a valid image path", function()
+      assert.is_true(util.is_image_path("/path/to/image.png"))
+    end)
+
+    it("should return true for an uppercase image path", function()
+      assert.is_true(util.is_image_path("/PATH/TO/IMAGE.JPG"))
+    end)
+
+    it("should return false for a non-image file path", function()
+      assert.is_false(util.is_image_path("/path/to/file.txt"))
+    end)
+
+    it("should return false for a string without a path separator", function()
+      assert.is_false(util.is_image_path("image.png"))
+    end)
+
+    it("should return false for a string with a path separator but no file extension", function()
+      assert.is_false(util.is_image_path("/path/to/image"))
+    end)
+
+    it("should return false for a string with an image file extension but no path separator", function()
+      assert.is_false(util.is_image_path("image.jpeg"))
+    end)
+  end)
+
+  describe("is_image_url", function()
+    it("should return true for a valid image URL with an extension", function()
+      assert.is_true(util.is_image_url("http://example.com/image.png"))
+    end)
+
+    it("should return false for a non-image URL", function()
+      assert.is_false(util.is_image_url("http://example.com/file.txt"))
+    end)
+
+    it("should return false for an invalid URL format", function()
+      assert.is_false(util.is_image_url("not_a_valid_url"))
+    end)
+
+    it("should return true for a valid image URL without an extension but with image content type", function()
+      util.execute = function()
+        return "image/png", 0
+      end
+      assert.is_true(util.is_image_url("http://example.com/image"))
+    end)
+
+    it("should return false for a URL with non-image content type", function()
+      util.execute = function()
+        return "text/html", 0
+      end
+      assert.is_false(util.is_image_url("http://example.com"))
+    end)
+  end)
 end)
