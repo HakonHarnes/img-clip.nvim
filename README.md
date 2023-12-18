@@ -326,6 +326,17 @@ A list of terminal emulators and their capabilities is given below.
       <td style="text-align:center;">➖</td>
     </tr>
     <tr>
+      <td><a href="https://apps.microsoft.com/detail/9N0DX20HK701">Windows Terminal</a></td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">✅</td>
+    </tr>
+    <tr>
       <td><a href="https://en.wikipedia.org/wiki/PowerShell">PowerShell</a></td>
       <td style="text-align:center;">➖</td>
       <td style="text-align:center;">➖</td>
@@ -361,9 +372,11 @@ A list of terminal emulators and their capabilities is given below.
   </tbody>
 </table>
 
-_\*MacOS URLs only work in Safari._
+> 💡 If you're having issues on Windows, change the shell to `powershell` or `pwsh`. See `:h shell-powershell`.
 
-_\*WSL is currently not supported._
+> ⚠️ MacOS URLs only work in Safari.
+
+> ⚠️ WSL is currently not supported.
 
 ## Demonstration
 

@@ -205,21 +205,24 @@ The drag and drop feature enables users to drag images from the web browser or f
 
 A list of terminal emulators and their capabilities is given below.
 
-|                                                                  |   X11    |         | Wayland  |         |  MacOS   |         | Windows  |         |
-| ---------------------------------------------------------------- | :------: | :-----: | :------: | :-----: | :------: | :-----: | :------: | :-----: |
-| **Terminal**                                                     | **File** | **URL** | **File** | **URL** | **File** | **URL** | **File** | **URL** |
-| [Kitty](https://github.com/kovidgoyal/kitty)                     |   Yes    |   Yes   |   Yes    |   Yes   |   Yes    |   Yes   |   N/A    |   N/A   |
-| [Konsole](https://github.com/goblinfactory/konsole)              |   Yes    |   Yes   |   N/T    |   N/T   |   N/A    |   N/A   |   N/A    |   N/A   |
-| [Alacritty](https://github.com/alacritty/alacritty)              |   Yes    |   No    |    No    |   No    |   Yes    |   No    |   Yes    |   No    |
-| [Wezterm](https://github.com/wez/wezterm)                        |    No    |   No    |   N/T    |   N/T   |   Yes    |   No    |   Yes    |   No    |
-| [Foot](https://codeberg.org/dnkl/foot)                           |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |   N/A    |   N/A   |
-| [Terminal.app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>) |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |
-| [iTerm.app](https://iterm2.com/)                                 |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |
-| [Hyper](https://github.com/vercel/hyper)                         |    No    |   No    |   N/T    |   N/T   |    No    |   No    |    No    |   No    |
-| [XTerm](https://en.wikipedia.org/wiki/Xterm)                     |    No    |   No    |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |
-| [PowerShell](https://en.wikipedia.org/wiki/PowerShell)           |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
-| [Cmder](https://github.com/cmderdev/cmder)                       |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
-| [ConEmu](https://github.com/Maximus5/ConEmu)                     |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
+|                                                                    |   X11    |         | Wayland  |         |  MacOS   |         | Windows  |         |
+| ------------------------------------------------------------------ | :------: | :-----: | :------: | :-----: | :------: | :-----: | :------: | :-----: |
+| **Terminal**                                                       | **File** | **URL** | **File** | **URL** | **File** | **URL** | **File** | **URL** |
+| [Kitty](https://github.com/kovidgoyal/kitty)                       |   Yes    |   Yes   |   Yes    |   Yes   |   Yes    |   Yes   |   N/A    |   N/A   |
+| [Konsole](https://github.com/goblinfactory/konsole)                |   Yes    |   Yes   |   N/T    |   N/T   |   N/A    |   N/A   |   N/A    |   N/A   |
+| [Alacritty](https://github.com/alacritty/alacritty)                |   Yes    |   No    |    No    |   No    |   Yes    |   No    |   Yes    |   No    |
+| [Wezterm](https://github.com/wez/wezterm)                          |    No    |   No    |   N/T    |   N/T   |   Yes    |   No    |   Yes    |   No    |
+| [Foot](https://codeberg.org/dnkl/foot)                             |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |   N/A    |   N/A   |
+| [Terminal.app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>)   |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |
+| [iTerm.app](https://iterm2.com/)                                   |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |   N/A    |   N/A   |
+| [Hyper](https://github.com/vercel/hyper)                           |    No    |   No    |   N/T    |   N/T   |    No    |   No    |    No    |   No    |
+| [XTerm](https://en.wikipedia.org/wiki/Xterm)                       |    No    |   No    |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |
+| [Windows Terminal](https://apps.microsoft.com/detail/9N0DX20HK701) |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |   Yes    |   Yes   |
+| [PowerShell](https://en.wikipedia.org/wiki/PowerShell)             |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
+| [Cmder](https://github.com/cmderdev/cmder)                         |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
+| [ConEmu](https://github.com/Maximus5/ConEmu)                       |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
+
+_\*If you're having issues on Windows, change the shell to `powershell` or `pwsh`. See `:h shell-powershell`._
 
 _\*MacOS URLs only work in Safari._
 

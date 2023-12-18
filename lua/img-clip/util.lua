@@ -95,7 +95,7 @@ M.is_image_url = function(str)
   end
 
   -- send a head request to the url and check content type
-  local command = string.format("curl -s -o /dev/null -I -w '%%{content_type}' '%s'", str)
+  local command = string.format("curl -s -I -w '%%{content_type}' '%s'", str)
   local output, exit_code = M.execute(command)
   return exit_code == 0 and output ~= nil and (output:match("image/png") ~= nil or output:match("image/jpeg") ~= nil)
 end
