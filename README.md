@@ -7,9 +7,10 @@ Paste images directly from your clipboard into any markup language, like LaTeX, 
 ## Features
 
 - **Directly** paste images from the **clipboard**.
-- **Save** images as files or embed them directly as **Base64**.
+- **Drag and drop** images from your web browser or file explorer.
 - Fully **configurable templates** with cursor placement and figure labels.
 - **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
+- **Save** images as files or embed them directly as **Base64**.
 - **Automatically** generated file names.
 - **Cross-compatibility** with Linux, Windows, and MacOS.
 
@@ -213,14 +214,14 @@ A list of terminal emulators and their capabilities is given below.
       <th colspan="2" style="text-align:center;">Windows</th>
     </tr>
     <tr>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
-      <th style="text-align:center;">Files</th>
-      <th style="text-align:center;">URLs</th>
+      <th style="text-align:center;">File</th>
+      <th style="text-align:center;">URL</th>
+      <th style="text-align:center;">File</th>
+      <th style="text-align:center;">URL</th>
+      <th style="text-align:center;">File</th>
+      <th style="text-align:center;">URL</th>
+      <th style="text-align:center;">File</th>
+      <th style="text-align:center;">URL</th>
     </tr>
   </thead>
   <tbody>
@@ -228,8 +229,8 @@ A list of terminal emulators and their capabilities is given below.
       <td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
+      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">✅</td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">➖</td>
@@ -250,8 +251,8 @@ A list of terminal emulators and their capabilities is given below.
       <td><a href="https://github.com/alacritty/alacritty">Alacritty</a></td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">❌</td>
-      <td style="text-align:center;">❓️</td>
-      <td style="text-align:center;">❓️</td>
+      <td style="text-align:center;">❌</td>
+      <td style="text-align:center;">❌</td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">❌</td>
       <td style="text-align:center;">✅</td>
@@ -267,6 +268,17 @@ A list of terminal emulators and their capabilities is given below.
       <td style="text-align:center;">❌</td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">❌</td>
+    </tr>
+    <tr>
+      <td><a href="https://codeberg.org/dnkl/foot">Foot</a></td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
     </tr>
     <tr>
       <td><a href="https://en.wikipedia.org/wiki/Terminal_(macOS)">Terminal.app</a></td>
