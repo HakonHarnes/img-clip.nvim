@@ -1,23 +1,24 @@
 # 📸 img-clip.nvim
 
-Paste images directly from your clipboard into any markup language, like LaTeX, Markdown or Typst.
+Effortlessly embed images into any markup language, like LaTeX, Markdown or Typst.
 
 ![demo](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/db364ae2-f966-43d2-8f15-34654e03e0f4)
 
 ## Features
 
-- **Directly** paste images from the **clipboard**.
-- **Drag and drop** images from your web browser or file explorer.
-- Fully **configurable templates** with cursor placement and figure labels.
+- Paste images **directly** from the system **clipboard**.
+- **Drag and drop** images from your web browser or file explorer to embed them.
+- Embed images as **files**, **URLs**, or directly as **Base64**.
+- **Configurable templates** with cursor positioning and figure labels.
 - **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
-- **Save** images as files or embed them directly as **Base64**.
-- **Automatically** generated file names.
 - **Cross-compatibility** with Linux, Windows, and MacOS.
+
+See these features in action in the [demonstration section](#demonstration)!
 
 ## Requirements
 
-- **Linux:** `xclip` (x11) or `wl-clipboard` (wayland).
-- **MacOS:** `pngpaste` (optional, but recommended).
+- **Linux:** [xclip](https://github.com/astrand/xclip) (x11) or [wl-clipboard](https://github.com/bugaevc/wl-clipboard) (wayland).
+- **MacOS:** [pngpaste](https://github.com/jcsalterego/pngpaste) (optional, but recommended).
 - **Windows:** No requirements.
 
 > ⚠️ Run `:checkhealth img-clip` after installation to ensure requirements are satisfied.
@@ -185,7 +186,7 @@ File type-specific options are determined by the _file type_ (see `:help filetyp
 
 ### Templates
 
-Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime. For available placeholders, see the following table:
+Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime. For available placeholders, see the following table and the [demonstration](#demonstration):
 
 | Placeholder         | Description                                                                                             | Example                            |
 | ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
@@ -197,7 +198,7 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 
 ## Drag and drop
 
-The drag and drop feature enables users to drag images from their internet browser or file explorer into the terminal to automatically embed them. For this to work correctly, the following is required by the terminal emulator:
+The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in **normal mode**. For this to work correctly, the following is required by the terminal emulator:
 
 1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
 2. The text must be inserted in [bracketed paste mode](https://cirw.in/blog/bracketed-paste), which allows Neovim to differentiate pasted text from typed-in text. This is required because the drag and drop feature is implemented by overriding `vim.paste()`.
@@ -364,13 +365,13 @@ _\*MacOS URLs only work in Safari._
 
 _\*WSL is currently not supported._
 
-## Demo
+## Demonstration
 
 ### Drag and drop
 
 ![drag-and-drop](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/7ca4543c-e68e-4ec6-b723-46c959833e6e)
 
-### Clipboard
+### Paste from clipboard
 
 ![clipboard-screenshot](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/6ecbdbf8-b382-434b-ad92-a09776309864)
 ![clipboard-copy](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/05c3f0e3-3d73-45d6-a2ad-d8f43a298943)
