@@ -275,8 +275,8 @@ A list of terminal emulators and their capabilities is given below.
       <td style="text-align:center;">➖</td>
       <td style="text-align:center;">✅</td>
       <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
-      <td style="text-align:center;">✅</td>
+      <td style="text-align:center;">➖</td>
+      <td style="text-align:center;">➖</td>
       <td style="text-align:center;">➖</td>
       <td style="text-align:center;">➖</td>
     </tr>
