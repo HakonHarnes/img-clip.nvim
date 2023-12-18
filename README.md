@@ -378,7 +378,7 @@ _\*WSL is currently not supported._
 ### Templates
 
 ![template](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/af10a690-cea9-4776-88aa-1f793c1552e6)
-![template-image](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/034c227c-e7e3-4b84-80c5-7fcf30ddfc9d)
+![template-image](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/fd996028-adc0-4706-9340-63ba33f6e252)
 
 ### Base64
 
