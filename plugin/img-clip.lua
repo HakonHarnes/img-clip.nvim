@@ -15,7 +15,7 @@ vim.paste = (function(overridden)
       print("Paste: " .. vim.inspect(lines))
     end
 
-    if #lines > 1 or #lines == 0 then
+    if #lines > 2 or #lines == 0 then
       return overridden(lines, phase)
     end
 
