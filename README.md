@@ -32,7 +32,7 @@ Install the plugin with your preferred package manager:
 ```lua
 return {
   "HakonHarnes/img-clip.nvim",
-  cmd = "PasteImage",
+  event = "BufEnter",
   opts = {
     -- add options here
     -- or leave it empty to use the default settings
