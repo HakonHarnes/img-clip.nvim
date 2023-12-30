@@ -32,6 +32,10 @@ end
 -- it will contain the path to the image or file, or a link to the image
 vim.paste = (function(overridden)
   return function(lines, phase)
+    if config.get_option("debug") then
+      print("Paste: " .. vim.inspect(lines))
+    end
+
     if config.get_option("drag_and_drop.enabled") == false then
       return overridden(lines, phase)
     end
@@ -40,19 +44,20 @@ vim.paste = (function(overridden)
       return overridden(lines, phase)
     end
 
-    if #lines > 2 or #lines == 0 then
-      return overridden(lines, phase)
-    end
-
     if phase ~= -1 then
       return convert_streaming_paste(lines, phase)
     end
 
-    if config.get_option("debug") then
-      print("Paste: " .. vim.inspect(lines))
+    if #lines > 2 or #lines == 0 then
+      return overridden(lines, phase)
     end
 
+
     local line = lines[1]
+
+    if config.get_option("debug") then
+      print("Line: " .. line)
+    end
 
     -- probably not a file path or url to an image if the input is this long
     if string.len(line) > 512 then
