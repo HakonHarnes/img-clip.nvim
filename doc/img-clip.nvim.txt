@@ -286,12 +286,10 @@ A list of terminal emulators and their capabilities is given below.
 
   ConEmu                                 N/A    N/A     N/A     N/A    N/A    N/A     No      No
   ------------------------------------------------------------------------------------------------
-_If you’re having issues on Windows, change the shell to powershell or pwsh.
-See :h shell-powershell._
+_If you’re having issues on Windows, try changing the default shell to
+powershell or pwsh. See :h shell-powershell._
 
 _MacOS URLs only work in Safari._
-
-_WSL is currently not supported._
 
 ==============================================================================
 2. Links                                                 *img-clip.nvim-links*
