@@ -6,11 +6,36 @@ vim.api.nvim_create_user_command("PasteImage", function()
   img_clip.pasteImage()
 end, {})
 
+local buffer = ""
+
+local function convert_streaming_paste(lines, phase)
+  if phase == 1 then
+    buffer = ""
+  end
+
+  for i, line in ipairs(lines) do
+    buffer = buffer .. line
+    if i < #lines then
+      buffer = buffer .. "\n"
+    end
+  end
+
+  if phase == 3 then              -- end of the paste  if phase == 3 then              -- end of the paste
+    local complete_lines = vim.split(buffer, "\n")
+    vim.paste(complete_lines, -1) -- use -1 to indicate non-streaming paste
+  end
+end
+
+-- override vim.paste to handle image pasting from system clipboard
 -- override vim.paste to handle image pasting from system clipboard
 -- vim.paste is triggered when the users drops an image or file into the terminal
 -- it will contain the path to the image or file, or a link to the image
 vim.paste = (function(overridden)
   return function(lines, phase)
+    if phase ~= -1 then
+      return convert_streaming_paste(lines, phase)
+    end
+
     if config.get_option("debug") then
       print("Paste: " .. vim.inspect(lines))
     end
