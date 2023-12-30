@@ -12,25 +12,6 @@ describe("drag and drop", function()
       end
     end)
 
-    it("should return false drag and drop is not enabled", function()
-      config.setup({ default = {
-        drag_and_drop = {
-          enabled = false,
-        },
-      } })
-
-      local result = drag_and_drop.handle_paste("path/to/image.png")
-      assert.is_false(result)
-    end)
-
-    it("should return false in insert mode", function()
-      vim.fn.mode = function()
-        return "i"
-      end
-      local result = drag_and_drop.handle_paste("path/to/image.png")
-      assert.is_false(result)
-    end)
-
     it("should return false if input is not url or path", function()
       local result = drag_and_drop.handle_paste("some string")
       assert.is_false(result)

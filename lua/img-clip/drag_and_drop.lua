@@ -99,14 +99,6 @@ end
 ---@param input string
 ---@return boolean status
 M.handle_paste = function(input)
-  if config.get_option("drag_and_drop.enabled") == false then
-    return false
-  end
-
-  if config.get_option("drag_and_drop.insert_mode") == false and vim.fn.mode() == "i" then
-    return false
-  end
-
   input = sanitize_input(input)
 
   if util.is_image_url(input) then
