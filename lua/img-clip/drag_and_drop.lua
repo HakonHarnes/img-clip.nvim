@@ -90,9 +90,9 @@ end
 ---@return string
 local function sanitize_input(str)
   str = str:match("^%s*(.-)%s*$") -- remove leading and trailing whitespace
-  str = str:match('^"?(.-)"?$')   -- remove double quotes
-  str = str:match("^'?(.-)'?$")   -- remove single quotes
-  str = str:gsub("file://", "")   -- remove "file://"
+  str = str:match('^"?(.-)"?$') -- remove double quotes
+  str = str:match("^'?(.-)'?$") -- remove single quotes
+  str = str:gsub("file://", "") -- remove "file://"
   return str
 end
 

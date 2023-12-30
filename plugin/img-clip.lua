@@ -20,7 +20,7 @@ local function convert_streaming_paste(lines, phase)
     end
   end
 
-  if phase == 3 then              -- end of the paste
+  if phase == 3 then -- end of the paste
     local complete_lines = vim.split(buffer, "\n")
     vim.paste(complete_lines, -1) -- use -1 to indicate non-streaming paste
   end
@@ -51,7 +51,6 @@ vim.paste = (function(overridden)
     if #lines > 2 or #lines == 0 then
       return overridden(lines, phase)
     end
-
 
     local line = lines[1]
 
