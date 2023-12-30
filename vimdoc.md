@@ -222,8 +222,6 @@ A list of terminal emulators and their capabilities is given below.
 | [Cmder](https://github.com/cmderdev/cmder)                         |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
 | [ConEmu](https://github.com/Maximus5/ConEmu)                       |   N/A    |   N/A   |   N/A    |   N/A   |   N/A    |   N/A   |    No    |   No    |
 
-_\*If you're having issues on Windows, change the shell to `powershell` or `pwsh`. See `:h shell-powershell`._
+_\*If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`._
 
 _\*MacOS URLs only work in Safari._
-
-_\*WSL is currently not supported._
