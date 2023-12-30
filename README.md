@@ -372,11 +372,9 @@ A list of terminal emulators and their capabilities is given below.
   </tbody>
 </table>
 
-> 💡 If you're having issues on Windows, change the shell to `powershell` or `pwsh`. See `:h shell-powershell`.
+> 💡 If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`.
 
 > ⚠️ MacOS URLs only work in Safari.
-
-> ⚠️ WSL is currently not supported.
 
 ## Demonstration
 
