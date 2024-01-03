@@ -1,4 +1,5 @@
 local config = require("img-clip.config")
+local fs = require("img-clip.fs")
 
 local M = {}
 
@@ -56,28 +57,34 @@ M.url_encode = function(str)
   return str
 end
 
----@param file string the file path or base64 string
+---@param file_path string the file path or base64 string
 ---@param opts? table
 ---@return boolean
-function M.insert_markup(file, opts)
+function M.insert_markup(file_path, opts)
   local template = config.get_option("template", opts)
   if not template then
     return false
   end
 
-  local file_name = vim.fn.fnamemodify(file, ":t")
-  local file_name_no_ext = vim.fn.fnamemodify(file, ":t:r")
+  local file_name = vim.fn.fnamemodify(file_path, ":t")
+  local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
   local label = file_name_no_ext:gsub("%s+", "-"):lower()
+
+  -- see issue #21
+  local ft = vim.bo.filetype
+  if ft == "markdown" or ft == "md" then
+    file_path = fs.relative_to_current_file(file_path)
+  end
 
   -- url encode path
   if config.get_option("url_encode_path", opts) then
-    file = M.url_encode(file)
-    file = file:gsub("%%", "%%%%") -- escape % so we can call gsub again
+    file_path = M.url_encode(file_path)
+    file_path = file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
   end
 
   template = template:gsub("$FILE_NAME_NO_EXT", file_name_no_ext)
   template = template:gsub("$FILE_NAME", file_name)
-  template = template:gsub("$FILE_PATH", file)
+  template = template:gsub("$FILE_PATH", file_path)
   template = template:gsub("$LABEL", label)
 
   if not config.get_option("use_cursor_in_template", opts) then

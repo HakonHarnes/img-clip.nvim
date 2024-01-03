@@ -12,6 +12,17 @@ M.normalize_path = function(path)
   return vim.fn.simplify(path):gsub(M.sep .. "$", "") .. M.sep
 end
 
+---@param file_path string
+---@return string
+M.relative_to_current_file = function(file_path)
+  local current_file_path = vim.fn.expand("%:.:h")
+  if current_file_path ~= "." and current_file_path ~= "" then
+    file_path = file_path:gsub("^" .. current_file_path, "")
+    file_path = file_path:gsub("^" .. M.sep, "")
+  end
+  return file_path
+end
+
 ---@param str string
 ---@param ext string
 ---@return string
