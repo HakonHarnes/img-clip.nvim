@@ -49,14 +49,14 @@ end
 ---@param ft string
 ---@return boolean
 local language_supports_base64_embedding = function(ft)
-  return ft == "markdown" or ft == "rmd"
+  return ft == "markdown" or ft == "md" or ft == "rmd" or ft == "wiki" or ft == "vimwiki"
 end
 
 ---@private
 ---@param ft string
 ---@return string
 local get_base64_prefix = function(ft)
-  if ft == "markdown" or ft == "rmd" then
+  if ft == "markdown" or ft == "md" or ft == "rmd" or ft == "wiki" or ft == "vimwiki" then
     return "data:image/png;base64,"
   end
 
