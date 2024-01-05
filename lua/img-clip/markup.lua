@@ -71,9 +71,13 @@ function M.insert_markup(file_path, opts)
   local label = file_name_no_ext:gsub("%s+", "-"):lower()
 
   -- see issue #21
-  local ft = vim.bo.filetype
-  if ft == "markdown" or ft == "md" then
-    file_path = fs.relative_to_current_file(file_path)
+  local current_dir_path = vim.fn.expand("%:p:h")
+  print(current_dir_path)
+  if current_dir_path ~= vim.fn.getcwd() then
+    local ft = vim.bo.filetype
+    if ft == "markdown" or ft == "md" or ft == "rmd" or ft == "wiki" or ft == "vimwiki" then
+      file_path = fs.relpath(file_path, current_dir_path)
+    end
   end
 
   -- url encode path

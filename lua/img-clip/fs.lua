@@ -12,15 +12,53 @@ M.normalize_path = function(path)
   return vim.fn.simplify(path):gsub(M.sep .. "$", "") .. M.sep
 end
 
----@param file_path string
----@return string
-M.relative_to_current_file = function(file_path)
-  local current_file_path = vim.fn.expand("%:.:h")
-  if current_file_path ~= "." and current_file_path ~= "" then
-    file_path = file_path:gsub("^" .. current_file_path, "")
-    file_path = file_path:gsub("^" .. M.sep, "")
+---@param str string
+---@return string[]
+local function split_path(str)
+  local result = {}
+  local pattern = "[^" .. M.sep .. "]+"
+
+  for part in string.gmatch(str, pattern) do
+    table.insert(result, part)
   end
-  return file_path
+
+  return result
+end
+
+---@param target string
+---@param start? string
+---@return string relative_path
+M.relpath = function(target, start)
+  start = start or vim.fn.getcwd()
+
+  target = vim.fn.fnamemodify(target, ":p")
+  start = vim.fn.fnamemodify(start, ":p")
+
+  local target_parts = split_path(target)
+  local start_parts = split_path(start)
+
+  -- find out where the paths diverge
+  local common_length = 0
+  for i = 1, math.min(#start_parts, #target_parts) do
+    if start_parts[i] == target_parts[i] then
+      common_length = i
+    else
+      break
+    end
+  end
+
+  -- calculate how many directories we have to go up
+  local result = {}
+  for _ = common_length + 1, #start_parts do
+    table.insert(result, "..")
+  end
+
+  -- add the non-common parts of the target path
+  for i = common_length + 1, #target_parts do
+    table.insert(result, target_parts[i])
+  end
+
+  return table.concat(result, M.sep)
 end
 
 ---@param str string
