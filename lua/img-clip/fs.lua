@@ -16,7 +16,7 @@ end
 ---@return string[]
 local function split_path(str)
   local result = {}
-  local pattern = "[^" .. M.sep .. "]+"
+  local pattern = "[^/\\]+"
 
   for part in string.gmatch(str, pattern) do
     table.insert(result, part)

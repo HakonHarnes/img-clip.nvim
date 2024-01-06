@@ -215,6 +215,14 @@ describe("fs", function()
       )
     end)
 
+    it("handles a mix of different path separators", function()
+      fs.sep = "\\"
+      assert.equals(
+        "..\\assets\\image.png",
+        fs.relpath("C:\\home\\user\\project\\assets\\image.png", "C:/home/user/project/scripts")
+      )
+    end)
+
     it("handles same directory path correctly", function()
       assert.equals("file.txt", fs.relpath("/home/user/project/scripts/file.txt", "/home/user/project/scripts"))
     end)
