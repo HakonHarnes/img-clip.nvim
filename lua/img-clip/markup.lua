@@ -72,7 +72,7 @@ function M.insert_markup(file_path, opts)
 
   -- see issue #21
   local current_dir_path = vim.fn.expand("%:p:h")
-  if current_dir_path ~= vim.fn.getcwd() then
+  if current_dir_path ~= vim.fn.getcwd() and not config.get_option("use_absolute_path") then
     local ft = vim.bo.filetype
     if ft == "markdown" or ft == "md" or ft == "rmd" or ft == "wiki" or ft == "vimwiki" then
       file_path = fs.relpath(file_path, current_dir_path)
