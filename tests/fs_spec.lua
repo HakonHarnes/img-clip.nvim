@@ -192,4 +192,39 @@ describe("fs", function()
       end)
     end)
   end)
+
+  describe("relpath", function()
+    before_each(function()
+      fs.sep = "/"
+
+      config.setup({}) -- use default config values
+    end)
+
+    it("computes the correct relative path on Linux", function()
+      assert.equals(
+        "../assets/image.png",
+        fs.relpath("/home/user/project/assets/image.png", "/home/user/project/scripts")
+      )
+    end)
+
+    it("computes the correct relative path on Windows", function()
+      fs.sep = "\\"
+      assert.equals(
+        "..\\assets\\image.png",
+        fs.relpath("C:\\home\\user\\project\\assets\\image.png", "C:\\home\\user\\project\\scripts")
+      )
+    end)
+
+    it("handles a mix of different path separators", function()
+      fs.sep = "\\"
+      assert.equals(
+        "..\\assets\\image.png",
+        fs.relpath("C:\\home\\user\\project\\assets\\image.png", "C:/home/user/project/scripts")
+      )
+    end)
+
+    it("handles same directory path correctly", function()
+      assert.equals("file.txt", fs.relpath("/home/user/project/scripts/file.txt", "/home/user/project/scripts"))
+    end)
+  end)
 end)

@@ -77,6 +77,7 @@ The plugin comes with the following defaults:
     url_encode_path = false, -- encode spaces and special characters in file path
     use_absolute_path = false, -- expands dir_path to an absolute path
     relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
+    relative_template_path = true, -- make file path in the template relative to current file rather than the cwd
     prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
     show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
     use_cursor_in_template = true, -- jump to cursor position in template after pasting
@@ -113,6 +114,7 @@ The plugin comes with the following defaults:
   },
 
   tex = {
+    relative_template_path = false,
     template = [[
 \begin{figure}[h]
   \centering

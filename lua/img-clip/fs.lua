@@ -13,6 +13,55 @@ M.normalize_path = function(path)
 end
 
 ---@param str string
+---@return string[]
+local function split_path(str)
+  local result = {}
+  local pattern = "[^/\\]+"
+
+  for part in string.gmatch(str, pattern) do
+    table.insert(result, part)
+  end
+
+  return result
+end
+
+---@param target string
+---@param start? string
+---@return string relative_path
+M.relpath = function(target, start)
+  start = start or vim.fn.getcwd()
+
+  target = vim.fn.fnamemodify(target, ":p")
+  start = vim.fn.fnamemodify(start, ":p")
+
+  local target_parts = split_path(target)
+  local start_parts = split_path(start)
+
+  -- find out where the paths diverge
+  local common_length = 0
+  for i = 1, math.min(#start_parts, #target_parts) do
+    if start_parts[i] == target_parts[i] then
+      common_length = i
+    else
+      break
+    end
+  end
+
+  -- calculate how many directories we have to go up
+  local result = {}
+  for _ = common_length + 1, #start_parts do
+    table.insert(result, "..")
+  end
+
+  -- add the non-common parts of the target path
+  for i = common_length + 1, #target_parts do
+    table.insert(result, target_parts[i])
+  end
+
+  return table.concat(result, M.sep)
+end
+
+---@param str string
 ---@param ext string
 ---@return string
 M.add_file_ext = function(str, ext)
