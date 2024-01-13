@@ -97,7 +97,7 @@ M.options = {}
 ---@param key string
 ---@param opts? table The options passed to pasteImage function
 ---@return string | nil
-M.get_option = function(key, opts)
+M.get_option = function(key, opts, args)
   local ft = vim.bo.filetype
   local val
 
@@ -136,7 +136,7 @@ M.get_option = function(key, opts)
     return nil
   end
 
-  return type(val) == "function" and val() or val -- execute if function
+  return type(val) == "function" and val(args or {}) or val -- execute if function
 end
 
 function M.setup(opts)

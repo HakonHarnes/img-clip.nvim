@@ -89,5 +89,29 @@ describe("markup", function()
 
       assert.is_true(success)
     end)
+
+    it("inserts correct markup into a file when using template args", function()
+      config.setup({
+        default = {
+          template = function(context)
+            return context.cursor
+              .. " "
+              .. context.file_path
+              .. " "
+              .. context.file_name
+              .. " "
+              .. context.file_name_no_ext
+              .. " "
+              .. context.label
+          end,
+        },
+      })
+
+      local success = markup.insert_markup("/path/to/file.png")
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+      assert.equal(" /path/to/file.png file.png file file", lines[2])
+      assert.is_true(success)
+    end)
   end)
 end)
