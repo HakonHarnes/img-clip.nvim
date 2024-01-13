@@ -201,8 +201,8 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 Templates can also be defined using functions with the above placeholders available as function parameters:
 
 ```lua
-template = function(placeholders)
-  return "![" .. placeholders.cursor .. "](" .. placeholders.file_path .. ")"
+template = function(context)
+  return "![" .. context.cursor .. "](" .. context.file_path .. ")"
 end
 ```
 
