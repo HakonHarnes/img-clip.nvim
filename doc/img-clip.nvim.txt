@@ -244,6 +244,15 @@ and the |img-clip.nvim-demonstration|
                       after insertion if use_cursor_in_template is   
                       true.                                          
   ---------------------------------------------------------------------------------------
+Templates can also be defined using functions with the above placeholders
+available as function parameters:
+
+>lua
+    template = function(context)
+      return "![" .. context.cursor .. "](" .. context.file_path .. ")"
+    end
+<
+
 
 DRAG AND DROP                      *img-clip.nvim-img-clip.nvim-drag-and-drop*
 
