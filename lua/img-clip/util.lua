@@ -25,12 +25,12 @@ M.execute = function(cmd, powershell)
   -- WSL requires the command to have the format:
   -- powershell.exe -Command 'command "path/to/file"'
   elseif M.has("wsl") then
-    command = "powershell.exe -Command '" .. cmd:gsub("'", '"') .. "'"
+    command = "powershell.exe -NoProfile -Command '" .. cmd:gsub("'", '"') .. "'"
 
   -- cmd.exe requires the command to have the format:
   -- powershell.exe -Command "command 'path/to/file'"
   else
-    command = 'powershell.exe -Command "' .. cmd:gsub('"', "'") .. '"'
+    command = 'powershell.exe -NoProfile -Command "' .. cmd:gsub('"', "'") .. '"'
   end
 
   local output = vim.fn.system(command)
