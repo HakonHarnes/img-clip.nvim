@@ -136,6 +136,18 @@ M.get_option = function(key, opts)
     return nil
   end
 
+  if key == "template" and type(val) == "function" then
+    local placeholders = {
+      file_path = "$FILE_PATH",
+      file_name = "$FILE_NAME",
+      file_name_no_ext = "$FILE_NAME_NO_EXT",
+      cursor = "$CURSOR",
+      label = "$LABEL",
+    }
+
+    return val(placeholders)
+  end
+
   return type(val) == "function" and val() or val -- execute if function
 end
 
