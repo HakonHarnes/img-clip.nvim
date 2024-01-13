@@ -45,7 +45,7 @@ describe("util", function()
       local command = 'command "path/to/file"'
       local output, exit_code = util.execute(command, true)
 
-      assert.equal([[powershell.exe -Command "command 'path/to/file'"]], output)
+      assert.equal([[powershell.exe -NoProfile -Command "command 'path/to/file'"]], output)
       assert.equal(exit_code, 0)
     end)
 
@@ -61,7 +61,7 @@ describe("util", function()
       local command = "command 'path/to/file'"
       local output, exit_code = util.execute(command, true)
 
-      assert.equal([[powershell.exe -Command 'command "path/to/file"']], output)
+      assert.equal([[powershell.exe -NoProfile -Command 'command "path/to/file"']], output)
       assert.equal(exit_code, 0)
     end)
   end)
