@@ -198,6 +198,14 @@ Templates in the plugin use placeholders that are dynamically replaced with the 
 | `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
 | `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          |                                    |
 
+Templates can also be defined using functions with the above placeholders available as function parameters:
+
+```lua
+template = function(placeholders)
+  return "![" .. placeholders.cursor .. "](" .. placeholders.file_path .. ")"
+end
+```
+
 ## Drag and drop
 
 The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in **normal mode**. For this to work correctly, the following is required by the terminal emulator:
