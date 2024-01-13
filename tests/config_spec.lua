@@ -42,26 +42,4 @@ describe("config", function()
     local opts = { file_name = "custom-filename" }
     assert.equals("custom-filename", config.get_option("file_name", opts))
   end)
-
-  it("should correctly process a function template with all parameters", function()
-    vim.bo.filetype = "markdown"
-
-    local template_func = function(context)
-      return "File: "
-        .. context.file_name
-        .. ", Path: "
-        .. context.file_path
-        .. ", Cursor: "
-        .. context.cursor
-        .. ", Label: "
-        .. context.label
-        .. ", No Ext: "
-        .. context.file_name_no_ext
-    end
-
-    config.setup({ markdown = { template = template_func } })
-
-    local expected = "File: $FILE_NAME, Path: $FILE_PATH, Cursor: $CURSOR, Label: $LABEL, No Ext: $FILE_NAME_NO_EXT"
-    assert.equals(expected, config.get_option("template"))
-  end)
 end)

@@ -61,11 +61,6 @@ end
 ---@param opts? table
 ---@return boolean
 function M.insert_markup(file_path, opts)
-  local template = config.get_option("template", opts)
-  if not template then
-    return false
-  end
-
   local file_name = vim.fn.fnamemodify(file_path, ":t")
   local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
   local label = file_name_no_ext:gsub("%s+", "-"):lower()
@@ -78,6 +73,19 @@ function M.insert_markup(file_path, opts)
     and current_dir_path ~= vim.fn.getcwd()
   then
     file_path = fs.relpath(file_path, current_dir_path)
+  end
+
+  -- pass args to template
+  local template_args = {
+    file_path = file_path,
+    file_name = file_name,
+    file_name_no_ext = file_name_no_ext,
+    cursor = "$CURSOR",
+    label = label,
+  }
+  local template = config.get_option("template", opts, template_args)
+  if not template then
+    return false
   end
 
   -- url encode path
