@@ -25,8 +25,8 @@ local defaults = {
     },
   },
 
-  -- file-type specific options
-  -- any options that are passed here will override the default config
+  -- file-type specific opts
+  -- any opts that are passed here will override the default config
   -- for instance, setting use_absolute_path = true for markdown will
   -- only enable that for this particular file type
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
@@ -93,53 +93,57 @@ defaults.plaintex = defaults.tex
 defaults.rmd = defaults.markdown
 defaults.md = defaults.markdown
 
-local function recursive_get_opt(table, key)
+local function recursive_get_opt(key, opts)
   local keys = vim.split(key, ".", { plain = true, trimempty = true })
 
   for _, k in pairs(keys) do
-    if table and table[k] ~= nil then
-      table = table[k]
+    if opts and opts[k] ~= nil then
+      opts = opts[k]
     else
       return nil -- option not found in this table
     end
   end
-  return table
+  return opts
 end
 
-local function get_file_specific_opt(key, options, ft)
-  return recursive_get_opt(options, "filetypes." .. ft .. "." .. key)
+local function get_file_specific_opt(key, opts, ft)
+  return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
 end
 
-local function get_dir_specific_opt(key, options, dir) end
+local function get_dir_specific_opt(key, opts, dir) end
+
+local function get_default_opt(key, opts)
+  return recursive_get_opt(key, opts)
+end
 
 local function get_val(val, args)
   return type(val) == "function" and val(args or {}) or val
 end
 
-M.options = {}
+M.opts = {}
 
----@param key string The key - nested options are passed as e.g. "default.debug"
----@param opts? table The options passed to pasteImage function
+---@param key string The key - nested opts are passed as e.g. "default.debug"
+---@param api_opts? table The opts passed to pasteImage function
 ---@return string | nil
-M.get_opt = function(key, opts, args)
-  -- extend config with options passed directly to the pasteImage (API) function
-  local options = vim.tbl_deep_extend("force", {}, M.options, opts or {})
+M.get_opt = function(key, api_opts, args)
+  -- extend config with opts passed directly to the pasteImage (API) function
+  local opts = vim.tbl_deep_extend("force", {}, M.opts, api_opts or {})
 
   local val = nil
 
-  val = get_file_specific_opt(key, options, "markdown")
+  val = get_file_specific_opt(key, opts, "markdown")
   if val then
     return get_val(val, args)
   end
 
-  -- val = get_dir_specific_opt(key, options, "/home/hakon/markdown")
+  -- val = get_dir_specific_opt(key, opts, "/home/hakon/markdown")
 
-  -- print(vim.inspect(options["default"]))
+  -- print(vim.inspect(opts["default"]))
   return nil
 end
 
-function M.setup(opts)
-  M.options = vim.tbl_deep_extend("force", {}, defaults, opts or {})
+function M.setup(config_opts)
+  M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
 end
 
 local user_opts = {
