@@ -30,23 +30,23 @@ local defaults = {
   -- for instance, setting use_absolute_path = true for markdown will
   -- only enable that for this particular file type
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
+  filetypes = {
+    markdown = {
+      url_encode_path = true,
+      template = "![$CURSOR]($FILE_PATH)",
 
-  markdown = {
-    url_encode_path = true,
-    template = "![$CURSOR]($FILE_PATH)",
-
-    drag_and_drop = {
-      download_images = false,
+      drag_and_drop = {
+        download_images = false,
+      },
     },
-  },
 
-  html = {
-    template = '<img src="$FILE_PATH" alt="$CURSOR">',
-  },
+    html = {
+      template = '<img src="$FILE_PATH" alt="$CURSOR">',
+    },
 
-  tex = {
-    relative_template_path = false,
-    template = [[
+    tex = {
+      relative_template_path = false,
+      template = [[
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
@@ -54,37 +54,38 @@ local defaults = {
   \label{fig:$LABEL}
 \end{figure}
     ]],
-  },
+    },
 
-  typst = {
-    template = [[
+    typst = {
+      template = [[
 #figure(
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
     ]],
-  },
+    },
 
-  rst = {
-    template = [[
+    rst = {
+      template = [[
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
     ]],
-  },
+    },
 
-  asciidoc = {
-    template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
-  },
+    asciidoc = {
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+    },
 
-  org = {
-    template = [=[
+    org = {
+      template = [=[
 #+BEGIN_FIGURE
 [[file:$FILE_PATH]]
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
     ]=],
+    },
   },
 }
 
@@ -92,57 +93,71 @@ defaults.plaintex = defaults.tex
 defaults.rmd = defaults.markdown
 defaults.md = defaults.markdown
 
+local function recursive_get_opt(table, key)
+  local keys = vim.split(key, ".", { plain = true, trimempty = true })
+
+  for _, k in pairs(keys) do
+    if table and table[k] ~= nil then
+      table = table[k]
+    else
+      return nil -- option not found in this table
+    end
+  end
+  return table
+end
+
+local function get_file_specific_opt(key, options, ft)
+  return recursive_get_opt(options, "filetypes." .. ft .. "." .. key)
+end
+
+local function get_dir_specific_opt(key, options, dir) end
+
+local function get_val(val, args)
+  return type(val) == "function" and val(args or {}) or val
+end
+
 M.options = {}
 
----@param key string
+---@param key string The key - nested options are passed as e.g. "default.debug"
 ---@param opts? table The options passed to pasteImage function
 ---@return string | nil
-M.get_option = function(key, opts, args)
-  local ft = vim.bo.filetype
-  local val
+M.get_opt = function(key, opts, args)
+  -- extend config with options passed directly to the pasteImage (API) function
+  local options = vim.tbl_deep_extend("force", {}, M.options, opts or {})
 
-  local function extract_option(table, nested_key)
-    local keys = vim.split(nested_key, ".", { plain = true, trimempty = true })
-    for _, k in ipairs(keys) do
-      if table and table[k] ~= nil then
-        table = table[k] -- navigate into the nested structure
-      else
-        return nil -- option not found in this table
-      end
-    end
-    return table
+  local val = nil
+
+  val = get_file_specific_opt(key, options, "markdown")
+  if val then
+    return get_val(val, args)
   end
 
-  -- check options passed explicitly to pasteImage function
-  if opts and opts[key] ~= nil then
-    val = opts[key]
+  -- val = get_dir_specific_opt(key, options, "/home/hakon/markdown")
 
-  -- check for filetype-specific option, including nested ones
-  elseif M.options[ft] then
-    val = extract_option(M.options[ft], key)
-    if val == nil then
-      -- fallback to default if not found in filetype-specific options
-      val = extract_option(M.options["default"], key)
-    end
-
-  -- check for global option, including nested ones
-  elseif M.options["default"] then
-    val = extract_option(M.options["default"], key)
-  end
-
-  -- return nil if no option found
-  if val == nil then
-    vim.notify("No option found for " .. key .. ".", vim.log.levels.WARN, { title = "img-clip" })
-    return nil
-  end
-
-  return type(val) == "function" and val(args or {}) or val -- execute if function
+  -- print(vim.inspect(options["default"]))
+  return nil
 end
 
 function M.setup(opts)
   M.options = vim.tbl_deep_extend("force", {}, defaults, opts or {})
 end
 
-M.setup()
+local user_opts = {
+  default = {
+    debug = true,
+  },
+
+  filetypes = {
+    markdown = {
+      template = "test_template",
+    },
+  },
+}
+
+M.setup(user_opts)
+
+local test_val = M.get_opt("template")
+
+print(test_val)
 
 return M

@@ -68,8 +68,8 @@ function M.insert_markup(file_path, opts)
   -- see issue #21
   local current_dir_path = vim.fn.expand("%:p:h")
   if
-    config.get_option("relative_template_path")
-    and not config.get_option("use_absolute_path")
+    config.get_opt("relative_template_path")
+    and not config.get_opt("use_absolute_path")
     and current_dir_path ~= vim.fn.getcwd()
   then
     file_path = fs.relpath(file_path, current_dir_path)
@@ -83,13 +83,13 @@ function M.insert_markup(file_path, opts)
     cursor = "$CURSOR",
     label = label,
   }
-  local template = config.get_option("template", opts, template_args)
+  local template = config.get_opt("template", opts, template_args)
   if not template then
     return false
   end
 
   -- url encode path
-  if config.get_option("url_encode_path", opts) then
+  if config.get_opt("url_encode_path", opts) then
     file_path = M.url_encode(file_path)
     file_path = file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
   end
@@ -99,7 +99,7 @@ function M.insert_markup(file_path, opts)
   template = template:gsub("$FILE_PATH", file_path)
   template = template:gsub("$LABEL", label)
 
-  if not config.get_option("use_cursor_in_template", opts) then
+  if not config.get_opt("use_cursor_in_template", opts) then
     template = template:gsub("$CURSOR", "")
   end
 
@@ -117,7 +117,7 @@ function M.insert_markup(file_path, opts)
 
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
-  if config.get_option("insert_mode_after_paste", opts) and vim.api.nvim_get_mode().mode ~= "i" then
+  if config.get_opt("insert_mode_after_paste", opts) and vim.api.nvim_get_mode().mode ~= "i" then
     if new_col == string.len(line) - 1 then
       vim.api.nvim_input("a")
     else

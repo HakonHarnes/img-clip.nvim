@@ -32,15 +32,15 @@ end
 -- it will contain the path to the image or file, or a link to the image
 vim.paste = (function(overridden)
   return function(lines, phase)
-    if config.get_option("debug") then
+    if config.get_opt("debug") then
       print("Paste: " .. vim.inspect(lines))
     end
 
-    if config.get_option("drag_and_drop.enabled") == false then
+    if config.get_opt("drag_and_drop.enabled") == false then
       return overridden(lines, phase)
     end
 
-    if config.get_option("drag_and_drop.insert_mode") == false and vim.fn.mode() == "i" then
+    if config.get_opt("drag_and_drop.insert_mode") == false and vim.fn.mode() == "i" then
       return overridden(lines, phase)
     end
 
@@ -54,7 +54,7 @@ vim.paste = (function(overridden)
 
     local line = lines[1]
 
-    if config.get_option("debug") then
+    if config.get_opt("debug") then
       print("Line: " .. line)
     end
 
@@ -64,7 +64,7 @@ vim.paste = (function(overridden)
     end
 
     if not drag_and_drop.handle_paste(line) then
-      if config.get_option("debug") then
+      if config.get_opt("debug") then
         print("Did not handle paste, calling original vim.paste")
       end
       return overridden(lines, phase) -- if drag and drop did not handle the paste, call the original vim.paste function

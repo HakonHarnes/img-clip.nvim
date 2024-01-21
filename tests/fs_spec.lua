@@ -14,7 +14,7 @@ describe("fs", function()
 
     it("uses default directory and filename if no options or user inputs are provided", function()
       local ext = "png"
-      local expected = config.get_option("dir_path") .. fs.sep .. os.date(config.get_option("file_name")) .. "." .. ext
+      local expected = config.get_opt("dir_path") .. fs.sep .. os.date(config.get_opt("file_name")) .. "." .. ext
       local actual = fs.get_file_path(ext)
 
       assert.equals(expected, actual)
@@ -44,7 +44,7 @@ describe("fs", function()
         end
 
         local ext = "png"
-        local dir_path = config.get_option("dir_path") .. fs.sep
+        local dir_path = config.get_opt("dir_path") .. fs.sep
         local expected = dir_path .. "custom-file.png"
         local actual = fs.get_file_path(ext)
 
@@ -70,7 +70,7 @@ describe("fs", function()
       config.setup({ default = { use_absolute_path = true } }) -- set absolute_path option to true
 
       local ext = "png"
-      local path = config.get_option("dir_path") .. fs.sep .. os.date(config.get_option("file_name")) .. "." .. ext
+      local path = config.get_opt("dir_path") .. fs.sep .. os.date(config.get_opt("file_name")) .. "." .. ext
       local absolute_path = vim.fn.fnamemodify(path, ":p")
       local expected = absolute_path
       local actual = fs.get_file_path(ext)
@@ -82,7 +82,7 @@ describe("fs", function()
       config.setup({ default = { dir_path = "custom" .. fs.sep .. "path" } })
 
       local ext = "png"
-      local expected = "custom" .. fs.sep .. "path" .. fs.sep .. os.date(config.get_option("file_name")) .. "." .. ext
+      local expected = "custom" .. fs.sep .. "path" .. fs.sep .. os.date(config.get_opt("file_name")) .. "." .. ext
       local actual = fs.get_file_path(ext)
 
       assert.equals(expected, actual)
@@ -94,7 +94,7 @@ describe("fs", function()
       end
 
       local ext = "png"
-      local expected = config.get_option("dir_path") .. fs.sep .. os.date(config.get_option("file_name")) .. "." .. ext
+      local expected = config.get_opt("dir_path") .. fs.sep .. os.date(config.get_opt("file_name")) .. "." .. ext
       local actual = fs.get_file_path(ext)
 
       assert.equals(expected, actual)
@@ -104,7 +104,7 @@ describe("fs", function()
       config.setup({ default = { file_name = "%Y-%m-%d" } })
 
       local ext = "png"
-      local expected = config.get_option("dir_path") .. fs.sep .. os.date("%Y-%m-%d") .. "." .. ext
+      local expected = config.get_opt("dir_path") .. fs.sep .. os.date("%Y-%m-%d") .. "." .. ext
       local actual = fs.get_file_path(ext)
 
       assert.equals(expected, actual)
