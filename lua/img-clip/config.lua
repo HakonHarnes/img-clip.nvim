@@ -229,7 +229,6 @@ M.get_opt = function(key, api_opts, args)
     or get_file_opt(key, opts, args, vim.fn.expand("%:p:t"))
     or get_dir_opt(key, opts, args, vim.fn.expand("%:p:h"))
     or get_dir_opt(key, opts, args, vim.fn.expand("%:p:h:t"))
-    or get_filetype_opt(key, opts, "markdown")
     or get_filetype_opt(key, opts, vim.bo.filetype)
     or get_default_opt(key, opts)
 
