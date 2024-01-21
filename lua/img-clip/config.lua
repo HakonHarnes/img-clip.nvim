@@ -104,7 +104,7 @@ local function recursive_get_opt(key, opts)
     if opts and opts[k] ~= nil then
       opts = opts[k]
     else
-      return nil -- option not found in this table
+      return nil
     end
   end
 
