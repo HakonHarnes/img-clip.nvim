@@ -90,9 +90,13 @@ local defaults = {
 }
 
 defaults.filetypes.plaintex = defaults.filetypes.tex
-defaults.filetypes.rmd = defaults.fileypes.markdown
+defaults.filetypes.rmd = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
 
+---Recursively gets the value of the option (e.g. "default.debug")
+---@param key string
+---@param opts table
+---@return string | nil
 local function recursive_get_opt(key, opts)
   local keys = vim.split(key, ".", { plain = true, trimempty = true })
 
@@ -106,6 +110,10 @@ local function recursive_get_opt(key, opts)
   return opts
 end
 
+---Gets the value of the option, executing it if it's a function
+---@param val any
+---@param args? table
+---@return string | nil
 local function get_val(val, args)
   if val == nil then
     return nil
@@ -114,10 +122,11 @@ local function get_val(val, args)
   end
 end
 
-local function get_filetype_opt(key, opts, ft)
-  return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
-end
-
+---Gets the option from the custom table
+---@param key string
+---@param opts table
+---@param args table
+---@return string | nil
 local function get_custom_opt(key, opts, args)
   if opts["custom"] == nil then
     return nil
@@ -139,6 +148,11 @@ local function get_custom_opt(key, opts, args)
   end
 end
 
+---Gets the option from the files table
+---@param key string
+---@param opts table
+---@param args table
+---@return string | nil
 local function get_file_opt(key, opts, args, file)
   if opts["files"] == nil then
     return nil
@@ -160,6 +174,11 @@ local function get_file_opt(key, opts, args, file)
   end
 end
 
+---Gets the option from the dirs table
+---@param key string
+---@param opts table
+---@param args table
+---@return string | nil
 local function get_dir_opt(key, opts, args, dir)
   if opts["dirs"] == nil then
     return nil
@@ -181,13 +200,25 @@ local function get_dir_opt(key, opts, args, dir)
   end
 end
 
+---Gets the option from the filetypes table
+---@param key string
+---@param opts table
+---@return string | nil
+local function get_filetype_opt(key, opts, ft)
+  return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
+end
+
+---Gets the option from the default table
+---@param key string
+---@param opts table
+---@return string | nil
 local function get_default_opt(key, opts)
   return recursive_get_opt("default." .. key, opts)
 end
 
 M.opts = {}
 
----@param key string The key - nested opts are passed as e.g. "default.debug"
+---@param key string The key, may be nested (e.g. "default.debug")
 ---@param api_opts? table The opts passed to pasteImage function
 ---@return string | nil
 M.get_opt = function(key, api_opts, args)
