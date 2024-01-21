@@ -203,6 +203,13 @@ local function get_default_opt(key)
   return recursive_get_opt("default." .. key, M.opts)
 end
 
+---Gets the option from the main opts table
+---@param key string
+---@return string | nil
+local function get_unscoped_opt(key)
+  return recursive_get_opt(key, M.opts)
+end
+
 M.opts = {}
 
 ---@param key string The key, may be nested (e.g. "default.debug")
@@ -232,6 +239,9 @@ M.get_opt = function(key, api_opts, args)
   end
   if val == nil then
     val = get_default_opt(key)
+  end
+  if val == nil then
+    val = get_unscoped_opt(key)
   end
 
   return get_val(val, args)
