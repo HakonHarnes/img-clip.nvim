@@ -107,6 +107,7 @@ local function recursive_get_opt(key, opts)
       return nil -- option not found in this table
     end
   end
+
   return opts
 end
 
@@ -216,12 +217,24 @@ M.get_opt = function(key, api_opts, args)
   local opts = vim.tbl_deep_extend("force", {}, M.opts, api_opts or {})
 
   local val = get_custom_opt(key, opts, args)
-    or get_file_opt(key, opts, args, vim.fn.expand("%:p"))
-    or get_file_opt(key, opts, args, vim.fn.expand("%:p:t"))
-    or get_dir_opt(key, opts, args, vim.fn.expand("%:p:h"))
-    or get_dir_opt(key, opts, args, vim.fn.expand("%:p:h:t"))
-    or get_filetype_opt(key, opts, vim.bo.filetype)
-    or get_default_opt(key, opts)
+  if val == nil then
+    val = get_file_opt(key, opts, args, vim.fn.expand("%:p"))
+  end
+  if val == nil then
+    val = get_file_opt(key, opts, args, vim.fn.expand("%:p:t"))
+  end
+  if val == nil then
+    val = get_dir_opt(key, opts, args, vim.fn.expand("%:p:h"))
+  end
+  if val == nil then
+    val = get_dir_opt(key, opts, args, vim.fn.expand("%:p:h:t"))
+  end
+  if val == nil then
+    val = get_filetype_opt(key, opts, vim.bo.filetype)
+  end
+  if val == nil then
+    val = get_default_opt(key, opts)
+  end
 
   return get_val(val, args)
 end
