@@ -138,12 +138,9 @@ local function get_custom_opt(key, opts, args)
       M.opts = config_opts
 
       local val = M.get_opt(key, {}, args)
-      if val then
-        return val
-      end
 
       M.opts = M_opts
-      return nil
+      return val
     end
   end
 end
@@ -164,12 +161,9 @@ local function get_file_opt(key, opts, args, file)
       M.opts = config_file_opts
 
       local val = M.get_opt(key, {}, args)
-      if val then
-        return val
-      end
 
       M.opts = M_opts
-      return nil
+      return val
     end
   end
 end
@@ -190,12 +184,9 @@ local function get_dir_opt(key, opts, args, dir)
       M.opts = config_dir_opts
 
       local val = M.get_opt(key, {}, args)
-      if val then
-        return val
-      end
 
       M.opts = M_opts
-      return nil
+      return val
     end
   end
 end
