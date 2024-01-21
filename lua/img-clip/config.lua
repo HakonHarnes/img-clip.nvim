@@ -89,9 +89,9 @@ local defaults = {
   },
 }
 
-defaults.plaintex = defaults.tex
-defaults.rmd = defaults.markdown
-defaults.md = defaults.markdown
+defaults.filetypes.plaintex = defaults.filetypes.tex
+defaults.filetypes.rmd = defaults.fileypes.markdown
+defaults.filetypes.md = defaults.filetypes.markdown
 
 local function recursive_get_opt(key, opts)
   local keys = vim.split(key, ".", { plain = true, trimempty = true })
@@ -106,8 +106,37 @@ local function recursive_get_opt(key, opts)
   return opts
 end
 
+local function get_val(val, args)
+  if val == nil then
+    return nil
+  else
+    return type(val) == "function" and val(args or {}) or val
+  end
+end
+
 local function get_filetype_opt(key, opts, ft)
   return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
+end
+
+local function get_custom_opt(key, opts, args)
+  if opts["custom"] == nil then
+    return nil
+  end
+
+  for _, config_opts in pairs(opts["custom"]) do
+    if config_opts["trigger"] and get_val(config_opts["trigger"]) then
+      local M_opts = M.opts
+      M.opts = config_opts
+
+      local val = M.get_opt(key, {}, args)
+      if val then
+        return val
+      end
+
+      M.opts = M_opts
+      return nil
+    end
+  end
 end
 
 local function get_file_opt(key, opts, args, file)
@@ -126,6 +155,7 @@ local function get_file_opt(key, opts, args, file)
       end
 
       M.opts = M_opts
+      return nil
     end
   end
 end
@@ -146,20 +176,13 @@ local function get_dir_opt(key, opts, args, dir)
       end
 
       M.opts = M_opts
+      return nil
     end
   end
 end
 
 local function get_default_opt(key, opts)
   return recursive_get_opt("default." .. key, opts)
-end
-
-local function get_val(val, args)
-  if val == nil then
-    return nil
-  else
-    return type(val) == "function" and val(args or {}) or val
-  end
 end
 
 M.opts = {}
@@ -170,11 +193,12 @@ M.opts = {}
 M.get_opt = function(key, api_opts, args)
   local opts = vim.tbl_deep_extend("force", {}, M.opts, api_opts or {})
 
-  local val = get_file_opt(key, opts, args, vim.fn.expand("%:p"))
+  local val = get_custom_opt(key, opts, args)
+    or get_file_opt(key, opts, args, vim.fn.expand("%:p"))
     or get_file_opt(key, opts, args, vim.fn.expand("%:p:t"))
     or get_dir_opt(key, opts, args, vim.fn.expand("%:p:h"))
     or get_dir_opt(key, opts, args, vim.fn.expand("%:p:h:t"))
-    -- or get_filetype_opt(key, opts, "markdown")
+    or get_filetype_opt(key, opts, "markdown")
     or get_filetype_opt(key, opts, vim.bo.filetype)
     or get_default_opt(key, opts)
 
@@ -184,50 +208,5 @@ end
 function M.setup(config_opts)
   M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
 end
-
-local user_opts = {
-  default = {
-    debug = true,
-  },
-
-  filetypes = {
-    markdown = {
-      template = "test_template",
-    },
-  },
-
-  files = {
-    ["config.lua"] = {
-      default = {
-        template = "cool",
-      },
-
-      filetypes = {
-        markdown = {
-          template = "coolcoll",
-        },
-      },
-    },
-  },
-
-  dirs = {
-    ["img-clip"] = {
-      default = {
-        template = "dir_custom",
-      },
-
-      filetypes = {
-        markdown = {
-          template = "dogdog",
-        },
-      },
-    },
-  },
-}
-
-M.setup(user_opts)
-
-local test_val = M.get_opt("template")
-print(test_val)
 
 return M
