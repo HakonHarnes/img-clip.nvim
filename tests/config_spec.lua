@@ -3,7 +3,7 @@ local config = require("img-clip.config")
 describe("config", function()
   before_each(function()
     vim.bo.filetype = ""
-    config.setup({}) -- use default config values
+    config.setup({})
   end)
 
   it("should have default values for all configuration options", function()
@@ -31,9 +31,6 @@ describe("config", function()
     assert.is_true(config.get_opt("url_encode_path"))
     assert.equals("![$CURSOR]($FILE_PATH)", config.get_opt("template"))
     assert.is_false(config.get_opt("drag_and_drop.download_images"))
-
-    -- Add similar checks for other filetypes like html, tex, typst, rst, asciidoc, org
-    -- ...
   end)
 
   it("should allow overriding default values", function()
@@ -52,12 +49,23 @@ describe("config", function()
   it("should allow filetype-specific configuration", function()
     vim.bo.filetype = "markdown"
 
-    config.options.markdown = { template = "markdown-template-override" }
-    assert.equals("markdown-template-override", config.get_opt("template"))
+    config.setup({ filetypes = { markdown = { template = "markdown-template" } } })
+    assert.equals("markdown-template", config.get_opt("template"))
   end)
 
-  it("should prioritize explicitly passed options over defaults", function()
-    local opts = { file_name = "custom-filename" }
-    assert.equals("custom-filename", config.get_opt("file_name", opts))
+  it("should prioritize API options over config values", function()
+    assert.equals("custom-filename", config.get_opt("file_name", { file_name = "custom-filename" }))
+    assert.equals(true, config.get_opt("debug", { debug = true }))
+  end)
+
+  it("should execute functions that are passed in the API", function()
+    assert.equals(
+      42,
+      config.get_opt("life", {
+        life = function()
+          return 40 + 2
+        end,
+      })
+    )
   end)
 end)

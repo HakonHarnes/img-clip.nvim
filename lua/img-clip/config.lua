@@ -125,15 +125,14 @@ end
 
 ---Gets the option from the custom table
 ---@param key string
----@param opts table
 ---@param args table
 ---@return string | nil
-local function get_custom_opt(key, opts, args)
-  if opts["custom"] == nil then
+local function get_custom_opt(key, args)
+  if M.opts["custom"] == nil then
     return nil
   end
 
-  for _, config_opts in pairs(opts["custom"]) do
+  for _, config_opts in pairs(M.opts["custom"]) do
     if config_opts["trigger"] and get_val(config_opts["trigger"]) then
       local M_opts = M.opts
       M.opts = config_opts
@@ -148,15 +147,14 @@ end
 
 ---Gets the option from the files table
 ---@param key string
----@param opts table
 ---@param args table
 ---@return string | nil
-local function get_file_opt(key, opts, args, file)
-  if opts["files"] == nil then
+local function get_file_opt(key, args, file)
+  if M.opts["files"] == nil then
     return nil
   end
 
-  for config_file, config_file_opts in pairs(opts["files"]) do
+  for config_file, config_file_opts in pairs(M.opts["files"]) do
     if file:sub(-#config_file) == config_file then
       local M_opts = M.opts
       M.opts = config_file_opts
@@ -171,15 +169,14 @@ end
 
 ---Gets the option from the dirs table
 ---@param key string
----@param opts table
 ---@param args table
 ---@return string | nil
-local function get_dir_opt(key, opts, args, dir)
-  if opts["dirs"] == nil then
+local function get_dir_opt(key, args, dir)
+  if M.opts["dirs"] == nil then
     return nil
   end
 
-  for config_dir, config_dir_opts in pairs(opts["dirs"]) do
+  for config_dir, config_dir_opts in pairs(M.opts["dirs"]) do
     if dir:sub(1, #config_dir) == config_dir then
       local M_opts = M.opts
       M.opts = config_dir_opts
@@ -194,18 +191,16 @@ end
 
 ---Gets the option from the filetypes table
 ---@param key string
----@param opts table
 ---@return string | nil
-local function get_filetype_opt(key, opts, ft)
-  return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
+local function get_filetype_opt(key, ft)
+  return recursive_get_opt("filetypes." .. ft .. "." .. key, M.opts)
 end
 
 ---Gets the option from the default table
 ---@param key string
----@param opts table
 ---@return string | nil
-local function get_default_opt(key, opts)
-  return recursive_get_opt("default." .. key, opts)
+local function get_default_opt(key)
+  return recursive_get_opt("default." .. key, M.opts)
 end
 
 M.opts = {}
@@ -214,26 +209,29 @@ M.opts = {}
 ---@param api_opts? table The opts passed to pasteImage function
 ---@return string | nil
 M.get_opt = function(key, api_opts, args)
-  local opts = vim.tbl_deep_extend("force", {}, M.opts, api_opts or {})
+  if api_opts and api_opts[key] ~= nil then
+    local val = api_opts[key]
+    return get_val(val, args)
+  end
 
-  local val = get_custom_opt(key, opts, args)
+  local val = get_custom_opt(key, args)
   if val == nil then
-    val = get_file_opt(key, opts, args, vim.fn.expand("%:p"))
+    val = get_file_opt(key, args, vim.fn.expand("%:p"))
   end
   if val == nil then
-    val = get_file_opt(key, opts, args, vim.fn.expand("%:p:t"))
+    val = get_file_opt(key, args, vim.fn.expand("%:p:t"))
   end
   if val == nil then
-    val = get_dir_opt(key, opts, args, vim.fn.expand("%:p:h"))
+    val = get_dir_opt(key, args, vim.fn.expand("%:p:h"))
   end
   if val == nil then
-    val = get_dir_opt(key, opts, args, vim.fn.expand("%:p:h:t"))
+    val = get_dir_opt(key, args, vim.fn.expand("%:p:h:t"))
   end
   if val == nil then
-    val = get_filetype_opt(key, opts, vim.bo.filetype)
+    val = get_filetype_opt(key, vim.bo.filetype)
   end
   if val == nil then
-    val = get_default_opt(key, opts)
+    val = get_default_opt(key)
   end
 
   return get_val(val, args)

@@ -4,29 +4,38 @@ local markup = require("img-clip.markup")
 local util = require("img-clip.util")
 local fs = require("img-clip.fs")
 local spy = require("luassert.spy")
+local config = require("img-clip.config")
 
 describe("img-clip.init", function()
   describe("pasteImage", function()
     before_each(function()
       init.clip_cmd = nil
+
       clipboard.get_clip_cmd = function()
         return "xclip"
       end
+
       clipboard.content_is_image = function(cmd)
         return cmd == "xclip"
       end
+
       fs.get_file_path = function()
         return "/path/to/image.png"
       end
+
       fs.mkdirp = function()
         return true
       end
+
       clipboard.save_image = function()
         return true
       end
+
       markup.insert_markup = function()
         return true
       end
+
+      config.setup({})
 
       spy.on(util, "warn")
       spy.on(util, "error")
