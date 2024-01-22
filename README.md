@@ -159,7 +159,7 @@ The plugin comes with the following defaults:
 
   -- override opts for specific files, dirs or custom triggers
   files = {}, -- file specific opts (e.g. "main.md" or "/path/to/main.md")
-  dirs = {}, -- dir specific opts (e.g. "project" or "/home/hakon/project")
+  dirs = {}, -- dir specific opts (e.g. "project" or "/home/user/project")
   custom = {}, -- custom opts enabled with the trigger option
 }
 ```
@@ -252,7 +252,7 @@ The options can be nested arbitrarily deep:
 
 ```lua
 dirs = {
-  ["/home/hakon/markdown"] = {
+  ["/home/user/markdown"] = {
     template = "template for this project",
 
     filetypes = { -- filetypes opt nested inside dirs
