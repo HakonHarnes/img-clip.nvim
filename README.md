@@ -219,7 +219,7 @@ The plugin evaluates the options in the following order:
 
 Here's and example configuration:
 
-````lua
+```lua
 -- File-specific opts
 files = {
   ["/path/to/specific/file.md"] = {
@@ -268,7 +268,7 @@ dirs = {
     },
   },
 }
-````
+```
 
 ### Templates
 
