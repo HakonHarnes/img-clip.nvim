@@ -259,7 +259,7 @@ dirs = {
       markdown = {
         template = "markdown template"
       }
-    }
+    },
 
     files = { -- files opt nested inside dirs
       ["readme.md"] = {
