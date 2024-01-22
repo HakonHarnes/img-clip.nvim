@@ -181,7 +181,7 @@ local function get_dir_opt(key, args, dir)
   end
 
   for config_dir, config_dir_opts in pairs(M.opts["dirs"]) do
-    if dir:sub(1, #config_dir) == config_dir then
+    if string.find(dir, config_dir, 1, true) then
       local M_opts = M.opts
       M.opts = config_dir_opts
 
