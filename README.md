@@ -217,7 +217,7 @@ The plugin evaluates the options in the following order:
 4. File type-specific options
 5. Default options
 
-Here's and example configuration:
+Example configuration:
 
 ```lua
 -- File-specific opts
