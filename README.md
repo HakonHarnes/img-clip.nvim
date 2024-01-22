@@ -248,7 +248,7 @@ custom = {
 }
 ```
 
-The options can be nested arbitrarily deep, and the most specific option will always be used:
+The options can be nested arbitrarily deep:
 
 ```lua
 dirs = {
