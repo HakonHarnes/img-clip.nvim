@@ -87,6 +87,10 @@ local defaults = {
     ]=],
     },
   },
+
+  files = {}, -- file specific opts (e.g. "main.md" or "/path/to/main.md")
+  dirs = {}, -- dir specific opts (e.g. "project" or "/home/hakon/project")
+  custom = {}, -- custom opts enabled with the trigger option
 }
 
 defaults.filetypes.plaintex = defaults.filetypes.tex
