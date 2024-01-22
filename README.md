@@ -220,7 +220,7 @@ The plugin evaluates the options in the following order:
 Example configuration:
 
 ```lua
--- File-specific opts
+-- file-specific opts
 files = {
   ["/path/to/specific/file.md"] = {
     template = "Custom template for this file",
