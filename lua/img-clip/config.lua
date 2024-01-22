@@ -159,7 +159,7 @@ local function get_file_opt(key, args, file)
   end
 
   for config_file, config_file_opts in pairs(M.opts["files"]) do
-    if file:sub(-#config_file) == config_file then
+    if string.sub(file:lower(), -#config_file:lower()) == config_file:lower() then
       local M_opts = M.opts
       M.opts = config_file_opts
 
@@ -181,7 +181,7 @@ local function get_dir_opt(key, args, dir)
   end
 
   for config_dir, config_dir_opts in pairs(M.opts["dirs"]) do
-    if string.find(dir, config_dir, 1, true) then
+    if string.find(dir:lower(), config_dir:lower(), 1, true) then
       local M_opts = M.opts
       M.opts = config_dir_opts
 
