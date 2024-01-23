@@ -225,18 +225,21 @@ M.get_opt = function(key, api_opts, args)
     return get_val(val, args)
   end
 
+  local file_path = vim.fn.expand("%:p")
+  local dir_path = vim.fn.expand("%:p:h")
+
   local val = get_custom_opt(key, args)
   if val == nil then
-    val = get_file_opt(key, args, vim.fn.expand("%:p")) -- absolute file path (e.g. /home/hakon/project/main.md)
+    val = get_file_opt(key, args, file_path)
   end
   if val == nil then
-    val = get_file_opt(key, args, vim.fn.expand("%:p:t")) -- file name (e.g. main.md)
+    val = get_file_opt(key, args, vim.fn.resolve(file_path))
   end
   if val == nil then
-    val = get_dir_opt(key, args, vim.fn.expand("%:p:h")) -- absolute dir path (e.g. /home/hakon/project)
+    val = get_dir_opt(key, args, dir_path)
   end
   if val == nil then
-    val = get_dir_opt(key, args, vim.fn.expand("%:p:h:t")) -- folder name (e.g. project)
+    val = get_dir_opt(key, args, vim.fn.resolve(dir_path))
   end
   if val == nil then
     val = get_filetype_opt(key, vim.bo.filetype)
