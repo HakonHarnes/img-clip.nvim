@@ -166,8 +166,8 @@ The plugin comes with the following defaults:
 
 ### Options
 
-The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions.
-For example, to set the `dir_path` to match the name of the currently opened file:
+Option values can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions.
+For instance, to set the `dir_path` to match the name of the currently opened file:
 
 ```lua
 dir_path = function()
@@ -177,9 +177,9 @@ end,
 
 ### Filetypes
 
-The options can also be scoped to specific filetypes.
-In the default configuration the templates for the `markdown`, `html`, `tex` ..., files override the template defined in the global settings.
-Any option can be added under the specific filetype, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
+Filetype specific options will override the default (or global) configuration.
+Any option can be specified for a specific filetype.
+For instance, if you only want to use absolute file paths for LaTeX, then:
 
 ```lua
 filetypes = {
