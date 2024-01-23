@@ -94,10 +94,10 @@ The plugin comes with the following defaults:
     },
   },
 
-  -- file type specific opts
-  -- any opts that are passed here will override the default config
+  -- filetype specific options
+  -- any options that are passed here will override the default config
   -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular file type
+  -- only enable that for this particular filetype
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
   filetypes = {
     markdown = {
@@ -157,10 +157,10 @@ The plugin comes with the following defaults:
     },
   },
 
-  -- override opts for specific files, dirs or custom triggers
-  files = {}, -- file specific opts (e.g. "main.md" or "/path/to/main.md")
-  dirs = {}, -- dir specific opts (e.g. "project" or "/home/user/project")
-  custom = {}, -- custom opts enabled with the trigger option
+  -- override options for specific files, dirs or custom triggers
+  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
+  dirs = {}, -- dir specific options (e.g. "project" or "/home/user/project")
+  custom = {}, -- custom options enabled with the trigger option
 }
 ```
 
@@ -175,11 +175,11 @@ dir_path = function()
 end,
 ```
 
-### File types
+### Filetypes
 
-The options can also be scoped to specific file types.
+The options can also be scoped to specific filetypes.
 In the default configuration the templates for the `markdown`, `html`, `tex` ..., files override the template defined in the global settings.
-Any option can be added under the specific file type, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
+Any option can be added under the specific filetype, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
 
 ```lua
 filetypes = {
@@ -189,13 +189,13 @@ filetypes = {
 }
 ```
 
-File type-specific options are determined by the _file type_ (see `:help filetype`).
-You can override settings for any file type by specifying it as the key in your configuration:
+Filetype specific options are determined by the _filetype_ (see `:help filetype`).
+You can override settings for any filetype by specifying it as the key in your configuration:
 
 ```lua
 filetypes = {
   <filetype> = { -- obtained from "set filetype?"
-    -- add opts here
+    -- add options here
   }
 }
 ```
@@ -212,15 +212,15 @@ For custom options, you can specify a _trigger_ function that returns a boolean 
 The plugin evaluates the options in the following order:
 
 1. Custom options
-2. File-specific options
-3. Directory-specific options
-4. File type-specific options
+2. File specific options
+3. Directory specific options
+4. Filetype specific options
 5. Default options
 
 Example configuration:
 
 ```lua
--- file-specific opts
+-- file specific options
 files = {
   ["/path/to/specific/file.md"] = {
     template = "Custom template for this file",
@@ -230,14 +230,14 @@ files = {
   },
 },
 
--- directory-specific opts
+-- directory specific options
 dirs = {
   ["/path/to/project"] = {
-    template = "Project-specific template",
+    template = "Project specific template",
   },
 },
 
--- custom opts
+-- custom options
 custom = {
   {
     trigger = function() -- returns true to activate
