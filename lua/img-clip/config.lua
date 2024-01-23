@@ -97,21 +97,23 @@ defaults.filetypes.plaintex = defaults.filetypes.tex
 defaults.filetypes.rmd = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
 
----Sort table keys by their length in descending order
----@param tbl table: The table whose keys will be sorted.
----@return table: A table containing the sorted keys.
-local function sort_table(tbl)
-  local sorted_table = {}
+local function sort_config()
+  local function sort_keys(tbl)
+    local sorted_keys = {}
 
-  for key in pairs(tbl) do
-    table.insert(sorted_table, key)
+    for key in pairs(tbl) do
+      table.insert(sorted_keys, key)
+    end
+
+    table.sort(sorted_keys, function(a, b)
+      return #a > #b
+    end)
+
+    return sorted_keys
   end
 
-  table.sort(sorted_table, function(a, b)
-    return #a > #b
-  end)
-
-  return sorted_table
+  M.opts["sorted_files"] = sort_keys(M.opts["files"])
+  M.opts["sorted_dirs"] = sort_keys(M.opts["dirs"])
 end
 
 ---Recursively gets the value of the option (e.g. "default.debug")
@@ -175,8 +177,7 @@ local function get_file_opt(key, args, file)
     return nil
   end
 
-  local sorted_table = sort_table(M.opts["files"])
-  for _, config_file in ipairs(sorted_table) do
+  for _, config_file in ipairs(M.opts["sorted_files"]) do
     if string.sub(file:lower(), -#config_file:lower()) == config_file:lower() then
       local config_file_opts = M.opts["files"][config_file]
       local original_opts = M.opts
@@ -199,8 +200,7 @@ local function get_dir_opt(key, args, dir)
     return nil
   end
 
-  local sorted_table = sort_table(M.opts["dirs"])
-  for _, config_dir in ipairs(sorted_table) do
+  for _, config_dir in ipairs(M.opts["sorted_dirs"]) do
     if string.find(dir:lower(), config_dir:lower(), 1, true) then
       local config_dir_opts = M.opts["dirs"][config_dir]
       local original_opts = M.opts
@@ -277,6 +277,7 @@ end
 
 function M.setup(config_opts)
   M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
+  sort_config()
 end
 
 return M
