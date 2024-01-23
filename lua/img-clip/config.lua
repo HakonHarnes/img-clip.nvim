@@ -177,8 +177,12 @@ local function get_file_opt(key, args, file)
     return nil
   end
 
+  local function file_matches(f1, f2)
+    return string.sub(f1:lower(), -#f2:lower()) == f2:lower()
+  end
+
   for _, config_file in ipairs(M.opts["sorted_files"]) do
-    if string.sub(file:lower(), -#config_file:lower()) == config_file:lower() then
+    if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(config_file)) then
       local config_file_opts = M.opts["files"][config_file]
       local original_opts = M.opts
       M.opts = config_file_opts
@@ -200,8 +204,12 @@ local function get_dir_opt(key, args, dir)
     return nil
   end
 
+  local function dir_matches(d1, d2)
+    return string.find(d1:lower(), d2:lower(), 1, true)
+  end
+
   for _, config_dir in ipairs(M.opts["sorted_dirs"]) do
-    if string.find(dir:lower(), config_dir:lower(), 1, true) then
+    if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(config_dir)) then
       local config_dir_opts = M.opts["dirs"][config_dir]
       local original_opts = M.opts
       M.opts = config_dir_opts
@@ -246,21 +254,12 @@ M.get_opt = function(key, api_opts, args)
     return get_val(val, args)
   end
 
-  local file_path = vim.fn.expand("%:p")
-  local dir_path = vim.fn.expand("%:p:h")
-
   local val = get_custom_opt(key, args)
   if val == nil then
-    val = get_file_opt(key, args, file_path)
+    val = get_file_opt(key, args, vim.fn.expand("%:p"))
   end
   if val == nil then
-    val = get_file_opt(key, args, vim.fn.resolve(file_path))
-  end
-  if val == nil then
-    val = get_dir_opt(key, args, dir_path)
-  end
-  if val == nil then
-    val = get_dir_opt(key, args, vim.fn.resolve(dir_path))
+    val = get_dir_opt(key, args, vim.fn.expand("%:p:h"))
   end
   if val == nil then
     val = get_filetype_opt(key, vim.bo.filetype)
