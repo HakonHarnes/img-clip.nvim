@@ -25,10 +25,10 @@ local defaults = {
     },
   },
 
-  -- file-type specific opts
-  -- any opts that are passed here will override the default config
+  -- filetype specific options
+  -- any options that are passed here will override the default config
   -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular file type
+  -- only enable that for this particular filetype
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
   filetypes = {
     markdown = {
@@ -88,14 +88,31 @@ local defaults = {
     },
   },
 
-  files = {}, -- file specific opts (e.g. "main.md" or "/path/to/main.md")
-  dirs = {}, -- dir specific opts (e.g. "project" or "/home/hakon/project")
-  custom = {}, -- custom opts enabled with the trigger option
+  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
+  dirs = {}, -- dir specific options (e.g. "project" or "/home/hakon/project")
+  custom = {}, -- custom options enabled with the trigger option
 }
 
 defaults.filetypes.plaintex = defaults.filetypes.tex
 defaults.filetypes.rmd = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
+
+---Sort table keys by their length in descending order
+---@param tbl table: The table whose keys will be sorted.
+---@return table: A table containing the sorted keys.
+local function sort_table(tbl)
+  local sorted_table = {}
+
+  for key in pairs(tbl) do
+    table.insert(sorted_table, key)
+  end
+
+  table.sort(sorted_table, function(a, b)
+    return #a > #b
+  end)
+
+  return sorted_table
+end
 
 ---Recursively gets the value of the option (e.g. "default.debug")
 ---@param key string
@@ -158,17 +175,19 @@ local function get_file_opt(key, args, file)
     return nil
   end
 
-  for config_file, config_file_opts in pairs(M.opts["files"]) do
+  local sorted_table = sort_table(M.opts["files"])
+  for _, config_file in ipairs(sorted_table) do
     if string.sub(file:lower(), -#config_file:lower()) == config_file:lower() then
-      local M_opts = M.opts
+      local config_file_opts = M.opts["files"][config_file]
+      local original_opts = M.opts
       M.opts = config_file_opts
-
       local val = M.get_opt(key, {}, args)
-
-      M.opts = M_opts
+      M.opts = original_opts
       return val
     end
   end
+
+  return nil
 end
 
 ---Gets the option from the dirs table
@@ -180,17 +199,19 @@ local function get_dir_opt(key, args, dir)
     return nil
   end
 
-  for config_dir, config_dir_opts in pairs(M.opts["dirs"]) do
+  local sorted_table = sort_table(M.opts["dirs"])
+  for _, config_dir in ipairs(sorted_table) do
     if string.find(dir:lower(), config_dir:lower(), 1, true) then
-      local M_opts = M.opts
+      local config_dir_opts = M.opts["dirs"][config_dir]
+      local original_opts = M.opts
       M.opts = config_dir_opts
-
       local val = M.get_opt(key, {}, args)
-
-      M.opts = M_opts
+      M.opts = original_opts
       return val
     end
   end
+
+  return nil
 end
 
 ---Gets the option from the filetypes table
@@ -216,8 +237,8 @@ end
 
 M.opts = {}
 
----@param key string The key, may be nested (e.g. "default.debug")
----@param api_opts? table The opts passed to pasteImage function
+---@param key string: The key, may be nested (e.g. "default.debug")
+---@param api_opts? table: The opts passed to pasteImage function
 ---@return string | nil
 M.get_opt = function(key, api_opts, args)
   if api_opts and api_opts[key] ~= nil then
