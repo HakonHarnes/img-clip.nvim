@@ -155,14 +155,12 @@ local function get_custom_opt(key, args)
     return nil
   end
 
-  for _, config_opts in pairs(M.opts["custom"]) do
+  for _, config_opts in ipairs(M.opts["custom"]) do
     if config_opts["trigger"] and get_val(config_opts["trigger"]) then
-      local M_opts = M.opts
+      local original_opts = M.opts
       M.opts = config_opts
-
       local val = M.get_opt(key, {}, args)
-
-      M.opts = M_opts
+      M.opts = original_opts
       return val
     end
   end
