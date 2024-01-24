@@ -180,7 +180,7 @@ local function get_file_opt(key, args, file)
   end
 
   for _, config_file in ipairs(M.opts["sorted_files"]) do
-    if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(config_file)) then
+    if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(vim.fn.expand(config_file))) then
       local config_file_opts = M.opts["files"][config_file]
       local original_opts = M.opts
       M.opts = config_file_opts
@@ -207,7 +207,7 @@ local function get_dir_opt(key, args, dir)
   end
 
   for _, config_dir in ipairs(M.opts["sorted_dirs"]) do
-    if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(config_dir)) then
+    if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(vim.fn.expand(config_dir))) then
       local config_dir_opts = M.opts["dirs"][config_dir]
       local original_opts = M.opts
       M.opts = config_dir_opts
