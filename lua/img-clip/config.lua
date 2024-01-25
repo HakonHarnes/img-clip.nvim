@@ -100,6 +100,8 @@ defaults.filetypes.plaintex = defaults.filetypes.tex
 defaults.filetypes.rmd = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
 
+---@param opts table
+---@return table
 local function sort_config(opts)
   local function sort_keys(tbl)
     local sorted_keys = {}
@@ -121,6 +123,9 @@ local function sort_config(opts)
   return opts
 end
 
+---Gets the config
+---Can be either the default config or the config from the config file
+---@return table
 local function get_config()
   -- use cached config if available
   local dir_path = vim.fn.expand("%:p:h")
@@ -179,7 +184,7 @@ end
 
 ---Gets the option from the custom table
 ---@param key string
----@param args table
+---@param args? table
 ---@return string | nil
 local function get_custom_opt(key, opts, args)
   if opts["custom"] == nil then
@@ -195,7 +200,7 @@ end
 
 ---Gets the option from the files table
 ---@param key string
----@param args table
+---@param args? table
 ---@return string | nil
 local function get_file_opt(key, opts, args, file)
   if opts["files"] == nil then
@@ -217,7 +222,7 @@ end
 
 ---Gets the option from the dirs table
 ---@param key string
----@param args table
+---@param args? table
 ---@return string | nil
 local function get_dir_opt(key, opts, args, dir)
   if opts["dirs"] == nil then
@@ -260,6 +265,8 @@ end
 
 ---@param key string: The key, may be nested (e.g. "default.debug")
 ---@param api_opts? table: The opts passed to pasteImage function
+---@param args? table: Args that should be passed to the option function
+---@param opts? table: The opts table to use instead of the config
 ---@return string | nil
 M.get_opt = function(key, api_opts, args, opts)
   if api_opts then
@@ -270,6 +277,7 @@ M.get_opt = function(key, api_opts, args, opts)
   end
 
   -- if options are passed explicitly, use those instead of the config
+  -- otherwise use the config (either from file or neovim config)
   opts = opts or get_config()
 
   local val = get_custom_opt(key, opts, args)
