@@ -5,7 +5,9 @@ local fs = require("img-clip.fs")
 describe("fs", function()
   before_each(function()
     config.setup({})
-    config.configs = {}
+    config.get_config = function()
+      return config.opts
+    end
   end)
 
   describe("get_file_path", function()

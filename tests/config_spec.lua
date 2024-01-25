@@ -4,7 +4,9 @@ describe("config", function()
   before_each(function()
     vim.bo.filetype = ""
     config.setup({})
-    config.configs = {}
+    config.get_config = function()
+      return config.opts
+    end
   end)
 
   it("should have default values for all configuration options", function()

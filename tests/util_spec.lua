@@ -4,7 +4,9 @@ local config = require("img-clip.config")
 describe("util", function()
   before_each(function()
     config.setup({})
-    config.configs = {}
+    config.get_config = function()
+      return config.opts
+    end
   end)
 
   describe("execute", function()

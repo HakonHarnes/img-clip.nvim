@@ -4,8 +4,10 @@ local util = require("img-clip.util")
 
 describe("drag and drop", function()
   before_each(function()
+    config.get_config = function()
+      return config.opts
+    end
     config.setup({})
-    config.configs = {}
   end)
 
   describe("handle_paste", function()

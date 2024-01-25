@@ -9,7 +9,9 @@ local config = require("img-clip.config")
 describe("img-clip.init", function()
   before_each(function()
     config.setup({})
-    config.configs = {}
+    config.get_config = function()
+      return config.opts
+    end
   end)
 
   describe("pasteImage", function()

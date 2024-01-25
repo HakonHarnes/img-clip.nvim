@@ -102,7 +102,7 @@ defaults.filetypes.md = defaults.filetypes.markdown
 
 ---@param opts table
 ---@return table
-local function sort_config(opts)
+M.sort_config = function(opts)
   local function sort_keys(tbl)
     local sorted_keys = {}
 
@@ -126,7 +126,7 @@ end
 ---Gets the config
 ---Can be either the default config or the config from the config file
 ---@return table
-local function get_config()
+M.get_config = function()
   -- use cached config if available
   local dir_path = vim.fn.expand("%:p:h")
   if M.configs[dir_path] and M.configs[dir_path] ~= {} then
@@ -144,8 +144,7 @@ local function get_config()
 
     if success then
       local opts = vim.tbl_deep_extend("force", {}, defaults, output)
-      opts = sort_config(opts)
-      M.configs[dir_path] = sort_config(opts)
+      M.configs[dir_path] = M.sort_config(opts)
       return M.configs[dir_path]
     else
       M.configs[dir_path] = {}
@@ -283,7 +282,7 @@ M.get_opt = function(key, api_opts, args, opts)
 
   -- if options are passed explicitly, use those instead of the config
   -- otherwise use the config (either from file or neovim config)
-  opts = opts or get_config()
+  opts = opts or M.get_config()
 
   local val = get_custom_opt(key, opts, args)
   if val == nil then
@@ -307,7 +306,7 @@ end
 
 function M.setup(config_opts)
   M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
-  M.opts = sort_config(M.opts)
+  M.opts = M.sort_config(M.opts)
 end
 
 return M
