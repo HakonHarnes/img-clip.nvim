@@ -136,7 +136,6 @@ local function get_config()
     if success then
       local config_file_options = vim.tbl_deep_extend("force", {}, M.opts, output)
       config_file_options = sort_config(config_file_options)
-      -- return config_file_options
       M.configs[dir_path] = config_file_options
       return config_file_options
     end
