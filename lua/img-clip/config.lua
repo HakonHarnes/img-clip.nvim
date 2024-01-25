@@ -129,8 +129,12 @@ end
 local function get_config()
   -- use cached config if available
   local dir_path = vim.fn.expand("%:p:h")
-  if M.configs[dir_path] then
+  if M.configs[dir_path] and M.configs[dir_path] ~= {} then
     return M.configs[dir_path]
+
+  -- no config file found, use default config
+  elseif M.configs[dir_path] == {} then
+    return M.opts
   end
 
   -- find config file in the current directory or any parent directory
@@ -143,9 +147,10 @@ local function get_config()
       config_file_options = sort_config(config_file_options)
       M.configs[dir_path] = config_file_options
       return config_file_options
+    else
+      M.configs[dir_path] = {}
+      print("Error loading config file: " .. output)
     end
-
-    print("Error loading config file: " .. output)
   end
 
   -- use default config if no config file is found
