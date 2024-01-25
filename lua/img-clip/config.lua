@@ -25,28 +25,28 @@ local defaults = {
     },
   },
 
-  -- file-type specific options
+  -- filetype specific options
   -- any options that are passed here will override the default config
   -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular file type
+  -- only enable that for this particular filetype
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
+  filetypes = {
+    markdown = {
+      url_encode_path = true,
+      template = "![$CURSOR]($FILE_PATH)",
 
-  markdown = {
-    url_encode_path = true,
-    template = "![$CURSOR]($FILE_PATH)",
-
-    drag_and_drop = {
-      download_images = false,
+      drag_and_drop = {
+        download_images = false,
+      },
     },
-  },
 
-  html = {
-    template = '<img src="$FILE_PATH" alt="$CURSOR">',
-  },
+    html = {
+      template = '<img src="$FILE_PATH" alt="$CURSOR">',
+    },
 
-  tex = {
-    relative_template_path = false,
-    template = [[
+    tex = {
+      relative_template_path = false,
+      template = [[
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
@@ -54,95 +54,227 @@ local defaults = {
   \label{fig:$LABEL}
 \end{figure}
     ]],
-  },
+    },
 
-  typst = {
-    template = [[
+    typst = {
+      template = [[
 #figure(
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
     ]],
-  },
+    },
 
-  rst = {
-    template = [[
+    rst = {
+      template = [[
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
     ]],
-  },
+    },
 
-  asciidoc = {
-    template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
-  },
+    asciidoc = {
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+    },
 
-  org = {
-    template = [=[
+    org = {
+      template = [=[
 #+BEGIN_FIGURE
 [[file:$FILE_PATH]]
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
     ]=],
+    },
   },
+
+  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
+  dirs = {}, -- dir specific options (e.g. "project" or "/home/hakon/project")
+  custom = {}, -- custom options enabled with the trigger option
 }
 
-defaults.plaintex = defaults.tex
-defaults.rmd = defaults.markdown
-defaults.md = defaults.markdown
+defaults.filetypes.plaintex = defaults.filetypes.tex
+defaults.filetypes.rmd = defaults.filetypes.markdown
+defaults.filetypes.md = defaults.filetypes.markdown
 
-M.options = {}
+local function sort_config()
+  local function sort_keys(tbl)
+    local sorted_keys = {}
 
+    for key in pairs(tbl) do
+      table.insert(sorted_keys, key)
+    end
+
+    table.sort(sorted_keys, function(a, b)
+      return #a > #b
+    end)
+
+    return sorted_keys
+  end
+
+  M.opts["sorted_files"] = sort_keys(M.opts["files"])
+  M.opts["sorted_dirs"] = sort_keys(M.opts["dirs"])
+end
+
+---Recursively gets the value of the option (e.g. "default.debug")
 ---@param key string
----@param opts? table The options passed to pasteImage function
+---@param opts table
 ---@return string | nil
-M.get_option = function(key, opts, args)
-  local ft = vim.bo.filetype
-  local val
+local function recursive_get_opt(key, opts)
+  local keys = vim.split(key, ".", { plain = true, trimempty = true })
 
-  local function extract_option(table, nested_key)
-    local keys = vim.split(nested_key, ".", { plain = true, trimempty = true })
-    for _, k in ipairs(keys) do
-      if table and table[k] ~= nil then
-        table = table[k] -- navigate into the nested structure
-      else
-        return nil -- option not found in this table
-      end
+  for _, k in pairs(keys) do
+    if opts and opts[k] ~= nil then
+      opts = opts[k]
+    else
+      return nil
     end
-    return table
   end
 
-  -- check options passed explicitly to pasteImage function
-  if opts and opts[key] ~= nil then
-    val = opts[key]
+  return opts
+end
 
-  -- check for filetype-specific option, including nested ones
-  elseif M.options[ft] then
-    val = extract_option(M.options[ft], key)
-    if val == nil then
-      -- fallback to default if not found in filetype-specific options
-      val = extract_option(M.options["default"], key)
-    end
-
-  -- check for global option, including nested ones
-  elseif M.options["default"] then
-    val = extract_option(M.options["default"], key)
-  end
-
-  -- return nil if no option found
+---Gets the value of the option, executing it if it's a function
+---@param val any
+---@param args? table
+---@return string | nil
+local function get_val(val, args)
   if val == nil then
-    vim.notify("No option found for " .. key .. ".", vim.log.levels.WARN, { title = "img-clip" })
+    return nil
+  else
+    return type(val) == "function" and val(args or {}) or val
+  end
+end
+
+---Gets the option from the custom table
+---@param key string
+---@param args table
+---@return string | nil
+local function get_custom_opt(key, args)
+  if M.opts["custom"] == nil then
     return nil
   end
 
-  return type(val) == "function" and val(args or {}) or val -- execute if function
+  for _, config_opts in ipairs(M.opts["custom"]) do
+    if config_opts["trigger"] and get_val(config_opts["trigger"]) then
+      local original_opts = M.opts
+      M.opts = config_opts
+      local val = M.get_opt(key, {}, args)
+      M.opts = original_opts
+      return val
+    end
+  end
 end
 
-function M.setup(opts)
-  M.options = vim.tbl_deep_extend("force", {}, defaults, opts or {})
+---Gets the option from the files table
+---@param key string
+---@param args table
+---@return string | nil
+local function get_file_opt(key, args, file)
+  if M.opts["files"] == nil then
+    return nil
+  end
+
+  local function file_matches(f1, f2)
+    return string.sub(f1:lower(), -#f2:lower()) == f2:lower()
+  end
+
+  for _, config_file in ipairs(M.opts["sorted_files"]) do
+    if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(vim.fn.expand(config_file))) then
+      local config_file_opts = M.opts["files"][config_file]
+      local original_opts = M.opts
+      M.opts = config_file_opts
+      local val = M.get_opt(key, {}, args)
+      M.opts = original_opts
+      return val
+    end
+  end
+
+  return nil
 end
 
-M.setup()
+---Gets the option from the dirs table
+---@param key string
+---@param args table
+---@return string | nil
+local function get_dir_opt(key, args, dir)
+  if M.opts["dirs"] == nil then
+    return nil
+  end
+
+  local function dir_matches(d1, d2)
+    return string.find(d1:lower(), d2:lower(), 1, true)
+  end
+
+  for _, config_dir in ipairs(M.opts["sorted_dirs"]) do
+    if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(vim.fn.expand(config_dir))) then
+      local config_dir_opts = M.opts["dirs"][config_dir]
+      local original_opts = M.opts
+      M.opts = config_dir_opts
+      local val = M.get_opt(key, {}, args)
+      M.opts = original_opts
+      return val
+    end
+  end
+
+  return nil
+end
+
+---Gets the option from the filetypes table
+---@param key string
+---@return string | nil
+local function get_filetype_opt(key, ft)
+  return recursive_get_opt("filetypes." .. ft .. "." .. key, M.opts)
+end
+
+---Gets the option from the default table
+---@param key string
+---@return string | nil
+local function get_default_opt(key)
+  return recursive_get_opt("default." .. key, M.opts)
+end
+
+---Gets the option from the main opts table
+---@param key string
+---@return string | nil
+local function get_unscoped_opt(key)
+  return recursive_get_opt(key, M.opts)
+end
+
+M.opts = {}
+
+---@param key string: The key, may be nested (e.g. "default.debug")
+---@param api_opts? table: The opts passed to pasteImage function
+---@return string | nil
+M.get_opt = function(key, api_opts, args)
+  if api_opts and api_opts[key] ~= nil then
+    local val = api_opts[key]
+    return get_val(val, args)
+  end
+
+  local val = get_custom_opt(key, args)
+  if val == nil then
+    val = get_file_opt(key, args, vim.fn.expand("%:p"))
+  end
+  if val == nil then
+    val = get_dir_opt(key, args, vim.fn.expand("%:p:h"))
+  end
+  if val == nil then
+    val = get_filetype_opt(key, vim.bo.filetype)
+  end
+  if val == nil then
+    val = get_default_opt(key)
+  end
+  if val == nil then
+    val = get_unscoped_opt(key)
+  end
+
+  return get_val(val, args)
+end
+
+function M.setup(config_opts)
+  M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
+  sort_config()
+end
 
 return M

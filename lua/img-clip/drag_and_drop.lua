@@ -10,7 +10,7 @@ local M = {}
 ---@return boolean status
 local handle_image_url = function(url)
   -- download the image in the link and insert the markup
-  if config.get_option("drag_and_drop.download_images") then
+  if config.get_opt("drag_and_drop.download_images") then
     -- get the file path
     local file_path = fs.get_file_path("png")
     if not file_path then
@@ -53,7 +53,7 @@ end
 ---@return boolean status
 local handle_image_path = function(path)
   -- copy the image to the dir_path and insert the markup
-  if config.get_option("drag_and_drop.copy_images") then
+  if config.get_opt("drag_and_drop.copy_images") then
     -- get the file path
     local file_path = fs.get_file_path("png")
     if file_path then

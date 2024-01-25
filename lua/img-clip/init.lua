@@ -75,7 +75,7 @@ local embed_image_as_base64 = function(opts)
   end
 
   -- check if base64 string is too long - max_base64_size is in KB
-  if string.len(base64) > config.get_option("max_base64_size", opts) * 1024 then
+  if string.len(base64) > config.get_opt("max_base64_size", opts) * 1024 then
     return false
   end
 
@@ -111,7 +111,7 @@ M.pasteImage = function(opts)
   end
 
   -- paste as base 64 if enabled and supported, otherwise paste as file
-  if config.get_option("embed_image_as_base64", opts) and language_supports_base64_embedding(vim.bo.filetype) then
+  if config.get_opt("embed_image_as_base64", opts) and language_supports_base64_embedding(vim.bo.filetype) then
     if embed_image_as_base64(opts) then
       return true
     end

@@ -73,26 +73,26 @@ end
 ---@param opts? table
 ---@return string
 M.get_file_path = function(ext, opts)
-  local config_dir_path = config.get_option("dir_path", opts)
-  local config_file_name = os.date(config.get_option("file_name", opts))
+  local config_dir_path = config.get_opt("dir_path", opts)
+  local config_file_name = os.date(config.get_opt("file_name", opts))
 
   local dir_path = config_dir_path
-  if config.get_option("relative_to_current_file", opts) then
+  if config.get_opt("relative_to_current_file", opts) then
     local current_file_path = vim.fn.expand("%:.:h")
     if current_file_path ~= "." and current_file_path ~= "" then
       dir_path = current_file_path .. M.sep .. config_dir_path
     end
   end
 
-  if config.get_option("use_absolute_path", opts) then
+  if config.get_opt("use_absolute_path", opts) then
     dir_path = vim.fn.fnamemodify(dir_path, ":p")
   end
 
   dir_path = M.normalize_path(dir_path)
 
   local file_path
-  if config.get_option("prompt_for_file_name", opts) then
-    if config.get_option("show_dir_path_in_prompt", opts) then
+  if config.get_opt("prompt_for_file_name", opts) then
+    if config.get_opt("show_dir_path_in_prompt", opts) then
       local input_file_path = util.input({
         prompt = "File path: ",
         default = dir_path,

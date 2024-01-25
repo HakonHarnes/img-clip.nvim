@@ -36,7 +36,7 @@ M.execute = function(cmd, powershell)
   local output = vim.fn.system(command)
   local exit_code = vim.v.shell_error
 
-  if config.get_option("debug") then
+  if config.get_opt("debug") then
     print("Shell: " .. shell)
     print("Command: " .. command)
     print("Exit code: " .. exit_code)

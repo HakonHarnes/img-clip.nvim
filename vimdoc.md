@@ -2,16 +2,14 @@
 
 Effortlessly embed images into any markup language, like LaTeX, Markdown or Typst.
 
-![demo](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/db364ae2-f966-43d2-8f15-34654e03e0f4)
-
 ## Features
 
-- Paste images **directly** from the system **clipboard**.
-- **Drag and drop** images from your web browser or file explorer to embed them.
-- Embed images as **files**, **URLs**, or directly as **Base64**.
-- **Configurable templates** with cursor positioning and figure labels.
-- **Default templates** for widely-used markup languages like LaTeX, Markdown and Typst.
-- **Cross-compatibility** with Linux, Windows, and MacOS.
+- Paste images directly from the system clipboard.
+- Drag and drop images from your web browser or file explorer to embed them.
+- Embed images as files, URLs, or directly as Base64.
+- Configurable templates with cursor positioning and figure labels.
+- Default templates for widely-used markup languages like LaTeX, Markdown and Typst.
+- Cross-compatibility with Linux, Windows, and MacOS.
 
 See these features in action in the [demonstration section](#demonstration)!
 
@@ -32,7 +30,7 @@ Install the plugin with your preferred package manager:
 ```lua
 return {
   "HakonHarnes/img-clip.nvim",
-  cmd = "PasteImage",
+  event = "BufEnter",
   opts = {
     -- add options here
     -- or leave it empty to use the default settings
@@ -94,28 +92,28 @@ The plugin comes with the following defaults:
     },
   },
 
-  -- file-type specific options
+  -- filetype specific options
   -- any options that are passed here will override the default config
   -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular file type
+  -- only enable that for this particular filetype
   -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
+  filetypes = {
+    markdown = {
+      url_encode_path = true,
+      template = "![$CURSOR]($FILE_PATH)",
 
-  markdown = {
-    url_encode_path = true,
-    template = "![$CURSOR]($FILE_PATH)",
-
-    drag_and_drop = {
-      download_images = false,
+      drag_and_drop = {
+        download_images = false,
+      },
     },
-  },
 
-  html = {
-    template = '<img src="$FILE_PATH" alt="$CURSOR">',
-  },
+    html = {
+      template = '<img src="$FILE_PATH" alt="$CURSOR">',
+    },
 
-  tex = {
-    relative_template_path = false,
-    template = [[
+    tex = {
+      relative_template_path = false,
+      template = [[
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
@@ -123,44 +121,51 @@ The plugin comes with the following defaults:
   \label{fig:$LABEL}
 \end{figure}
     ]],
-  },
+    },
 
-  typst = {
-    template = [[
+    typst = {
+      template = [[
 #figure(
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
     ]],
-  },
+    },
 
-  rst = {
-    template = [[
+    rst = {
+      template = [[
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
     ]],
-  },
+    },
 
-  asciidoc = {
-    template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
-  },
+    asciidoc = {
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+    },
 
-  org = {
-    template = [=[
+    org = {
+      template = [=[
 #+BEGIN_FIGURE
 [[file:$FILE_PATH]]
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
     ]=],
+    },
   },
+
+  -- override options for specific files, dirs or custom triggers
+  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
+  dirs = {}, -- dir specific options (e.g. "project" or "/home/user/project")
+  custom = {}, -- custom options enabled with the trigger option
 }
 ```
 
 ### Options
 
-The options can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions. For example, to set the `dir_path` to match the name of the currently opened file:
+Option values can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions.
+For instance, to set the `dir_path` to match the name of the currently opened file:
 
 ```lua
 dir_path = function()
@@ -168,27 +173,105 @@ dir_path = function()
 end,
 ```
 
-### File types
+### Filetypes
 
-The options can also be scoped to specific file types. In the default configuration the templates for the `markdown`, `html`, `tex` ..., files override the template defined in the global settings. Any option can be added under the specific file type, not just the template. For instance, if you only want to use absolute file paths for LaTeX, then:
+Filetype specific options will override the default (or global) configuration.
+Any option can be specified for a specific filetype.
+For instance, if you only want to use absolute file paths for LaTeX, then:
 
 ```lua
-tex = {
-  use_absolute_path = true
+filetypes = {
+  tex = {
+    use_absolute_path = true
+  }
 }
 ```
 
-File type-specific options are determined by the _file type_ (see `:help filetype`). You can override settings for any file type by specifying it as the key in your configuration:
+Filetype specific options are determined by the _filetype_ (see `:help filetype`).
+You can override settings for any filetype by specifying it as the key in your configuration:
 
 ```lua
-<filetype> = { -- obtained from "set filetype?"
-  -- add opts here
+filetypes = {
+  <filetype> = { -- obtained from "set filetype?"
+    -- add options here
+  }
+}
+```
+
+### Overriding options for specific files, directories or custom triggers
+
+Options can be overridden for specific files, directories or based on custom conditions.
+This means that you can have different options for different projects, or even different files within the same project.
+
+For files and directories, you can specify settings that apply to only a specific file or directory using its absolute path (e.g. `/home/user/project/README.md`).
+You can also specify a general file or directory name (e.g. `README.md`) which will apply the settings to any `README.md` file.
+For custom options, you can specify a _trigger_ function that returns a boolean value that is used to enable it.
+
+The plugin evaluates the options in the following order:
+
+1. Custom options
+2. File specific options
+3. Directory specific options
+4. Filetype specific options
+5. Default options
+
+Example configuration:
+
+```lua
+-- file specific options
+files = {
+  ["/path/to/specific/file.md"] = {
+    template = "Custom template for this file",
+  },
+  ["README.md"] = {
+    template = "Custom template for README.md files",
+  },
+},
+
+-- directory specific options
+dirs = {
+  ["/path/to/project"] = {
+    template = "Project specific template",
+  },
+},
+
+-- custom options
+custom = {
+  {
+    trigger = function() -- returns true to activate
+      return vim.fn.strftime("%A") == "Monday"
+    end,
+    template = "Template for Mondays only",
+  },
+}
+```
+
+The options can be nested arbitrarily deep:
+
+```lua
+dirs = {
+  ["/home/user/markdown"] = {
+    template = "template for this project",
+
+    filetypes = { -- filetypes opt nested inside dirs
+      markdown = {
+        template = "markdown template"
+      }
+    },
+
+    files = { -- files opt nested inside dirs
+      ["readme.md"] = {
+        dir_path = "images"
+      },
+    },
+  },
 }
 ```
 
 ### Templates
 
-Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime. For available placeholders, see the following table and the [demonstration](#demonstration):
+Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime.
+For available placeholders, see the following table and the [demonstration](#demonstration):
 
 | Placeholder         | Description                                                                                             | Example                            |
 | ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
@@ -208,10 +291,13 @@ end
 
 ## Drag and drop
 
-The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in **normal mode**. For this to work correctly, the following is required by the terminal emulator:
+The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in normal mode.
+It can be optionally enabled in insert mode using the `drag_and_drop.insert_mode` option.
+For drag and drop to work properly, the following is required by the terminal emulator:
 
 1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
-2. The text must be inserted in [bracketed paste mode](https://cirw.in/blog/bracketed-paste), which allows Neovim to differentiate pasted text from typed-in text. This is required because the drag and drop feature is implemented by overriding `vim.paste()`.
+2. The text must be inserted in [bracketed paste mode](https://cirw.in/blog/bracketed-paste), which allows Neovim to differentiate pasted text from typed-in text.
+   This is required because the drag and drop feature is implemented by overriding `vim.paste()`.
 
 A list of terminal emulators and their capabilities is given below.
 
