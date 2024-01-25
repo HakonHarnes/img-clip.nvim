@@ -262,9 +262,11 @@ end
 ---@param api_opts? table: The opts passed to pasteImage function
 ---@return string | nil
 M.get_opt = function(key, api_opts, args, opts)
-  if api_opts and api_opts[key] ~= nil then
-    local val = api_opts[key]
-    return get_val(val, args)
+  if api_opts then
+    local val = M.get_opt(key, nil, args, api_opts)
+    if val then
+      return get_val(val, args)
+    end
   end
 
   -- if options are passed explicitly, use those instead of the config

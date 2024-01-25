@@ -69,4 +69,13 @@ describe("config", function()
       })
     )
   end)
+
+  it("should allow nested API options", function()
+    vim.bo.filetype = "markdown"
+
+    assert.equals(
+      "markdown-template",
+      config.get_opt("template", { filetypes = { markdown = { template = "markdown-template" } } })
+    )
+  end)
 end)
