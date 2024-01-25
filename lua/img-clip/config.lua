@@ -121,6 +121,20 @@ local function sort_config(opts)
 end
 
 local function get_config()
+  -- use cached config if available
+  local dir_path = vim.fn.expand("%:p:h")
+  if M.configs[dir_path] then
+    return M.configs[dir_path]
+  end
+
+  --- find config file in current directory or any parent directory
+  local config_file = vim.fn.findfile(".img-clip.lua", ".;")
+  if config_file ~= "" then
+    M.configs[dir_path] = dofile(config_file)
+    return M.configs[dir_path]
+  end
+
+  -- if no config file is found, use the default config
   return M.configs["config_opts"]
 end
 
@@ -244,6 +258,7 @@ M.get_opt = function(key, api_opts, args, opts)
     return get_val(val, args)
   end
 
+  -- if options are passed explicitly, use those instead of the config
   opts = opts or get_config()
 
   local val = get_custom_opt(key, opts, args)
