@@ -143,10 +143,10 @@ local function get_config()
     local success, output = pcall(dofile, config_file)
 
     if success then
-      local config_file_options = vim.tbl_deep_extend("force", {}, M.opts, output)
-      config_file_options = sort_config(config_file_options)
-      M.configs[dir_path] = config_file_options
-      return config_file_options
+      local opts = vim.tbl_deep_extend("force", {}, defaults, output)
+      opts = sort_config(opts)
+      M.configs[dir_path] = sort_config(opts)
+      return M.configs[dir_path]
     else
       M.configs[dir_path] = {}
       print("Error loading config file: " .. output)
