@@ -1,5 +1,7 @@
 local M = {}
 
+M.configs = {}
+
 local defaults = {
   default = {
     debug = false, -- enable debug mode
@@ -97,7 +99,7 @@ defaults.filetypes.plaintex = defaults.filetypes.tex
 defaults.filetypes.rmd = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
 
-local function sort_config()
+local function sort_config(opts)
   local function sort_keys(tbl)
     local sorted_keys = {}
 
@@ -112,8 +114,14 @@ local function sort_config()
     return sorted_keys
   end
 
-  M.opts["sorted_files"] = sort_keys(M.opts["files"])
-  M.opts["sorted_dirs"] = sort_keys(M.opts["dirs"])
+  opts["sorted_files"] = sort_keys(opts["files"])
+  opts["sorted_dirs"] = sort_keys(opts["dirs"])
+
+  return opts
+end
+
+local function get_config()
+  return M.configs["config_opts"]
 end
 
 ---Recursively gets the value of the option (e.g. "default.debug")
@@ -150,18 +158,14 @@ end
 ---@param key string
 ---@param args table
 ---@return string | nil
-local function get_custom_opt(key, args)
-  if M.opts["custom"] == nil then
+local function get_custom_opt(key, opts, args)
+  if opts["custom"] == nil then
     return nil
   end
 
-  for _, config_opts in ipairs(M.opts["custom"]) do
+  for _, config_opts in ipairs(opts["custom"]) do
     if config_opts["trigger"] and get_val(config_opts["trigger"]) then
-      local original_opts = M.opts
-      M.opts = config_opts
-      local val = M.get_opt(key, {}, args)
-      M.opts = original_opts
-      return val
+      return M.get_opt(key, {}, args, config_opts)
     end
   end
 end
@@ -170,8 +174,8 @@ end
 ---@param key string
 ---@param args table
 ---@return string | nil
-local function get_file_opt(key, args, file)
-  if M.opts["files"] == nil then
+local function get_file_opt(key, opts, args, file)
+  if opts["files"] == nil then
     return nil
   end
 
@@ -179,14 +183,9 @@ local function get_file_opt(key, args, file)
     return string.sub(f1:lower(), -#f2:lower()) == f2:lower()
   end
 
-  for _, config_file in ipairs(M.opts["sorted_files"]) do
+  for _, config_file in ipairs(opts["sorted_files"]) do
     if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(vim.fn.expand(config_file))) then
-      local config_file_opts = M.opts["files"][config_file]
-      local original_opts = M.opts
-      M.opts = config_file_opts
-      local val = M.get_opt(key, {}, args)
-      M.opts = original_opts
-      return val
+      return M.get_opt(key, {}, args, opts["files"][config_file])
     end
   end
 
@@ -197,8 +196,8 @@ end
 ---@param key string
 ---@param args table
 ---@return string | nil
-local function get_dir_opt(key, args, dir)
-  if M.opts["dirs"] == nil then
+local function get_dir_opt(key, opts, args, dir)
+  if opts["dirs"] == nil then
     return nil
   end
 
@@ -206,14 +205,9 @@ local function get_dir_opt(key, args, dir)
     return string.find(d1:lower(), d2:lower(), 1, true)
   end
 
-  for _, config_dir in ipairs(M.opts["sorted_dirs"]) do
+  for _, config_dir in ipairs(opts["sorted_dirs"]) do
     if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(vim.fn.expand(config_dir))) then
-      local config_dir_opts = M.opts["dirs"][config_dir]
-      local original_opts = M.opts
-      M.opts = config_dir_opts
-      local val = M.get_opt(key, {}, args)
-      M.opts = original_opts
-      return val
+      return M.get_opt(key, {}, args, opts["dirs"][config_dir])
     end
   end
 
@@ -223,58 +217,59 @@ end
 ---Gets the option from the filetypes table
 ---@param key string
 ---@return string | nil
-local function get_filetype_opt(key, ft)
-  return recursive_get_opt("filetypes." .. ft .. "." .. key, M.opts)
+local function get_filetype_opt(key, opts, ft)
+  return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
 end
 
 ---Gets the option from the default table
 ---@param key string
 ---@return string | nil
-local function get_default_opt(key)
-  return recursive_get_opt("default." .. key, M.opts)
+local function get_default_opt(key, opts)
+  return recursive_get_opt("default." .. key, opts)
 end
 
 ---Gets the option from the main opts table
 ---@param key string
 ---@return string | nil
-local function get_unscoped_opt(key)
-  return recursive_get_opt(key, M.opts)
+local function get_unscoped_opt(key, opts)
+  return recursive_get_opt(key, opts)
 end
-
-M.opts = {}
 
 ---@param key string: The key, may be nested (e.g. "default.debug")
 ---@param api_opts? table: The opts passed to pasteImage function
 ---@return string | nil
-M.get_opt = function(key, api_opts, args)
+M.get_opt = function(key, api_opts, args, opts)
   if api_opts and api_opts[key] ~= nil then
     local val = api_opts[key]
     return get_val(val, args)
   end
 
-  local val = get_custom_opt(key, args)
+  opts = opts or get_config()
+
+  local val = get_custom_opt(key, opts, args)
   if val == nil then
-    val = get_file_opt(key, args, vim.fn.expand("%:p"))
+    val = get_file_opt(key, opts, args, vim.fn.expand("%:p"))
   end
   if val == nil then
-    val = get_dir_opt(key, args, vim.fn.expand("%:p:h"))
+    val = get_dir_opt(key, opts, args, vim.fn.expand("%:p:h"))
   end
   if val == nil then
-    val = get_filetype_opt(key, vim.bo.filetype)
+    val = get_filetype_opt(key, opts, vim.bo.filetype)
   end
   if val == nil then
-    val = get_default_opt(key)
+    val = get_default_opt(key, opts)
   end
   if val == nil then
-    val = get_unscoped_opt(key)
+    val = get_unscoped_opt(key, opts)
   end
 
   return get_val(val, args)
 end
 
 function M.setup(config_opts)
-  M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
-  sort_config()
+  local opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
+  opts = sort_config(opts)
+  M.configs["config_opts"] = opts
 end
 
 return M
