@@ -3,10 +3,13 @@ local config = require("img-clip.config")
 local util = require("img-clip.util")
 
 describe("drag and drop", function()
+  before_each(function()
+    config.setup({})
+    config.configs = {}
+  end)
+
   describe("handle_paste", function()
     before_each(function()
-      config.setup({}) -- use default config
-
       vim.fn.mode = function()
         return "n"
       end

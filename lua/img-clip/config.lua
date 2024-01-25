@@ -1,6 +1,7 @@
 local M = {}
 
 M.configs = {}
+M.opts = {}
 
 local defaults = {
   default = {
@@ -127,15 +128,24 @@ local function get_config()
     return M.configs[dir_path]
   end
 
-  --- find config file in current directory or any parent directory
+  -- find config file in the current directory or any parent directory
   local config_file = vim.fn.findfile(".img-clip.lua", ".;")
   if config_file ~= "" then
-    M.configs[dir_path] = dofile(config_file)
-    return M.configs[dir_path]
+    local success, output = pcall(dofile, config_file)
+
+    if success then
+      local config_file_options = vim.tbl_deep_extend("force", {}, M.opts, output)
+      config_file_options = sort_config(config_file_options)
+      -- return config_file_options
+      M.configs[dir_path] = config_file_options
+      return config_file_options
+    end
+
+    print("Error loading config file: " .. output)
   end
 
-  -- if no config file is found, use the default config
-  return M.configs["config_opts"]
+  -- use default config if no config file is found
+  return M.opts
 end
 
 ---Recursively gets the value of the option (e.g. "default.debug")
@@ -282,9 +292,8 @@ M.get_opt = function(key, api_opts, args, opts)
 end
 
 function M.setup(config_opts)
-  local opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
-  opts = sort_config(opts)
-  M.configs["config_opts"] = opts
+  M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
+  M.opts = sort_config(M.opts)
 end
 
 return M

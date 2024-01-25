@@ -1,7 +1,13 @@
 local clipboard = require("img-clip.clipboard")
+local config = require("img-clip.config")
 local util = require("img-clip.util")
 
 describe("clipboard", function()
+  before_each(function()
+    config.setup({})
+    config.configs = {}
+  end)
+
   describe("x11", function()
     before_each(function()
       os.getenv = function(env)

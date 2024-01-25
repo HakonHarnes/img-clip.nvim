@@ -3,13 +3,16 @@ local util = require("img-clip.util")
 local fs = require("img-clip.fs")
 
 describe("fs", function()
+  before_each(function()
+    config.setup({})
+    config.configs = {}
+  end)
+
   describe("get_file_path", function()
     before_each(function()
       util.input = function() -- mock user input
         return ""
       end
-
-      config.setup({}) -- use default config values
     end)
 
     it("uses default directory and filename if no options or user inputs are provided", function()
