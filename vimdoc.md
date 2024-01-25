@@ -253,13 +253,13 @@ dirs = {
   ["/home/user/markdown"] = {
     template = "template for this project",
 
-    filetypes = { -- filetypes opt nested inside dirs
+    filetypes = { -- filetype options nested inside dirs
       markdown = {
         template = "markdown template"
       }
     },
 
-    files = { -- files opt nested inside dirs
+    files = { -- file options nested inside dirs
       ["readme.md"] = {
         dir_path = "images"
       },
