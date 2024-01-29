@@ -2,6 +2,13 @@ local markup = require("img-clip.markup")
 local config = require("img-clip.config")
 
 describe("markup", function()
+  before_each(function()
+    config.setup({})
+    config.get_config = function()
+      return config.opts
+    end
+  end)
+
   describe("url_encode", function()
     it("encodes spaces", function()
       local result = markup.url_encode("hello world.png")

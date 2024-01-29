@@ -7,6 +7,13 @@ local spy = require("luassert.spy")
 local config = require("img-clip.config")
 
 describe("img-clip.init", function()
+  before_each(function()
+    config.setup({})
+    config.get_config = function()
+      return config.opts
+    end
+  end)
+
   describe("pasteImage", function()
     before_each(function()
       init.clip_cmd = nil
@@ -34,8 +41,6 @@ describe("img-clip.init", function()
       markup.insert_markup = function()
         return true
       end
-
-      config.setup({})
 
       spy.on(util, "warn")
       spy.on(util, "error")

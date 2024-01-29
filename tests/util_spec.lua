@@ -1,6 +1,14 @@
 local util = require("img-clip.util")
+local config = require("img-clip.config")
 
 describe("util", function()
+  before_each(function()
+    config.setup({})
+    config.get_config = function()
+      return config.opts
+    end
+  end)
+
   describe("execute", function()
     before_each(function()
       vim.o.shell = "cmd.exe"

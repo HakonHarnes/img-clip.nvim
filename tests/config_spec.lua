@@ -4,6 +4,9 @@ describe("config", function()
   before_each(function()
     vim.bo.filetype = ""
     config.setup({})
+    config.get_config = function()
+      return config.opts
+    end
   end)
 
   it("should have default values for all configuration options", function()
@@ -66,6 +69,15 @@ describe("config", function()
           return 40 + 2
         end,
       })
+    )
+  end)
+
+  it("should allow nested API options", function()
+    vim.bo.filetype = "markdown"
+
+    assert.equals(
+      "markdown-template",
+      config.get_opt("template", { filetypes = { markdown = { template = "markdown-template" } } })
     )
   end)
 end)
