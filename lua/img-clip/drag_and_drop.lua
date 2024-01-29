@@ -20,8 +20,7 @@ local handle_image_url = function(url)
 
     -- mkdir if not exists
     local dir_path = vim.fn.fnamemodify(file_path, ":h")
-    local dir_ok = fs.mkdirp(dir_path)
-    if not dir_ok then
+    if not fs.mkdirp(dir_path) then
       util.error("Could not create directories.")
       return false
     end
@@ -59,15 +58,13 @@ local handle_image_path = function(path)
     if file_path then
       -- mkdir if not exists
       local dir_path = vim.fn.fnamemodify(file_path, ":h")
-      local dirs_created = fs.mkdirp(dir_path)
-      if not dirs_created then
+      if not fs.mkdirp(dir_path) then
         util.error("Could not create directories.")
         return false
       end
 
       -- copy image to specified file path
-      local copy_ok = fs.copy_file(path, file_path)
-      if not copy_ok then
+      if not fs.copy_file(path, file_path) then
         util.error("Could not copy image.")
         return false
       end
