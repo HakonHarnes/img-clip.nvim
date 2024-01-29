@@ -304,6 +304,39 @@ The options can be nested arbitrarily deep:
 <
 
 
+PROJECT-SPECIFIC SETTINGS WITH THE .IMG-CLIP.LUA FILE ~
+
+Project-specific settings can be specified in a `.img-clip.lua` file in the
+root of your project. The plugin will automatically load this file and use it
+to override the default settings. If multiple files are found, the closest one
+to the current file (in any parent directory) will be used.
+
+The `.img-clip.lua` should return a Lua table containing the options (similar
+to `opts` in lazy.nvim):
+
+>lua
+    return {
+      -- add options here
+    }
+<
+
+Example:
+
+>lua
+    return {
+      default = {
+        template = "default template"
+      },
+    
+      filetypes = {
+        markdown = {
+          template = "markdown template"
+        }
+      },
+    }
+<
+
+
 TEMPLATES ~
 
 Templates in the plugin use placeholders that are dynamically replaced with the
