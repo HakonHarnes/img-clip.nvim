@@ -274,7 +274,7 @@ dirs = {
 
 Project-specific settings can be specified in a `.img-clip.lua` file in the root of your project.
 The plugin will automatically load this file and use it to override the default settings.
-If multiple files are found, the closest one to the current file will be used.
+If multiple files are found, the closest one to the current file (in any parent directory) will be used.
 
 The `.img-clip.lua` should return a Lua table containing the options (similar to `opts` in lazy.nvim):
 
