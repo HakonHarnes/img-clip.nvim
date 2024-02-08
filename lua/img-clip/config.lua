@@ -309,4 +309,6 @@ function M.setup(config_opts)
   M.opts = M.sort_config(M.opts)
 end
 
+M.setup()
+
 return M
