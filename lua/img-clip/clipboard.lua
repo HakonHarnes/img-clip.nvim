@@ -2,35 +2,43 @@ local util = require("img-clip.util")
 
 local M = {}
 
+M.clip_cmd = nil
+
 ---@return string | nil
 M.get_clip_cmd = function()
+  if M.clip_cmd then
+    return M.clip_cmd
+
   -- Windows
-  if (util.has("win32") or util.has("wsl")) and util.executable("powershell.exe") then
-    return "powershell.exe"
+  elseif (util.has("win32") or util.has("wsl")) and util.executable("powershell.exe") then
+    M.clip_cmd = "powershell.exe"
 
   -- Linux (Wayland)
   elseif os.getenv("WAYLAND_DISPLAY") and util.executable("wl-paste") then
-    return "wl-paste"
+    M.clip_cmd = "wl-paste"
 
   -- Linux (X11)
   elseif os.getenv("DISPLAY") and util.executable("xclip") then
-    return "xclip"
+    M.clip_cmd = "xclip"
 
   -- MacOS
   elseif util.has("mac") then
     if util.executable("pngpaste") then
-      return "pngpaste"
+      M.clip_cmd = "pngpaste"
     elseif util.executable("osascript") then
-      return "osascript"
+      M.clip_cmd = "osascript"
     end
+  else
+    return nil
   end
 
-  return nil
+  return M.clip_cmd
 end
 
----@param cmd string
 ---@return boolean
-M.content_is_image = function(cmd)
+M.content_is_image = function()
+  local cmd = M.get_clip_cmd()
+
   -- Linux (X11)
   if cmd == "xclip" then
     local output = util.execute("xclip -selection clipboard -t TARGETS -o")
@@ -47,7 +55,6 @@ M.content_is_image = function(cmd)
     return exit_code == 0
 
   -- MacOS (osascript) as a fallback
-  -- TODO: Add correct quotes aroudn class PNGf
   elseif cmd == "osascript" then
     local output = util.execute("osascript -e 'clipboard info'")
     return output ~= nil and output:find("class PNGf") ~= nil
@@ -62,10 +69,46 @@ M.content_is_image = function(cmd)
   return false
 end
 
----@param cmd string
+---@return string | nil
+M.get_content = function()
+  local cmd = M.get_clip_cmd()
+  return nil
+
+  -- -- Linux (X11)
+  -- if cmd == "xclip" then
+  --   local output = util.execute("xclip -selection clipboard -t TARGETS -o")
+  --   return output ~= nil and output:find("image/png") ~= nil
+  --
+  -- -- Linux (Wayland)
+  -- elseif cmd == "wl-paste" then
+  --   local output = util.execute("wl-paste --list-types")
+  --   return output ~= nil and output:find("image/png") ~= nil
+  --
+  -- -- MacOS (pngpaste) which is faster than osascript
+  -- elseif cmd == "pngpaste" then
+  --   local _, exit_code = util.execute("pngpaste -")
+  --   return exit_code == 0
+  --
+  -- -- MacOS (osascript) as a fallback
+  -- elseif cmd == "osascript" then
+  --   local output = util.execute("osascript -e 'clipboard info'")
+  --   return output ~= nil and output:find("class PNGf") ~= nil
+  --
+  -- -- Windows
+  -- elseif cmd == "powershell.exe" then
+  --   local output =
+  --     util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
+  --   return output ~= nil and output:find("Width") ~= nil
+  -- end
+  --
+  -- return false
+end
+
 ---@param file_path string
 ---@return boolean
-M.save_image = function(cmd, file_path)
+M.save_image = function(file_path)
+  local cmd = M.get_clip_cmd()
+
   -- Linux (X11)
   if cmd == "xclip" then
     local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
@@ -108,7 +151,9 @@ M.save_image = function(cmd, file_path)
   return false
 end
 
-M.get_base64_encoded_image = function(cmd)
+M.get_base64_encoded_image = function()
+  local cmd = M.get_clip_cmd()
+
   -- Linux (X11)
   if cmd == "xclip" then
     local output, exit_code = util.execute("xclip -selection clipboard -o -t image/png | base64 | tr -d '\n'")

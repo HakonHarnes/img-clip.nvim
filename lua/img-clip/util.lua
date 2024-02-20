@@ -2,6 +2,8 @@ local config = require("img-clip.config")
 
 local M = {}
 
+M.verbose = true
+
 M.executable = function(command)
   return vim.fn.executable(command) == 1
 end
@@ -53,12 +55,16 @@ end
 
 ---@param msg string
 M.warn = function(msg)
-  vim.notify(msg, vim.log.levels.WARN, { title = "img-clip" })
+  if M.verbose then
+    vim.notify(msg, vim.log.levels.WARN, { title = "img-clip" })
+  end
 end
 
 ---@param msg string
 M.error = function(msg)
-  vim.notify(msg, vim.log.levels.ERROR, { title = "img-clip" })
+  if M.verbose then
+    vim.notify(msg, vim.log.levels.ERROR, { title = "img-clip" })
+  end
 end
 
 ---@param msg string
@@ -79,6 +85,16 @@ M.input = function(args)
   end
 
   return output
+end
+
+---@param str string
+---@return string
+M.sanitize_input = function(str)
+  str = str:match("^%s*(.-)%s*$") -- remove leading and trailing whitespace
+  str = str:match('^"?(.-)"?$') -- remove double quotes
+  str = str:match("^'?(.-)'?$") -- remove single quotes
+  str = str:gsub("file://", "") -- remove "file://"
+  return str
 end
 
 ---@param str string
