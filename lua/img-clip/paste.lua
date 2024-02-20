@@ -66,6 +66,12 @@ M.paste_image_from_url = function(url, opts)
     return false
   end
 
+  if config.get_opt("embed_image_as_base64", opts) then
+    if M.embed_image_as_base64(file_path, opts) then
+      return true
+    end
+  end
+
   if not markup.insert_markup(file_path) then
     util.error("Could not insert markup code.")
     return false
