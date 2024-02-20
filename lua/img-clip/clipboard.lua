@@ -72,12 +72,19 @@ end
 ---@return string | nil
 M.get_content = function()
   local cmd = M.get_clip_cmd()
-  return nil
 
-  -- -- Linux (X11)
-  -- if cmd == "xclip" then
-  --   local output = util.execute("xclip -selection clipboard -t TARGETS -o")
-  --   return output ~= nil and output:find("image/png") ~= nil
+  -- Linux (X11)
+  if cmd == "xclip" then
+    for _, target in ipairs({ "text/uri-list", "STRING" }) do
+      local command = string.format("xclip -selection clipboard -t %s -o", target)
+      local output, exit_code = util.execute(command)
+      if exit_code == 0 then
+        return output:match("^[^\n]+")
+      end
+    end
+  end
+
+  return nil
   --
   -- -- Linux (Wayland)
   -- elseif cmd == "wl-paste" then

@@ -94,6 +94,8 @@ M.sanitize_input = function(str)
   str = str:match('^"?(.-)"?$') -- remove double quotes
   str = str:match("^'?(.-)'?$") -- remove single quotes
   str = str:gsub("file://", "") -- remove "file://"
+  str = str:gsub("%c", "") -- remove control characters
+
   return str
 end
 

@@ -22,17 +22,17 @@ M.paste_image = function(opts, input)
     end
   end
 
+  local clipboard_content = clipboard.get_content()
+  if clipboard_content then
+    return M.paste_image(opts, clipboard_content)
+  end
+
   if clipboard.content_is_image() then
     return M.paste_image_from_clipboard(opts)
   end
 
-  local clipboard_content = clipboard.get_content()
-  if clipboard_content then
-    return M.paste_image(opts, clipboard_content)
-  else
-    util.warn("Clipboard content is not an image.")
-    return false
-  end
+  util.warn("Clipboard does not contain an image.")
+  return false
 end
 
 ---@param url string
