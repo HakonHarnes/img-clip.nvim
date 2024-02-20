@@ -1,12 +1,11 @@
 local config = require("img-clip.config")
-local paste = require("img-clip.paste")
 local util = require("img-clip.util")
 local plugin = require("img-clip")
 
 plugin.setup()
 
 vim.api.nvim_create_user_command("PasteImage", function()
-  paste.paste_image()
+  plugin.pasteImage()
 end, {})
 
 local buffer = ""
@@ -68,7 +67,7 @@ vim.paste = (function(original)
     end
 
     util.verbose = false
-    if not paste.paste_image({}, line) then
+    if not plugin.pasteImage({}, line) then
       if config.get_opt("debug") then
         print("Did not handle paste, calling original vim.paste")
       end

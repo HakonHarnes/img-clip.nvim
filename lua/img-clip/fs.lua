@@ -157,4 +157,22 @@ M.copy_file = function(src, dest)
   return util.execute(string.format("cp '%s' '%s'", src, dest))
 end
 
+---@param file_path string
+---@return string | nil
+M.get_base64_encoded_image = function(file_path)
+  local command = nil
+  if util.has("win32") then
+    command = string.format("certutil -encode '%s' -", file_path)
+  else
+    command = string.format("base64 '%s' | tr -d '\n'", file_path)
+  end
+
+  local output, exit_code = util.execute(command, util.has("win32"))
+  if exit_code == 0 then
+    return output
+  end
+
+  return nil
+end
+
 return M

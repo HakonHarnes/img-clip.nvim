@@ -8,6 +8,7 @@ M.executable = function(command)
   return vim.fn.executable(command) == 1
 end
 
+---TODO: Remove powershell argument
 ---@param cmd string
 ---@param powershell? boolean
 ---@return string | nil output

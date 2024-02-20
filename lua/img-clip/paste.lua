@@ -22,13 +22,14 @@ M.paste_image = function(opts, input)
     end
   end
 
+  if clipboard.content_is_image() then
+    return M.paste_image_from_clipboard(opts)
+  end
+
+  -- clipboard content as text
   local clipboard_content = clipboard.get_content()
   if clipboard_content then
     return M.paste_image(opts, clipboard_content)
-  end
-
-  if clipboard.content_is_image() then
-    return M.paste_image_from_clipboard(opts)
   end
 
   util.warn("Clipboard does not contain an image.")
@@ -76,6 +77,12 @@ end
 ---@param src_path string
 ---@param opts? table
 M.paste_image_from_path = function(src_path, opts)
+  if config.get_opt("embed_image_as_base64", opts) then
+    if M.embed_image_as_base64(src_path, opts) then
+      return true
+    end
+  end
+
   if not config.get_opt("drag_and_drop.copy_images") then
     if not markup.insert_markup(src_path) then
       util.error("Could not insert markup code.")
@@ -112,8 +119,10 @@ end
 
 ---@param opts? table
 M.paste_image_from_clipboard = function(opts)
-  if config.get_opt("embed_image_as_base64", opts) and M.embed_image_as_base64() then
-    return true
+  if config.get_opt("embed_image_as_base64", opts) then
+    if M.embed_image_as_base64(nil, opts) then
+      return true
+    end
   end
 
   local file_path = fs.get_file_path("png", opts)
@@ -141,15 +150,22 @@ M.paste_image_from_clipboard = function(opts)
   return true
 end
 
+---@param file_path? string
 ---@param opts? table
-M.embed_image_as_base64 = function(opts)
+M.embed_image_as_base64 = function(file_path, opts)
   local ft = vim.bo.filetype
   if not M.lang_supports_base64(ft) then
     util.warn("Filetype " .. ft .. " does not support base64 encoding.")
     return false
   end
 
-  local base64 = clipboard.get_base64_encoded_image()
+  local base64 = nil
+  if file_path then
+    base64 = fs.get_base64_encoded_image(file_path)
+  else
+    base64 = clipboard.get_base64_encoded_image()
+  end
+
   if not base64 then
     util.error("Could not get base64 string.")
     return false

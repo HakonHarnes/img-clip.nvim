@@ -75,40 +75,41 @@ M.get_content = function()
 
   -- Linux (X11)
   if cmd == "xclip" then
-    for _, target in ipairs({ "text/uri-list", "STRING" }) do
+    for _, target in ipairs({ "text/plain", "text/uri-list" }) do
       local command = string.format("xclip -selection clipboard -t %s -o", target)
       local output, exit_code = util.execute(command)
       if exit_code == 0 then
         return output:match("^[^\n]+")
       end
     end
+
+  -- TODO: Linux (Wayland)
+  elseif cmd == "wl-paste" then
+    return nil
+    -- local output = util.execute("wl-paste --list-types")
+    -- return output ~= nil and output:find("image/png") ~= nil
+
+    -- TODO: MacOS (pngpaste) which is faster than osascript
+  elseif cmd == "pngpaste" then
+    return nil
+    -- local _, exit_code = util.execute("pngpaste -")
+    -- return exit_code == 0
+
+    -- TODO: MacOS (osascript) as a fallback
+  elseif cmd == "osascript" then
+    return nil
+    -- local output = util.execute("osascript -e 'clipboard info'")
+    -- return output ~= nil and output:find("class PNGf") ~= nil
+
+    -- TODO: Windows
+  elseif cmd == "powershell.exe" then
+    -- local output =
+    --   util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
+    -- return output ~= nil and output:find("Width") ~= nil
+    return nil
   end
 
   return nil
-  --
-  -- -- Linux (Wayland)
-  -- elseif cmd == "wl-paste" then
-  --   local output = util.execute("wl-paste --list-types")
-  --   return output ~= nil and output:find("image/png") ~= nil
-  --
-  -- -- MacOS (pngpaste) which is faster than osascript
-  -- elseif cmd == "pngpaste" then
-  --   local _, exit_code = util.execute("pngpaste -")
-  --   return exit_code == 0
-  --
-  -- -- MacOS (osascript) as a fallback
-  -- elseif cmd == "osascript" then
-  --   local output = util.execute("osascript -e 'clipboard info'")
-  --   return output ~= nil and output:find("class PNGf") ~= nil
-  --
-  -- -- Windows
-  -- elseif cmd == "powershell.exe" then
-  --   local output =
-  --     util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
-  --   return output ~= nil and output:find("Width") ~= nil
-  -- end
-  --
-  -- return false
 end
 
 ---@param file_path string
