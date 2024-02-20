@@ -47,7 +47,7 @@ M.paste_image_from_url = function(url, opts)
     return true
   end
 
-  local file_path = fs.get_file_path("png")
+  local file_path = fs.get_file_path("png", opts)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -85,7 +85,7 @@ M.paste_image_from_path = function(src_path, opts)
     return true
   end
 
-  local file_path = fs.get_file_path("png")
+  local file_path = fs.get_file_path("png", opts)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -122,20 +122,17 @@ M.paste_image_from_clipboard = function(opts)
     return false
   end
 
-  -- mkdir if not exists
   local dir_path = vim.fn.fnamemodify(file_path, ":h")
   if not fs.mkdirp(dir_path) then
     util.error("Could not create directories.")
     return false
   end
 
-  -- save image to specified file path
   if not clipboard.save_image(file_path) then
     util.error("Could not save image to disk.")
     return false
   end
 
-  -- get the markup for the image
   if not markup.insert_markup(file_path, opts) then
     util.error("Could not insert markup code.")
     return false
