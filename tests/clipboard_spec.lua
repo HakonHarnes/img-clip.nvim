@@ -1,10 +1,12 @@
 local clipboard = require("img-clip.clipboard")
+local plugin = require("img-clip")
 local config = require("img-clip.config")
 local util = require("img-clip.util")
 
 describe("clipboard", function()
   before_each(function()
-    config.setup({})
+    plugin.setup()
+    clipboard.clip_cmd = nil
     config.get_config = function()
       return config.opts
     end
