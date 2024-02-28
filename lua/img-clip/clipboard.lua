@@ -69,49 +69,6 @@ M.content_is_image = function()
   return false
 end
 
----@return string | nil
-M.get_content = function()
-  local cmd = M.get_clip_cmd()
-
-  -- Linux (X11)
-  if cmd == "xclip" then
-    for _, target in ipairs({ "text/plain", "text/uri-list" }) do
-      local command = string.format("xclip -selection clipboard -t %s -o", target)
-      local output, exit_code = util.execute(command)
-      if exit_code == 0 then
-        return output:match("^[^\n]+")
-      end
-    end
-
-  -- TODO: Linux (Wayland)
-  elseif cmd == "wl-paste" then
-    return nil
-    -- local output = util.execute("wl-paste --list-types")
-    -- return output ~= nil and output:find("image/png") ~= nil
-
-    -- TODO: MacOS (pngpaste) which is faster than osascript
-  elseif cmd == "pngpaste" then
-    return nil
-    -- local _, exit_code = util.execute("pngpaste -")
-    -- return exit_code == 0
-
-    -- TODO: MacOS (osascript) as a fallback
-  elseif cmd == "osascript" then
-    return nil
-    -- local output = util.execute("osascript -e 'clipboard info'")
-    -- return output ~= nil and output:find("class PNGf") ~= nil
-
-    -- TODO: Windows
-  elseif cmd == "powershell.exe" then
-    -- local output =
-    --   util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
-    -- return output ~= nil and output:find("Width") ~= nil
-    return nil
-  end
-
-  return nil
-end
-
 ---@param file_path string
 ---@return boolean
 M.save_image = function(file_path)
@@ -157,6 +114,52 @@ M.save_image = function(file_path)
   end
 
   return false
+end
+
+---@return string | nil
+M.get_content = function()
+  local cmd = M.get_clip_cmd()
+
+  -- Linux (X11)
+  if cmd == "xclip" then
+    for _, target in ipairs({ "text/plain", "text/uri-list" }) do
+      local command = string.format("xclip -selection clipboard -t %s -o", target)
+      local output, exit_code = util.execute(command)
+      if exit_code == 0 then
+        return output:match("^[^\n]+") -- only return first line
+      end
+    end
+
+  -- Linux (Wayland)
+  elseif cmd == "wl-paste" then
+    local output, exit_code = util.execute("wl-paste")
+    if exit_code == 0 then
+      return output:match("^[^\n]+")
+    end
+
+  -- MacOS (pngpaste)
+  elseif cmd == "pngpaste" then
+    local output, exit_code = util.execute("pngpaste -")
+    if exit_code == 0 then
+      return output:match("^[^\n]+")
+    end
+
+  -- MacOS (osascript)
+  elseif cmd == "osascript" then
+    local output, exit_code = util.execute([[osascript -e 'get the clipboard as text']])
+    if exit_code == 0 then
+      return output:match("^[^\n]+")
+    end
+
+  -- Windows
+  elseif cmd == "powershell.exe" then
+    local output, exit_code = util.execute([[powershell -command "Get-Clipboard -Text"]], true)
+    if exit_code == 0 then
+      return output:match("^[^\n]+")
+    end
+  end
+
+  return nil
 end
 
 M.get_base64_encoded_image = function()

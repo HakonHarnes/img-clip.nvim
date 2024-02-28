@@ -12,6 +12,7 @@ describe("clipboard", function()
     end
   end)
 
+  -- X11
   describe("x11", function()
     before_each(function()
       os.getenv = function(env)
@@ -35,7 +36,7 @@ describe("clipboard", function()
         return [[TARGETS\nimage/png]], 0 -- output of xclip
       end
 
-      assert.is_true(clipboard.content_is_image("xclip"))
+      assert.is_true(clipboard.content_is_image())
     end)
 
     it("returns false if clipboard content is not an image", function()
@@ -44,7 +45,17 @@ describe("clipboard", function()
         return [[TARGETS\nUTF8_STRING]], 0 -- output of xclip
       end
 
-      assert.is_false(clipboard.content_is_image("xclip"))
+      assert.is_false(clipboard.content_is_image())
+    end)
+
+    it("gets first line of clipboard content", function()
+      util.execute = function(command)
+        assert(command:match("xclip"))
+        return [[first line
+        second line]], 0
+      end
+
+      assert.equals("first line", clipboard.get_content())
     end)
 
     it("successfully saves an image", function()
@@ -57,6 +68,7 @@ describe("clipboard", function()
     end)
   end)
 
+  -- Wayland
   describe("wayland", function()
     before_each(function()
       os.getenv = function(env)
@@ -80,7 +92,7 @@ describe("clipboard", function()
         return [[TARGETS\nimage/png]], 0 -- output of wl-paste
       end
 
-      assert.is_true(clipboard.content_is_image("wl-paste"))
+      assert.is_true(clipboard.content_is_image())
     end)
 
     it("returns false if clipboard content is not an image", function()
@@ -89,7 +101,17 @@ describe("clipboard", function()
         return [[TARGETS\nUTF8_STRING]], 0 -- output of wl-paste
       end
 
-      assert.is_false(clipboard.content_is_image("wl-paste"))
+      assert.is_false(clipboard.content_is_image())
+    end)
+
+    it("gets first line of clipboard content", function()
+      util.execute = function(command)
+        assert(command:match("wl%-paste"))
+        return [[first line
+        second line]], 0
+      end
+
+      assert.equals("first line", clipboard.get_content())
     end)
 
     it("successfully saves an image", function()
@@ -98,10 +120,11 @@ describe("clipboard", function()
         return nil, 0 -- simulate successful execution
       end
 
-      assert.is_true(clipboard.save_image("wl-paste", "/path/to/image.png"))
+      assert.is_true(clipboard.save_image("/path/to/image.png"))
     end)
   end)
 
+  -- MacOS
   describe("macos", function()
     describe("pngpaste", function()
       before_each(function()
@@ -126,7 +149,7 @@ describe("clipboard", function()
           return nil, 0 -- output of pngpaste
         end
 
-        assert.is_true(clipboard.content_is_image("pngpaste"))
+        assert.is_true(clipboard.content_is_image())
       end)
 
       it("returns false if clipboard content is not an image", function()
@@ -135,7 +158,17 @@ describe("clipboard", function()
           return nil, 1 -- output of pngpaste
         end
 
-        assert.is_false(clipboard.content_is_image("pngpaste"))
+        assert.is_false(clipboard.content_is_image())
+      end)
+
+      it("gets first line of clipboard content", function()
+        util.execute = function(command)
+          assert(command:match("pngpaste"))
+          return [[first line
+        second line]], 0
+        end
+
+        assert.equals("first line", clipboard.get_content())
       end)
 
       it("successfully saves an image", function()
@@ -144,7 +177,7 @@ describe("clipboard", function()
           return nil, 0 -- simulate successful execution
         end
 
-        assert.is_true(clipboard.save_image("pngpaste", "/path/to/image.png"))
+        assert.is_true(clipboard.save_image("/path/to/image.png"))
       end)
     end)
 
@@ -165,24 +198,32 @@ describe("clipboard", function()
         assert.equals("osascript", clipboard.get_clip_cmd())
       end)
 
-      -- TODO: Get correct output of osascript
       it("returns true if clipboard content is an image", function()
         util.execute = function(command)
           assert(command:match("osascript"))
           return "class PNGf", 0 -- output of osascript
         end
 
-        assert.is_true(clipboard.content_is_image("osascript"))
+        assert.is_true(clipboard.content_is_image())
       end)
 
-      -- TODO: Get correct output of osascript
       it("returns false if clipboard content is not an image", function()
         util.execute = function(command)
           assert(command:match("osascript"))
           return "Text", 1 -- output of osascript
         end
 
-        assert.is_false(clipboard.content_is_image("osascript"))
+        assert.is_false(clipboard.content_is_image())
+      end)
+
+      it("gets first line of clipboard content", function()
+        util.execute = function(command)
+          assert(command:match("osascript"))
+          return [[first line
+        second line]], 0
+        end
+
+        assert.equals("first line", clipboard.get_content())
       end)
 
       it("successfully saves an image", function()
@@ -191,11 +232,12 @@ describe("clipboard", function()
           return nil, 0 -- simulate successful execution
         end
 
-        assert.is_true(clipboard.save_image("osascript", "/path/to/image.png"))
+        assert.is_true(clipboard.save_image("/path/to/image.png"))
       end)
     end)
   end)
 
+  -- Windows (including WSL)
   describe("windows", function()
     before_each(function()
       util.has = function(feature)
@@ -232,7 +274,7 @@ describe("clipboard", function()
           0
       end
 
-      assert.is_true(clipboard.content_is_image("powershell.exe"))
+      assert.is_true(clipboard.content_is_image())
     end)
 
     it("returns false if clipboard content is not an image", function()
@@ -240,7 +282,17 @@ describe("clipboard", function()
         return "", 0 -- output of powershell
       end
 
-      assert.is_false(clipboard.content_is_image("powershell.exe"))
+      assert.is_false(clipboard.content_is_image())
+    end)
+
+    it("gets first line of clipboard content", function()
+      util.execute = function(command)
+        assert(command:match("powershell"))
+        return [[first line
+        second line]], 0
+      end
+
+      assert.equals("first line", clipboard.get_content())
     end)
 
     it("successfully saves an image", function()
@@ -248,7 +300,7 @@ describe("clipboard", function()
         return nil, 0 -- simulate successful execution
       end
 
-      assert.is_true(clipboard.save_image("powershell.exe", "C:\\path\\to\\image.png"))
+      assert.is_true(clipboard.save_image("C:\\path\\to\\image.png"))
     end)
   end)
 end)
