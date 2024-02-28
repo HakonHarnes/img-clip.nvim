@@ -33,7 +33,7 @@ describe("util", function()
       vim.o.shell = "powershell"
 
       local command = "command"
-      local output, exit_code = util.execute(command, true)
+      local output, exit_code = util.execute(command)
 
       assert.equal(command, output)
       assert.equal(exit_code, 0)
@@ -43,31 +43,31 @@ describe("util", function()
       vim.o.shell = "pwsh"
 
       local command = "command"
-      local output, exit_code = util.execute(command, true)
+      local output, exit_code = util.execute(command)
 
       assert.equal(command, output)
       assert.equal(exit_code, 0)
     end)
 
     it("should wrap the command in powershell.exe -Command if shell is cmd.exe", function()
+      vim.o.shell = "cmd.exe"
+      util.has = function(arg)
+        return arg == "win32"
+      end
       local command = 'command "path/to/file"'
-      local output, exit_code = util.execute(command, true)
+      local output, exit_code = util.execute(command)
 
       assert.equal([[powershell.exe -NoProfile -Command "command 'path/to/file'"]], output)
       assert.equal(exit_code, 0)
     end)
 
     it("should wrap the command in powershell.exe -Command if in WSL", function()
-      vim.fn.has = function(feature)
-        if feature == "wsl" then
-          return 1
-        else
-          return 0
-        end
+      util.has = function(arg)
+        return arg == "wsl"
       end
 
       local command = "command 'path/to/file'"
-      local output, exit_code = util.execute(command, true)
+      local output, exit_code = util.execute(command)
 
       assert.equal([[powershell.exe -NoProfile -Command 'command "path/to/file"']], output)
       assert.equal(exit_code, 0)

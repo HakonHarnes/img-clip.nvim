@@ -1,3 +1,4 @@
+local clipoard = require("img-clip.clipboard")
 local config = require("img-clip.config")
 local util = require("img-clip.util")
 
@@ -160,14 +161,15 @@ end
 ---@param file_path string
 ---@return string | nil
 M.get_base64_encoded_image = function(file_path)
+  local clip_cmd = clipoard.get_clip_cmd()
   local command
-  if util.has("win32") then
+  if clip_cmd == "powershell" then
     command = string.format("certutil -encode '%s' -", file_path)
   else
     command = string.format("base64 '%s' | tr -d '\n'", file_path)
   end
 
-  local output, exit_code = util.execute(command, util.has("win32"))
+  local output, exit_code = util.execute(command)
   if exit_code == 0 then
     return output
   end

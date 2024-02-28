@@ -62,7 +62,7 @@ M.content_is_image = function()
   -- Windows
   elseif cmd == "powershell.exe" then
     local output =
-      util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()", true)
+      util.execute("Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage()")
     return output ~= nil and output:find("Width") ~= nil
   end
 
@@ -109,7 +109,7 @@ M.save_image = function(file_path)
       "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::GetImage().Save('%s')",
       file_path
     )
-    local _, exit_code = util.execute(command, true)
+    local _, exit_code = util.execute(command)
     return exit_code == 0
   end
 
@@ -153,7 +153,7 @@ M.get_content = function()
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    local output, exit_code = util.execute([[powershell -command "Get-Clipboard -Text"]], true)
+    local output, exit_code = util.execute([[powershell -command "Get-Clipboard -Text"]])
     if exit_code == 0 then
       return output:match("^[^\n]+")
     end
@@ -202,8 +202,7 @@ M.get_base64_encoded_image = function()
     local output, exit_code = util.execute(
       [[Add-Type -AssemblyName System.Windows.Forms; $ms = New-Object System.IO.MemoryStream;]]
         .. [[ [System.Windows.Forms.Clipboard]::GetImage().Save($ms, [System.Drawing.Imaging.ImageFormat]::Png);]]
-        .. [[ [System.Convert]::ToBase64String($ms.ToArray())]],
-      true
+        .. [[ [System.Convert]::ToBase64String($ms.ToArray())]]
     )
     if exit_code == 0 then
       return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
