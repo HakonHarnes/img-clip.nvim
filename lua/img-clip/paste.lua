@@ -165,7 +165,7 @@ M.embed_image_as_base64 = function(file_path, opts)
     return false
   end
 
-  local base64 = nil
+  local base64
   if file_path then
     base64 = fs.get_base64_encoded_image(file_path)
   else

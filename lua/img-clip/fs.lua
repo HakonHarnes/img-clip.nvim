@@ -160,7 +160,7 @@ end
 ---@param file_path string
 ---@return string | nil
 M.get_base64_encoded_image = function(file_path)
-  local command = nil
+  local command
   if util.has("win32") then
     command = string.format("certutil -encode '%s' -", file_path)
   else
