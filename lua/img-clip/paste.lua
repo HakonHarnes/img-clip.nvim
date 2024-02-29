@@ -10,23 +10,27 @@ local M = {}
 ---@param input? string file path or url
 ---@return boolean
 M.paste_image = function(opts, input)
+  -- check if input (file path or url) is provided
   if input then
     input = util.sanitize_input(input)
+
     if util.is_image_url(input) then
       return M.paste_image_from_url(input, opts)
     elseif util.is_image_path(input) then
       return M.paste_image_from_path(input, opts)
-    else
-      util.warn("Input is not an image.")
-      return false
     end
+
+    util.warn("Input is not an image.")
+    return false
   end
 
+  -- if no input is provided, check clipboard content
   if clipboard.content_is_image() then
     return M.paste_image_from_clipboard(opts)
   end
 
-  -- clipboard content as text
+  -- if clipboard does not contain an image, then get the
+  -- clipboard content as text and check attempt to paste it
   local clipboard_content = clipboard.get_content()
   if clipboard_content then
     return M.paste_image(opts, clipboard_content)
