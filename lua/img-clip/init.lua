@@ -16,6 +16,12 @@ end
 
 ---@param opts? table
 ---@param input? string
+M.paste_image = function(opts, input)
+  return paste.paste_image(opts, input)
+end
+
+---@param opts? table
+---@param input? string
 M.pasteImage = function(opts, input)
   return paste.paste_image(opts, input)
 end
