@@ -13,6 +13,10 @@ vim.api.nvim_create_user_command("ImgClipDebug", function()
   debug.print_log()
 end, {})
 
+vim.api.nvim_create_user_command("ImgClipConfig", function()
+  config.print_config()
+end, {})
+
 local buffer = ""
 
 ---@param lines string[]
