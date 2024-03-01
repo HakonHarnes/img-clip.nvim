@@ -11,6 +11,25 @@ describe("clipboard", function()
     end
   end)
 
+  -- incompatible os
+  describe("Incompatible", function()
+    before_each(function()
+      os.getenv = function()
+        return false
+      end
+      util.has = function()
+        return false
+      end
+      util.executable = function()
+        return false
+      end
+    end)
+
+    it("return nil if clipboard command cant be found", function()
+      assert.equals(nil, clipboard.get_clip_cmd())
+    end)
+  end)
+
   -- X11
   describe("x11", function()
     before_each(function()
