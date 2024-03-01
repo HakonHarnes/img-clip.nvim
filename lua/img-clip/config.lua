@@ -1,5 +1,8 @@
 local M = {}
 
+M.config_file = "Default"
+M.sorted_files = {}
+M.sorted_dirs = {}
 M.configs = {}
 M.opts = {}
 
@@ -99,6 +102,8 @@ defaults.filetypes.plaintex = defaults.filetypes.tex
 defaults.filetypes.rmd = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
 
+---sorts the files and dirs tables by length of the path
+---so more specific paths have priority over less specific paths
 ---@param opts table
 ---@return table
 M.sort_config = function(opts)
@@ -116,14 +121,14 @@ M.sort_config = function(opts)
     return sorted_keys
   end
 
-  opts["sorted_files"] = sort_keys(opts["files"])
-  opts["sorted_dirs"] = sort_keys(opts["dirs"])
+  M.sorted_files = sort_keys(opts["files"])
+  M.sorted_dirs = sort_keys(opts["dirs"])
 
   return opts
 end
 
 ---get the config
----Can be either the default config or the config from the config file
+---can be either the default config or the config from the config file
 ---@return table
 M.get_config = function()
   -- use cached config if available
@@ -131,8 +136,9 @@ M.get_config = function()
   if M.configs[dir_path] and M.configs[dir_path] ~= {} then
     return M.configs[dir_path]
 
-  -- no config file found, use default config
+  -- no cached config file found, use default config
   elseif M.configs[dir_path] == {} then
+    M.config_file = "Default"
     return M.opts
   end
 
@@ -144,6 +150,7 @@ M.get_config = function()
     if success then
       local opts = vim.tbl_deep_extend("force", {}, defaults, output)
       M.configs[dir_path] = M.sort_config(opts)
+      M.config_file = config_file
       return M.configs[dir_path]
     else
       M.configs[dir_path] = {}
@@ -152,6 +159,7 @@ M.get_config = function()
   end
 
   -- use default config if no config file is found
+  M.config_file = "Default"
   return M.opts
 end
 
@@ -214,7 +222,7 @@ local function get_file_opt(key, opts, args, file)
     return string.sub(f1:lower(), -#f2:lower()) == f2:lower()
   end
 
-  for _, config_file in ipairs(opts["sorted_files"]) do
+  for _, config_file in ipairs(M.sorted_files) do
     if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(vim.fn.expand(config_file))) then
       return M.get_opt(key, {}, args, opts["files"][config_file])
     end
@@ -236,7 +244,7 @@ local function get_dir_opt(key, opts, args, dir)
     return string.find(d1:lower(), d2:lower(), 1, true)
   end
 
-  for _, config_dir in ipairs(opts["sorted_dirs"]) do
+  for _, config_dir in ipairs(M.sorted_dirs) do
     if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(vim.fn.expand(config_dir))) then
       return M.get_opt(key, {}, args, opts["dirs"][config_dir])
     end
@@ -307,6 +315,13 @@ end
 function M.setup(config_opts)
   M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
   M.opts = M.sort_config(M.opts)
+end
+
+M.print_config = function()
+  local config = M.get_config()
+
+  print("Config file: " .. M.config_file)
+  vim.print(config)
 end
 
 return M
