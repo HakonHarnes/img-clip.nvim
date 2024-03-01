@@ -5,7 +5,6 @@ M.opts = {}
 
 local defaults = {
   default = {
-    debug = false, -- enable debug mode
     dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
     file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
     url_encode_path = false, -- encode spaces and special characters in file path
