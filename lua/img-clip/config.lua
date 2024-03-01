@@ -123,7 +123,7 @@ M.sort_config = function(opts)
   return opts
 end
 
----Gets the config
+---get the config
 ---Can be either the default config or the config from the config file
 ---@return table
 M.get_config = function()
@@ -156,7 +156,7 @@ M.get_config = function()
   return M.opts
 end
 
----Recursively gets the value of the option (e.g. "default.debug")
+---recursively gets the value of the option (e.g. "default.debug")
 ---@param key string
 ---@param opts table
 ---@return string | nil
@@ -174,7 +174,7 @@ local function recursive_get_opt(key, opts)
   return opts
 end
 
----Gets the value of the option, executing it if it's a function
+---get the value of the option, executing it if it's a function
 ---@param val any
 ---@param args? table
 ---@return string | nil
@@ -186,7 +186,7 @@ local function get_val(val, args)
   end
 end
 
----Gets the option from the custom table
+---get the option from the custom table
 ---@param key string
 ---@param args? table
 ---@return string | nil
@@ -202,7 +202,7 @@ local function get_custom_opt(key, opts, args)
   end
 end
 
----Gets the option from the files table
+---get the option from the files table
 ---@param key string
 ---@param args? table
 ---@return string | nil
@@ -224,7 +224,7 @@ local function get_file_opt(key, opts, args, file)
   return nil
 end
 
----Gets the option from the dirs table
+---get the option from the dirs table
 ---@param key string
 ---@param args? table
 ---@return string | nil
@@ -246,21 +246,21 @@ local function get_dir_opt(key, opts, args, dir)
   return nil
 end
 
----Gets the option from the filetypes table
+---get the option from the filetypes table
 ---@param key string
 ---@return string | nil
 local function get_filetype_opt(key, opts, ft)
   return recursive_get_opt("filetypes." .. ft .. "." .. key, opts)
 end
 
----Gets the option from the default table
+---get the option from the default table
 ---@param key string
 ---@return string | nil
 local function get_default_opt(key, opts)
   return recursive_get_opt("default." .. key, opts)
 end
 
----Gets the option from the main opts table
+---get the option from the main opts table
 ---@param key string
 ---@return string | nil
 local function get_unscoped_opt(key, opts)
@@ -304,11 +304,10 @@ M.get_opt = function(key, api_opts, args, opts)
   return get_val(val, args)
 end
 
+---@param config_opts? table
 function M.setup(config_opts)
   M.opts = vim.tbl_deep_extend("force", {}, defaults, config_opts or {})
   M.opts = M.sort_config(M.opts)
 end
-
-M.setup()
 
 return M

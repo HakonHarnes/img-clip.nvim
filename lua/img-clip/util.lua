@@ -2,48 +2,52 @@ local config = require("img-clip.config")
 
 local M = {}
 
-M.executable = function(command)
-  return vim.fn.executable(command) == 1
-end
+M.verbose = true
 
----@param cmd string
----@param powershell? boolean
+---@param input_cmd string
 ---@return string | nil output
 ---@return number exit_code
-M.execute = function(cmd, powershell)
+M.execute = function(input_cmd)
   local shell = vim.o.shell:lower()
-  local command
-
-  -- execute command directly if not powershell
-  if not powershell then
-    command = cmd
+  local cmd
 
   -- execute command directly if shell is powershell or pwsh
-  elseif shell:match("powershell") or shell:match("pwsh") then
-    command = cmd
+  if shell:match("powershell") or shell:match("pwsh") then
+    cmd = input_cmd
 
   -- WSL requires the command to have the format:
   -- powershell.exe -Command 'command "path/to/file"'
   elseif M.has("wsl") then
-    command = "powershell.exe -NoProfile -Command '" .. cmd:gsub("'", '"') .. "'"
-
+    if input_cmd:match("curl") then
+      cmd = input_cmd
+    else
+      cmd = "powershell.exe -NoProfile -Command '" .. input_cmd:gsub("'", '"') .. "'"
+    end
   -- cmd.exe requires the command to have the format:
   -- powershell.exe -Command "command 'path/to/file'"
+  elseif M.has("win32") then
+    cmd = 'powershell.exe -NoProfile -Command "' .. input_cmd:gsub('"', "'") .. '"'
+
+  -- otherwise (linux, macos), execute the command directly
   else
-    command = 'powershell.exe -NoProfile -Command "' .. cmd:gsub('"', "'") .. '"'
+    cmd = input_cmd
   end
 
-  local output = vim.fn.system(command)
+  local output = vim.fn.system(cmd)
   local exit_code = vim.v.shell_error
 
   if config.get_opt("debug") then
     print("Shell: " .. shell)
-    print("Command: " .. command)
+    print("Command: " .. cmd)
     print("Exit code: " .. exit_code)
     print("Output: " .. output)
   end
 
   return output, exit_code
+end
+
+M.executable = function(command)
+  return vim.fn.executable(command) == 1
 end
 
 ---@param feature string
@@ -53,12 +57,16 @@ end
 
 ---@param msg string
 M.warn = function(msg)
-  vim.notify(msg, vim.log.levels.WARN, { title = "img-clip" })
+  if M.verbose then
+    vim.notify(msg, vim.log.levels.WARN, { title = "img-clip" })
+  end
 end
 
 ---@param msg string
 M.error = function(msg)
-  vim.notify(msg, vim.log.levels.ERROR, { title = "img-clip" })
+  if M.verbose then
+    vim.notify(msg, vim.log.levels.ERROR, { title = "img-clip" })
+  end
 end
 
 ---@param msg string
@@ -79,6 +87,18 @@ M.input = function(args)
   end
 
   return output
+end
+
+---@param str string
+---@return string
+M.sanitize_input = function(str)
+  str = str:match("^%s*(.-)%s*$") -- remove leading and trailing whitespace
+  str = str:match('^"?(.-)"?$') -- remove double quotes
+  str = str:match("^'?(.-)'?$") -- remove single quotes
+  str = str:gsub("file://", "") -- remove "file://"
+  str = str:gsub("%c", "") -- remove control characters
+
+  return str
 end
 
 ---@param str string

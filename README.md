@@ -59,7 +59,13 @@ Consider binding `PasteImage` to something like `<leader>p`.
 You can also use the Lua equivalent, which allows you to override your configuration by passing the options directly to the function:
 
 ```lua
-require("img-clip").pasteImage({ use_absolute_path = false, file_name = "image.png" })
+require("img-clip").paste_image(opts?, input?) -- input is optional and can be a file path or URL
+```
+
+Example:
+
+```lua
+require("img-clip").paste_image({ use_absolute_path = false, file_name = "image.png" }, "/path/to/file.png")
 ```
 
 ## Configuration

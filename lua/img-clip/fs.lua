@@ -1,3 +1,4 @@
+local clipoard = require("img-clip.clipboard")
 local config = require("img-clip.config")
 local util = require("img-clip.util")
 
@@ -155,6 +156,31 @@ end
 ---@return number exit_code
 M.copy_file = function(src, dest)
   return util.execute(string.format("cp '%s' '%s'", src, dest))
+end
+
+---@param file_path string
+---@return string | nil
+M.get_base64_encoded_image = function(file_path)
+  local cmd = clipoard.get_clip_cmd()
+
+  -- Windows
+  if cmd == "powershell.exe" then
+    local command = string.format([[[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('%s'))]], file_path)
+    local output, exit_code = util.execute(command)
+    if exit_code == 0 then
+      return output:gsub("\r\n", ""):gsub("\n", ""):gsub("\r", "")
+    end
+
+  -- Linux/MacOS
+  else
+    local command = string.format("base64 '%s' | tr -d '\n'", file_path)
+    local output, exit_code = util.execute(command)
+    if exit_code == 0 then
+      return output
+    end
+  end
+
+  return nil
 end
 
 return M
