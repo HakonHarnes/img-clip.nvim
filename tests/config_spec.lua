@@ -10,7 +10,6 @@ describe("config", function()
   end)
 
   it("should have default values for all configuration options", function()
-    assert.is_false(config.get_opt("debug"))
     assert.equals("assets", config.get_opt("dir_path"))
     assert.equals("%Y-%m-%d-%H-%M-%S", config.get_opt("file_name"))
     assert.is_false(config.get_opt("url_encode_path"))
@@ -58,7 +57,7 @@ describe("config", function()
 
   it("should prioritize API options over config values", function()
     assert.equals("custom-filename", config.get_opt("file_name", { file_name = "custom-filename" }))
-    assert.equals(true, config.get_opt("debug", { debug = true }))
+    assert.equals("some-dir-path", config.get_opt("dir_path", { dir_path = "some-dir-path" }))
   end)
 
   it("should execute functions that are passed in the API", function()

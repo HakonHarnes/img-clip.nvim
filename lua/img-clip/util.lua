@@ -1,4 +1,5 @@
 local config = require("img-clip.config")
+local debug = require("img-clip.debug")
 
 local M = {}
 
@@ -36,12 +37,10 @@ M.execute = function(input_cmd)
   local output = vim.fn.system(cmd)
   local exit_code = vim.v.shell_error
 
-  if config.get_opt("debug") then
-    print("Shell: " .. shell)
-    print("Command: " .. cmd)
-    print("Exit code: " .. exit_code)
-    print("Output: " .. output)
-  end
+  debug.log("Shell: " .. shell)
+  debug.log("Command: " .. cmd)
+  debug.log("Exit code: " .. exit_code)
+  debug.log("Output: " .. output)
 
   return output, exit_code
 end

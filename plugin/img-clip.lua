@@ -1,3 +1,4 @@
+local debug = require("img-clip.debug")
 local config = require("img-clip.config")
 local util = require("img-clip.util")
 local plugin = require("img-clip")
@@ -6,6 +7,10 @@ plugin.setup()
 
 vim.api.nvim_create_user_command("PasteImage", function()
   plugin.pasteImage()
+end, {})
+
+vim.api.nvim_create_user_command("ImgClipDebug", function()
+  debug.print_log()
 end, {})
 
 local buffer = ""
@@ -35,9 +40,7 @@ end
 -- it will contain the path to the image or file, or a link to the image
 vim.paste = (function(original)
   return function(lines, phase)
-    if config.get_opt("debug") then
-      print("Paste: " .. vim.inspect(lines))
-    end
+    debug.log("Paste: " .. vim.inspect(lines))
 
     if config.get_opt("drag_and_drop.enabled") == false then
       return original(lines, phase)
@@ -57,9 +60,7 @@ vim.paste = (function(original)
 
     local line = lines[1]
 
-    if config.get_opt("debug") then
-      print("Line: " .. line)
-    end
+    debug.log("Line: " .. line)
 
     -- probably not a file path or url to an image if the input is this long
     if string.len(line) > 512 then
@@ -68,9 +69,7 @@ vim.paste = (function(original)
 
     util.verbose = false
     if not plugin.pasteImage({}, line) then
-      if config.get_opt("debug") then
-        print("Did not handle paste, calling original vim.paste")
-      end
+      debug.log("Did not handle paste, calling original vim.paste")
       util.verbose = true
       return original(lines, phase) -- if we did not handle the paste, call the original vim.paste function
     end
