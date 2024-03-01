@@ -22,8 +22,11 @@ M.execute = function(input_cmd)
   -- WSL requires the command to have the format:
   -- powershell.exe -Command 'command "path/to/file"'
   elseif M.has("wsl") then
-    cmd = "powershell.exe -NoProfile -Command '" .. input_cmd:gsub("'", '"') .. "'"
-
+    if input_cmd:match("curl") then
+      cmd = input_cmd
+    else
+      cmd = "powershell.exe -NoProfile -Command '" .. input_cmd:gsub("'", '"') .. "'"
+    end
   -- cmd.exe requires the command to have the format:
   -- powershell.exe -Command "command 'path/to/file'"
   elseif M.has("win32") then

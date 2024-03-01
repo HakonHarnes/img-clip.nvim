@@ -164,7 +164,7 @@ M.get_base64_encoded_image = function(file_path)
   local cmd = clipoard.get_clip_cmd()
 
   -- Windows
-  if cmd == "powershell" then
+  if cmd == "powershell.exe" then
     local command = string.format([[[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('%s'))]], file_path)
     local output, exit_code = util.execute(command)
     if exit_code == 0 then

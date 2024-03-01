@@ -153,7 +153,7 @@ M.get_content = function()
 
   -- Windows
   elseif cmd == "powershell.exe" then
-    local output, exit_code = util.execute([[powershell -command "Get-Clipboard -Text"]])
+    local output, exit_code = util.execute([[powershell -command "Get-Clipboard"]])
     if exit_code == 0 then
       return output:match("^[^\n]+")
     end
