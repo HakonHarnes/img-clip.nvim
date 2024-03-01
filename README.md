@@ -52,6 +52,7 @@ The plugin comes with the following commands:
 
 - `PasteImage` Inserts the image from the clipboard into the document.
 - `ImgClipDebug` Prints the debug log, including the output of shell commands.
+- `ImgClipConfig` Prints the current configuration.
 
 Consider binding `PasteImage` to something like `<leader>p`.
 
