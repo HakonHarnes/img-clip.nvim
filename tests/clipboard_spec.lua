@@ -181,7 +181,7 @@ describe("clipboard", function()
 
       it("gets first line of clipboard content", function()
         util.execute = function(command)
-          assert(command:match("pngpaste"))
+          assert(command:match("pbpaste"))
           return [[first line
         second line]], 0
         end
@@ -236,7 +236,7 @@ describe("clipboard", function()
 
       it("gets first line of clipboard content", function()
         util.execute = function(command)
-          assert(command:match("osascript"))
+          assert(command:match("pbpaste"))
           return [[first line
         second line]], 0
         end
