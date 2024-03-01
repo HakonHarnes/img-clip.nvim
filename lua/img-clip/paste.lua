@@ -20,7 +20,7 @@ M.paste_image = function(opts, input)
       return M.paste_image_from_path(input, opts)
     end
 
-    util.warn("Input is not an image.")
+    util.warn("Content is not an image.")
     return false
   end
 
@@ -36,7 +36,7 @@ M.paste_image = function(opts, input)
     return M.paste_image(opts, clipboard_content)
   end
 
-  util.warn("Clipboard does not contain an image.")
+  util.warn("Content is not an image.")
   return false
 end
 
