@@ -4,10 +4,6 @@ local M = {}
 
 M.verbose = true
 
-M.executable = function(command)
-  return vim.fn.executable(command) == 1
-end
-
 ---@param input_cmd string
 ---@return string | nil output
 ---@return number exit_code
@@ -48,6 +44,10 @@ M.execute = function(input_cmd)
   end
 
   return output, exit_code
+end
+
+M.executable = function(command)
+  return vim.fn.executable(command) == 1
 end
 
 ---@param feature string

@@ -137,16 +137,14 @@ M.get_content = function()
       return output:match("^[^\n]+")
     end
 
-  -- MacOS (pngpaste)
-  elseif cmd == "pngpaste" then
-    local output, exit_code = util.execute("pngpaste -")
+  -- MacOS
+  elseif cmd == "pngpaste" or cmd == "osascript" then
+    local output, exit_code = util.execute("pbpaste")
     if exit_code == 0 then
       return output:match("^[^\n]+")
     end
 
-  -- MacOS (osascript)
-  elseif cmd == "osascript" then
-    local output, exit_code = util.execute([[osascript -e 'get the clipboard as text']])
+    output, exit_code = util.execute([[osascript -e 'get the clipboard as text']])
     if exit_code == 0 then
       return output:match("^[^\n]+")
     end
