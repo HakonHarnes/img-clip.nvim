@@ -182,7 +182,7 @@ M.embed_image_as_base64 = function(file_path, opts)
   end
 
   -- check if base64 string is too long (max_base64_size is in KB)
-  local base64_size_kb = (string.len(base64) * 6) / (8 * 1024)
+  local base64_size_kb = math.floor((string.len(base64) * 6) / (8 * 1024))
   local max_size_kb = config.get_opt("max_base64_size", opts)
   if base64_size_kb > max_size_kb then
     util.warn("Base64 string is too large (" .. base64_size_kb .. " KB). Max allowed size is " .. max_size_kb .. " KB.")
