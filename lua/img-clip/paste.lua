@@ -24,6 +24,12 @@ M.paste_image = function(opts, input)
     return false
   end
 
+  -- ensure clipboard command is valid
+  if not clipboard.get_clip_cmd() then
+    util.error("Could not get clipboard command. See :checkhealth img-clip.")
+    return false
+  end
+
   -- if no input is provided, check clipboard content
   if clipboard.content_is_image() then
     return M.paste_image_from_clipboard(opts)
