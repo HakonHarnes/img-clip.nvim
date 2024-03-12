@@ -1,6 +1,7 @@
 local clipboard = require("img-clip.clipboard")
 local paste = require("img-clip.paste")
 local config = require("img-clip.config")
+local util = require("img-clip.util")
 local spy = require("luassert.spy")
 
 describe("paste", function()
@@ -8,6 +9,15 @@ describe("paste", function()
     config.setup({})
     config.get_config = function()
       return config.opts
+    end
+    os.getenv = function(env)
+      return env == "DISPLAY"
+    end
+    util.has = function()
+      return false
+    end
+    util.executable = function(cmd)
+      return cmd == "xclip"
     end
   end)
 
