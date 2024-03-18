@@ -71,9 +71,9 @@ M.paste_image_from_url = function(url, opts)
   end
 
   -- download and preprocess the image before saving
-  local preprocess_cmd = config.get_opt("preprocess_cmd")
-  if preprocess_cmd ~= "" then
-    local command = string.format("curl -s '%s' | %s > '%s'", url, preprocess_cmd, file_path)
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    local command = string.format("curl -s '%s' | %s > '%s'", url, process_cmd, file_path)
     local _, exit_code = util.execute(command)
     if exit_code ~= 0 then
       util.error("Could not download and pre-process the image.")

@@ -162,9 +162,9 @@ end
 ---@return string | nil
 M.get_base64_encoded_image = function(file_path)
   local cmd = clipoard.get_clip_cmd()
-  local preprocess_cmd = config.get_opt("preprocess_cmd")
-  if preprocess_cmd ~= "" then
-    preprocess_cmd = "| " .. preprocess_cmd .. " "
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    process_cmd = "| " .. process_cmd .. " "
   end
 
   -- Windows
@@ -177,7 +177,7 @@ M.get_base64_encoded_image = function(file_path)
 
   -- Linux/MacOS
   else
-    local command = string.format("cat '%s' %s| base64 | tr -d '\n'", file_path, preprocess_cmd)
+    local command = string.format("cat '%s' %s | base64 | tr -d '\n'", file_path, process_cmd)
     local output, exit_code = util.execute(command)
     if exit_code == 0 then
       return output
