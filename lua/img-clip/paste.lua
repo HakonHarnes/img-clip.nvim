@@ -131,6 +131,12 @@ M.paste_image_from_path = function(src_path, opts)
     return false
   end
 
+  local output, exit_code = fs.process_image(file_path, opts)
+  if exit_code ~= 0 then
+    util.warn("Could not process image.", true)
+    util.warn("Output: " .. output, true)
+  end
+
   if not markup.insert_markup(file_path) then
     util.error("Could not insert markup code.")
     return false
@@ -162,6 +168,12 @@ M.paste_image_from_clipboard = function(opts)
   if not clipboard.save_image(file_path) then
     util.error("Could not save image to disk.")
     return false
+  end
+
+  local output, exit_code = fs.process_image(file_path, opts)
+  if exit_code ~= 0 then
+    util.warn("Could not process image.", true)
+    util.warn("Output: " .. output, true)
   end
 
   if not markup.insert_markup(file_path, opts) then
