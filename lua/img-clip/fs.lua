@@ -159,6 +159,28 @@ M.copy_file = function(src, dest)
 end
 
 ---@param file_path string
+---@param opts? table
+---@return string | nil output
+---@return number exit_code
+M.process_image = function(file_path, opts)
+  local process_cmd = config.get_opt("process_cmd", opts)
+  if not process_cmd or process_cmd == "" then
+    return "", 0
+  end
+
+  local tmp_file_path = file_path .. ".tmp"
+  M.copy_file(file_path, tmp_file_path)
+
+  local output, exit_code = util.execute(string.format(" cat '%s' | %s > '%s'", file_path, process_cmd, tmp_file_path))
+  if exit_code == 0 then
+    M.copy_file(tmp_file_path, file_path)
+  end
+  util.execute(string.format("rm '%s'", tmp_file_path))
+
+  return output, exit_code
+end
+
+---@param file_path string
 ---@return string | nil
 M.get_base64_encoded_image = function(file_path)
   local cmd = clipoard.get_clip_cmd()

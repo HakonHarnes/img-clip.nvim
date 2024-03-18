@@ -76,6 +76,12 @@ M.paste_image_from_url = function(url, opts)
     return false
   end
 
+  local output, exit_code = fs.process_image(file_path, opts)
+  if exit_code ~= 0 then
+    util.warn("Could not process image.", true)
+    util.warn("Output: " .. output, true)
+  end
+
   if config.get_opt("embed_image_as_base64", opts) then
     if M.embed_image_as_base64(file_path, opts) then
       return true

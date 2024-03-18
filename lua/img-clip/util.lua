@@ -55,15 +55,17 @@ M.has = function(feature)
 end
 
 ---@param msg string
-M.warn = function(msg)
-  if M.verbose then
+---@param verbose boolean?
+M.warn = function(msg, verbose)
+  if M.verbose or verbose then
     vim.notify(msg, vim.log.levels.WARN, { title = "img-clip" })
   end
 end
 
 ---@param msg string
-M.error = function(msg)
-  if M.verbose then
+---@param verbose boolean?
+M.error = function(msg, verbose)
+  if M.verbose or verbose then
     vim.notify(msg, vim.log.levels.ERROR, { title = "img-clip" })
   end
 end
