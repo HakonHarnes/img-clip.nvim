@@ -168,14 +168,20 @@ M.process_image = function(file_path, opts)
     return "", 0
   end
 
+  if util.has("win32") then
+    util.warn("Windows does not support image processing yet.")
+    return nil, 1
+  end
+
   local tmp_file_path = file_path .. ".tmp"
   M.copy_file(file_path, tmp_file_path)
 
-  local output, exit_code = util.execute(string.format(" cat '%s' | %s > '%s'", file_path, process_cmd, tmp_file_path))
+  local output, exit_code =
+    util.execute(string.format("cat '%s' | %s > '%s'", file_path, process_cmd, tmp_file_path), true)
   if exit_code == 0 then
     M.copy_file(tmp_file_path, file_path)
   end
-  util.execute(string.format("rm '%s'", tmp_file_path))
+  util.execute(string.format("rm '%s'", tmp_file_path), true)
 
   return output, exit_code
 end
