@@ -70,10 +70,22 @@ M.paste_image_from_url = function(url, opts)
     return false
   end
 
-  local _, exit_code = util.execute(string.format("curl -o '%s' '%s'", file_path, url))
-  if exit_code ~= 0 then
-    util.error("Could not download image.")
-    return false
+  -- download and preprocess the image before saving
+  local preprocess_cmd = config.get_opt("preprocess_cmd")
+  if preprocess_cmd ~= "" then
+    local command = string.format("curl -s '%s' | %s > '%s'", url, preprocess_cmd, file_path)
+    local _, exit_code = util.execute(command)
+    if exit_code ~= 0 then
+      util.error("Could not download and pre-process the image.")
+      return false
+    end
+  else
+    -- if no pre-processing, download the image directly to the final file path
+    local _, exit_code = util.execute(string.format("curl -o '%s' '%s'", file_path, url))
+    if exit_code ~= 0 then
+      util.error("Could not download image.")
+      return false
+    end
   end
 
   if config.get_opt("embed_image_as_base64", opts) then
