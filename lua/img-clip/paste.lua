@@ -196,7 +196,7 @@ M.embed_image_as_base64 = function(file_path, opts)
   end
 
   local prefix = M.get_base64_prefix()
-  if not markup.insert_markup(prefix .. base64, opts) then
+  if not markup.insert_base64_markup(prefix .. base64, opts) then
     util.error("Could not insert markup code.")
     return false
   end
