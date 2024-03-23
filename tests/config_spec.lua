@@ -56,27 +56,27 @@ describe("config", function()
   end)
 
   it("should prioritize API options over config values", function()
-    assert.equals("custom-filename", config.get_opt("file_name", { file_name = "custom-filename" }))
-    assert.equals("some-dir-path", config.get_opt("dir_path", { dir_path = "some-dir-path" }))
+    config.api_opts = { dir_path = "some-dir-path", file_name = "custom-filename" }
+    assert.equals("custom-filename", config.get_opt("file_name"))
+    assert.equals("some-dir-path", config.get_opt("dir_path"))
+    config.api_opts = {}
   end)
 
   it("should execute functions that are passed in the API", function()
-    assert.equals(
-      42,
-      config.get_opt("life", {
-        life = function()
-          return 40 + 2
-        end,
-      })
-    )
+    config.api_opts = {
+      life = function()
+        return 42
+      end,
+    }
+    assert.equals(42, config.get_opt("life"))
+    config.api_opts = {}
   end)
 
   it("should allow nested API options", function()
     vim.bo.filetype = "markdown"
 
-    assert.equals(
-      "markdown-template",
-      config.get_opt("template", { filetypes = { markdown = { template = "markdown-template" } } })
-    )
+    config.api_opts = { filetypes = { markdown = { template = "markdown-template" } } }
+    assert.equals("markdown-template", config.get_opt("template"))
+    config.api_opts = {}
   end)
 end)
