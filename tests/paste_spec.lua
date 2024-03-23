@@ -1,5 +1,6 @@
 local clipboard = require("img-clip.clipboard")
 local paste = require("img-clip.paste")
+local plugin = require("img-clip")
 local config = require("img-clip.config")
 local util = require("img-clip.util")
 local spy = require("luassert.spy")
@@ -44,7 +45,7 @@ describe("paste", function()
 
       spy.on(paste, "paste_image_from_path")
 
-      paste.paste_image({}, "/home/user/Pictures/image.png")
+      plugin.paste_image({}, "/home/user/Pictures/image.png")
       assert.spy(paste.paste_image_from_path).was_called()
 
       paste.paste_image_from_url = function()
@@ -53,7 +54,7 @@ describe("paste", function()
 
       spy.on(paste, "paste_image_from_url")
 
-      paste.paste_image({}, "https://example.com/image.png")
+      plugin.paste_image({}, "https://example.com/image.png")
       assert.spy(paste.paste_image_from_url).was_called()
     end)
 
