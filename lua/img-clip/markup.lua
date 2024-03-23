@@ -58,9 +58,8 @@ M.url_encode = function(str)
 end
 
 ---@param file_path string the file path or base64 string
----@param opts? table
 ---@return boolean
-function M.insert_markup(file_path, opts)
+function M.insert_markup(file_path)
   local file_name = vim.fn.fnamemodify(file_path, ":t")
   local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
   local label = file_name_no_ext:gsub("%s+", "-"):lower()
@@ -83,13 +82,13 @@ function M.insert_markup(file_path, opts)
     cursor = "$CURSOR",
     label = label,
   }
-  local template = config.get_opt("template", opts, template_args)
+  local template = config.get_opt("template", template_args)
   if not template then
     return false
   end
 
   -- url encode path
-  if config.get_opt("url_encode_path", opts) then
+  if config.get_opt("url_encode_path") then
     file_path = M.url_encode(file_path)
     file_path = file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
   end
@@ -99,7 +98,7 @@ function M.insert_markup(file_path, opts)
   template = template:gsub("$FILE_PATH", file_path)
   template = template:gsub("$LABEL", label)
 
-  if not config.get_opt("use_cursor_in_template", opts) then
+  if not config.get_opt("use_cursor_in_template") then
     template = template:gsub("$CURSOR", "")
   end
 
@@ -117,7 +116,7 @@ function M.insert_markup(file_path, opts)
 
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
-  if config.get_opt("insert_mode_after_paste", opts) and vim.api.nvim_get_mode().mode ~= "i" then
+  if config.get_opt("insert_mode_after_paste") and vim.api.nvim_get_mode().mode ~= "i" then
     if new_col == string.len(line) - 1 then
       vim.api.nvim_input("a")
     else
@@ -129,9 +128,8 @@ function M.insert_markup(file_path, opts)
 end
 
 ---@param base64 string the file path or base64 string
----@param opts? table
 ---@return boolean
-function M.insert_base64_markup(base64, opts)
+function M.insert_base64_markup(base64)
   -- pass args to template
   local template_args = {
     file_path = "",
@@ -140,7 +138,7 @@ function M.insert_base64_markup(base64, opts)
     cursor = "$CURSOR",
     label = "",
   }
-  local template = config.get_opt("template", opts, template_args)
+  local template = config.get_opt("template", template_args)
   if not template then
     return false
   end
@@ -150,7 +148,7 @@ function M.insert_base64_markup(base64, opts)
   template = template:gsub("$FILE_PATH", base64)
   template = template:gsub("$LABEL", "")
 
-  if not config.get_opt("use_cursor_in_template", opts) then
+  if not config.get_opt("use_cursor_in_template") then
     template = template:gsub("$CURSOR", "")
   end
 
@@ -168,7 +166,7 @@ function M.insert_base64_markup(base64, opts)
 
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
-  if config.get_opt("insert_mode_after_paste", opts) and vim.api.nvim_get_mode().mode ~= "i" then
+  if config.get_opt("insert_mode_after_paste") and vim.api.nvim_get_mode().mode ~= "i" then
     if new_col == string.len(line) - 1 then
       vim.api.nvim_input("a")
     else

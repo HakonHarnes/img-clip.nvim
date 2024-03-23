@@ -4,6 +4,7 @@ M.config_file = "Default"
 M.sorted_files = {}
 M.sorted_dirs = {}
 M.configs = {}
+M.api_opts = {}
 M.opts = {}
 
 local defaults = {
@@ -205,7 +206,7 @@ local function get_custom_opt(key, opts, args)
 
   for _, config_opts in ipairs(opts["custom"]) do
     if config_opts["trigger"] and get_val(config_opts["trigger"]) then
-      return M.get_opt(key, {}, args, config_opts)
+      return M.get_opt(key, args, config_opts)
     end
   end
 end
@@ -225,7 +226,7 @@ local function get_file_opt(key, opts, args, file)
 
   for _, config_file in ipairs(M.sorted_files) do
     if file_matches(file, config_file) or file_matches(file, vim.fn.resolve(vim.fn.expand(config_file))) then
-      return M.get_opt(key, {}, args, opts["files"][config_file])
+      return M.get_opt(key, args, opts["files"][config_file])
     end
   end
 
@@ -247,7 +248,7 @@ local function get_dir_opt(key, opts, args, dir)
 
   for _, config_dir in ipairs(M.sorted_dirs) do
     if dir_matches(dir, config_dir) or dir_matches(dir, vim.fn.resolve(vim.fn.expand(config_dir))) then
-      return M.get_opt(key, {}, args, opts["dirs"][config_dir])
+      return M.get_opt(key, args, opts["dirs"][config_dir])
     end
   end
 
@@ -276,21 +277,20 @@ local function get_unscoped_opt(key, opts)
 end
 
 ---@param key string: The key, may be nested (e.g. "default.debug")
----@param api_opts? table: The opts passed to pasteImage function
 ---@param args? table: Args that should be passed to the option function
----@param opts? table: The opts table to use instead of the config
+---@param opts? table: Opts passed explicitly to the function
 ---@return string | nil
-M.get_opt = function(key, api_opts, args, opts)
-  if api_opts then
-    local val = M.get_opt(key, nil, args, api_opts)
-    if val then
-      return get_val(val, args)
+M.get_opt = function(key, args, opts)
+  -- use explicit opts if provided
+  -- otherwise, try to get the value from the api_opts
+  -- and then from the config file
+  if not opts then
+    local val = M.get_opt(key, args, M.api_opts)
+    if val ~= nil then
+      return val
     end
+    return M.get_opt(key, args, M.get_config())
   end
-
-  -- if options are passed explicitly, use those instead of the config
-  -- otherwise use the config (either from file or neovim config)
-  opts = opts or M.get_config()
 
   local val = get_custom_opt(key, opts, args)
   if val == nil then

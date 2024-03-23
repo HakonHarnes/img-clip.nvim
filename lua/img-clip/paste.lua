@@ -6,18 +6,17 @@ local fs = require("img-clip.fs")
 
 local M = {}
 
----@param opts? table
 ---@param input? string file path or url
 ---@return boolean
-M.paste_image = function(opts, input)
+M.paste_image = function(input)
   -- check if input (file path or url) is provided
   if input then
     input = util.sanitize_input(input)
 
     if util.is_image_url(input) then
-      return M.paste_image_from_url(input, opts)
+      return M.paste_image_from_url(input)
     elseif util.is_image_path(input) then
-      return M.paste_image_from_path(input, opts)
+      return M.paste_image_from_path(input)
     end
 
     util.warn("Content is not an image.")
@@ -32,14 +31,14 @@ M.paste_image = function(opts, input)
 
   -- if no input is provided, check clipboard content
   if clipboard.content_is_image() then
-    return M.paste_image_from_clipboard(opts)
+    return M.paste_image_from_clipboard()
   end
 
   -- if clipboard does not contain an image, then get the
   -- clipboard content as text and check attempt to paste it
   local clipboard_content = clipboard.get_content()
   if clipboard_content then
-    return M.paste_image(opts, clipboard_content)
+    return M.paste_image(clipboard_content)
   end
 
   util.warn("Content is not an image.")
@@ -47,8 +46,7 @@ M.paste_image = function(opts, input)
 end
 
 ---@param url string
----@param opts? table
-M.paste_image_from_url = function(url, opts)
+M.paste_image_from_url = function(url)
   if not config.get_opt("drag_and_drop.download_images") then
     if not markup.insert_markup(url) then
       util.error("Could not insert markup code.")
@@ -58,7 +56,7 @@ M.paste_image_from_url = function(url, opts)
     return true
   end
 
-  local file_path = fs.get_file_path("png", opts)
+  local file_path = fs.get_file_path("png")
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -97,10 +95,9 @@ M.paste_image_from_url = function(url, opts)
 end
 
 ---@param src_path string
----@param opts? table
-M.paste_image_from_path = function(src_path, opts)
-  if config.get_opt("embed_image_as_base64", opts) then
-    if M.embed_image_as_base64(src_path, opts) then
+M.paste_image_from_path = function(src_path)
+  if config.get_opt("embed_image_as_base64") then
+    if M.embed_image_as_base64(src_path) then
       return true
     end
   end
@@ -114,7 +111,7 @@ M.paste_image_from_path = function(src_path, opts)
     return true
   end
 
-  local file_path = fs.get_file_path("png", opts)
+  local file_path = fs.get_file_path("png")
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -145,15 +142,14 @@ M.paste_image_from_path = function(src_path, opts)
   return true
 end
 
----@param opts? table
-M.paste_image_from_clipboard = function(opts)
-  if config.get_opt("embed_image_as_base64", opts) then
-    if M.embed_image_as_base64(nil, opts) then
+M.paste_image_from_clipboard = function()
+  if config.get_opt("embed_image_as_base64") then
+    if M.embed_image_as_base64(nil) then
       return true
     end
   end
 
-  local file_path = fs.get_file_path("png", opts)
+  local file_path = fs.get_file_path("png")
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -185,8 +181,7 @@ M.paste_image_from_clipboard = function(opts)
 end
 
 ---@param file_path? string
----@param opts? table
-M.embed_image_as_base64 = function(file_path, opts)
+M.embed_image_as_base64 = function(file_path)
   local ft = vim.bo.filetype
   if not M.lang_supports_base64(ft) then
     util.warn("Filetype " .. ft .. " does not support base64 encoding.")
@@ -207,14 +202,14 @@ M.embed_image_as_base64 = function(file_path, opts)
 
   -- check if base64 string is too long (max_base64_size is in KB)
   local base64_size_kb = math.floor((string.len(base64) * 6) / (8 * 1024))
-  local max_size_kb = config.get_opt("max_base64_size", opts)
+  local max_size_kb = config.get_opt("max_base64_size")
   if base64_size_kb > max_size_kb then
     util.warn("Base64 string is too large (" .. base64_size_kb .. " KB). Max allowed size is " .. max_size_kb .. " KB.")
     return false
   end
 
   local prefix = M.get_base64_prefix()
-  if not markup.insert_base64_markup(prefix .. base64, opts) then
+  if not markup.insert_base64_markup(prefix .. base64) then
     util.error("Could not insert markup code.")
     return false
   end
