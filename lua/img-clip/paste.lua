@@ -81,8 +81,8 @@ M.paste_image_from_url = function(url)
     end
   end
 
-  local output, exit_code = fs.process_image(file_path)
-  if exit_code ~= 0 then
+  local output, process_exit_code = fs.process_image(file_path)
+  if process_exit_code ~= 0 then
     util.warn("Could not process image.", true)
     util.warn("Output: " .. output, true)
   end
