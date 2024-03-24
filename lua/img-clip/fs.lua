@@ -158,9 +158,44 @@ M.copy_file = function(src, dest)
 end
 
 ---@param file_path string
+---@param opts? table
+---@return string | nil output
+---@return number exit_code
+M.process_image = function(file_path, opts)
+  local process_cmd = config.get_opt("process_cmd", opts)
+  if not process_cmd or process_cmd == "" then
+    return "", 0
+  end
+
+  if util.has("win32") then
+    util.warn("Windows does not support image processing yet.")
+    return "", 0
+  end
+
+  -- create temp file
+  local tmp_file_path = file_path .. ".tmp"
+
+  -- process image
+  local output, exit_code =
+    util.execute(string.format("cat '%s' | %s > '%s'", file_path, process_cmd, tmp_file_path), true)
+  if exit_code == 0 then
+    M.copy_file(tmp_file_path, file_path)
+  end
+
+  -- remove temp file
+  util.execute(string.format("rm '%s'", tmp_file_path), true)
+
+  return output, exit_code
+end
+
+---@param file_path string
 ---@return string | nil
 M.get_base64_encoded_image = function(file_path)
   local cmd = clipoard.get_clip_cmd()
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    process_cmd = "| " .. process_cmd .. " "
+  end
 
   -- Windows
   if cmd == "powershell.exe" then
@@ -172,7 +207,7 @@ M.get_base64_encoded_image = function(file_path)
 
   -- Linux/MacOS
   else
-    local command = string.format("base64 '%s' | tr -d '\n'", file_path)
+    local command = string.format("cat '%s' " .. process_cmd .. "| base64 | tr -d '\n'", file_path)
     local output, exit_code = util.execute(command)
     if exit_code == 0 then
       return output

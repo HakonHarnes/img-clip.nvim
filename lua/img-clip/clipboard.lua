@@ -1,4 +1,5 @@
 local util = require("img-clip.util")
+local config = require("img-clip.config")
 
 local M = {}
 
@@ -69,26 +70,28 @@ M.content_is_image = function()
   return false
 end
 
----@param file_path string
----@return boolean
 M.save_image = function(file_path)
   local cmd = M.get_clip_cmd()
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    process_cmd = "| " .. process_cmd .. " "
+  end
 
   -- Linux (X11)
   if cmd == "xclip" then
-    local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
+    local command = string.format('xclip -selection clipboard -o -t image/png %s> "%s"', process_cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    local command = string.format('wl-paste --type image/png > "%s"', file_path)
+    local command = string.format('wl-paste --type image/png %s> "%s"', process_cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
   -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
-    local command = string.format('pngpaste "%s"', file_path)
+    local command = string.format('pngpaste - %s> "%s"', process_cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
@@ -97,7 +100,10 @@ M.save_image = function(file_path)
     local command = string.format(
       [[osascript -e 'set theFile to (open for access POSIX file "%s" with write permission)' ]]
         .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
-        .. [[-e 'close access theFile']],
+        .. [[-e 'close access theFile' -e 'do shell script "cat %s %s> %s"']],
+      file_path,
+      file_path,
+      process_cmd,
       file_path
     )
     local _, exit_code = util.execute(command)
@@ -162,24 +168,29 @@ end
 
 M.get_base64_encoded_image = function()
   local cmd = M.get_clip_cmd()
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    process_cmd = "| " .. process_cmd .. " "
+  end
 
   -- Linux (X11)
   if cmd == "xclip" then
-    local output, exit_code = util.execute("xclip -selection clipboard -o -t image/png | base64 | tr -d '\n'")
+    local output, exit_code =
+      util.execute("xclip -selection clipboard -o -t image/png " .. process_cmd .. "| base64 | tr -d '\n'")
     if exit_code == 0 then
       return output
     end
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    local output, exit_code = util.execute("wl-paste --type image/png | base64 | tr -d '\n'")
+    local output, exit_code = util.execute("wl-paste --type image/png " .. process_cmd .. "| base64 | tr -d '\n'")
     if exit_code == 0 then
       return output
     end
 
   -- MacOS (pngpaste)
   elseif cmd == "pngpaste" then
-    local output, exit_code = util.execute("pngpaste - | base64 | tr -d '\n'")
+    local output, exit_code = util.execute("pngpaste - " .. process_cmd .. "| base64 | tr -d '\n'")
     if exit_code == 0 then
       return output
     end
@@ -189,7 +200,9 @@ M.get_base64_encoded_image = function()
     local output, exit_code = util.execute(
       [[osascript -e 'set theFile to (open for access POSIX file "/tmp/image.png" with write permission)' ]]
         .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' -e 'close access theFile'; ]]
-        .. [[cat /tmp/image.png | base64 | tr -d "\n" ]]
+        .. [[/tmp/image.png ]]
+        .. process_cmd
+        .. [[ | base64 | tr -d "\n" ]]
     )
     if exit_code == 0 then
       return output
@@ -209,5 +222,4 @@ M.get_base64_encoded_image = function()
 
   return nil
 end
-
 return M

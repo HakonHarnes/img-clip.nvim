@@ -1,6 +1,7 @@
 local clipboard = require("img-clip.clipboard")
 local markup = require("img-clip.markup")
 local config = require("img-clip.config")
+local debug = require("img-clip.debug")
 local util = require("img-clip.util")
 local fs = require("img-clip.fs")
 
@@ -80,6 +81,12 @@ M.paste_image_from_url = function(url)
     end
   end
 
+  local output, process_exit_code = fs.process_image(file_path)
+  if process_exit_code ~= 0 then
+    util.warn("Could not process image.", true)
+    util.warn("Output: " .. output, true)
+  end
+
   if not markup.insert_markup(file_path) then
     util.error("Could not insert markup code.")
     return false
@@ -122,6 +129,12 @@ M.paste_image_from_path = function(src_path)
     return false
   end
 
+  local output, exit_code = fs.process_image(file_path)
+  if exit_code ~= 0 then
+    util.warn("Could not process image.", true)
+    util.warn("Output: " .. output, true)
+  end
+
   if not markup.insert_markup(file_path) then
     util.error("Could not insert markup code.")
     return false
@@ -132,7 +145,7 @@ end
 
 M.paste_image_from_clipboard = function()
   if config.get_opt("embed_image_as_base64") then
-    if M.embed_image_as_base64(nil) then
+    if M.embed_image_as_base64() then
       return true
     end
   end
@@ -152,6 +165,14 @@ M.paste_image_from_clipboard = function()
   if not clipboard.save_image(file_path) then
     util.error("Could not save image to disk.")
     return false
+  end
+
+  if util.has("wsl") then
+    local output, exit_code = fs.process_image(file_path)
+    if exit_code ~= 0 then
+      util.warn("Could not process image.", true)
+      util.warn("Output: " .. output, true)
+    end
   end
 
   if not markup.insert_markup(file_path) then
@@ -185,6 +206,7 @@ M.embed_image_as_base64 = function(file_path)
   -- check if base64 string is too long (max_base64_size is in KB)
   local base64_size_kb = math.floor((string.len(base64) * 6) / (8 * 1024))
   local max_size_kb = config.get_opt("max_base64_size")
+  debug.log("Base64 size: " .. base64_size_kb .. " KB")
   if base64_size_kb > max_size_kb then
     util.warn("Base64 string is too large (" .. base64_size_kb .. " KB). Max allowed size is " .. max_size_kb .. " KB.")
     return false

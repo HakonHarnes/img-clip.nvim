@@ -6,14 +6,15 @@ local M = {}
 M.verbose = true
 
 ---@param input_cmd string
+---@param execute_directly boolean
 ---@return string | nil output
 ---@return number exit_code
-M.execute = function(input_cmd)
+M.execute = function(input_cmd, execute_directly)
   local shell = vim.o.shell:lower()
   local cmd
 
-  -- execute command directly if shell is powershell or pwsh
-  if shell:match("powershell") or shell:match("pwsh") then
+  -- execute command directly if shell is powershell or pwsh or explicitly requested
+  if execute_directly or shell:match("powershell") or shell:match("pwsh") then
     cmd = input_cmd
 
   -- WSL requires the command to have the format:
@@ -24,6 +25,7 @@ M.execute = function(input_cmd)
     else
       cmd = "powershell.exe -NoProfile -Command '" .. input_cmd:gsub("'", '"') .. "'"
     end
+
   -- cmd.exe requires the command to have the format:
   -- powershell.exe -Command "command 'path/to/file'"
   elseif M.has("win32") then
@@ -55,15 +57,17 @@ M.has = function(feature)
 end
 
 ---@param msg string
-M.warn = function(msg)
-  if M.verbose then
+---@param verbose boolean?
+M.warn = function(msg, verbose)
+  if M.verbose or verbose then
     vim.notify(msg, vim.log.levels.WARN, { title = "img-clip" })
   end
 end
 
 ---@param msg string
-M.error = function(msg)
-  if M.verbose then
+---@param verbose boolean?
+M.error = function(msg, verbose)
+  if M.verbose or verbose then
     vim.notify(msg, vim.log.levels.ERROR, { title = "img-clip" })
   end
 end
