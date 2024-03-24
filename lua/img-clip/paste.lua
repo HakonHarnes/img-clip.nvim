@@ -74,14 +74,14 @@ M.paste_image_from_url = function(url)
     return false
   end
 
-  local output, exit_code = fs.process_image(file_path, opts)
+  local output, exit_code = fs.process_image(file_path)
   if exit_code ~= 0 then
     util.warn("Could not process image.", true)
     util.warn("Output: " .. output, true)
   end
 
-  if config.get_opt("embed_image_as_base64", opts) then
-    if M.embed_image_as_base64(file_path, opts) then
+  if config.get_opt("embed_image_as_base64") then
+    if M.embed_image_as_base64(file_path) then
       return true
     end
   end
@@ -128,7 +128,7 @@ M.paste_image_from_path = function(src_path)
     return false
   end
 
-  local output, exit_code = fs.process_image(file_path, opts)
+  local output, exit_code = fs.process_image(file_path)
   if exit_code ~= 0 then
     util.warn("Could not process image.", true)
     util.warn("Output: " .. output, true)
@@ -166,13 +166,13 @@ M.paste_image_from_clipboard = function()
     return false
   end
 
-  local output, exit_code = fs.process_image(file_path, opts)
+  local output, exit_code = fs.process_image(file_path)
   if exit_code ~= 0 then
     util.warn("Could not process image.", true)
     util.warn("Output: " .. output, true)
   end
 
-  if not markup.insert_markup(file_path, opts) then
+  if not markup.insert_markup(file_path) then
     util.error("Could not insert markup code.")
     return false
   end
