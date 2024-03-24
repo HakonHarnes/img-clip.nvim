@@ -57,80 +57,10 @@ M.url_encode = function(str)
   return str
 end
 
----@param file_path string the file path or base64 string
----@return boolean
-function M.insert_markup(file_path)
-  local file_name = vim.fn.fnamemodify(file_path, ":t")
-  local file_name_no_ext = vim.fn.fnamemodify(file_path, ":t:r")
-  local label = file_name_no_ext:gsub("%s+", "-"):lower()
-
-  -- see issue #21
-  local current_dir_path = vim.fn.expand("%:p:h")
-  if
-    config.get_opt("relative_template_path")
-    and not config.get_opt("use_absolute_path")
-    and current_dir_path ~= vim.fn.getcwd()
-  then
-    file_path = fs.relpath(file_path, current_dir_path)
-  end
-
-  -- pass args to template
-  local template_args = {
-    file_path = file_path,
-    file_name = file_name,
-    file_name_no_ext = file_name_no_ext,
-    cursor = "$CURSOR",
-    label = label,
-  }
-  local template = config.get_opt("template", template_args)
-  if not template then
-    return false
-  end
-
-  -- url encode path
-  if config.get_opt("url_encode_path") then
-    file_path = M.url_encode(file_path)
-    file_path = file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
-  end
-
-  template = template:gsub("$FILE_NAME_NO_EXT", file_name_no_ext)
-  template = template:gsub("$FILE_NAME", file_name)
-  template = template:gsub("$FILE_PATH", file_path)
-  template = template:gsub("$LABEL", label)
-
-  if not config.get_opt("use_cursor_in_template") then
-    template = template:gsub("$CURSOR", "")
-  end
-
-  local lines = M.split_lines(template)
-
-  local cur_pos = vim.api.nvim_win_get_cursor(0)
-  local cur_row = cur_pos[1]
-
-  local new_row, line, index = M.get_new_cursor_row(cur_row, lines)
-  local new_col = M.get_new_cursor_col(line)
-
-  lines[index] = line:gsub("$CURSOR", "")
-
-  vim.api.nvim_put(lines, "l", true, true)
-
-  vim.api.nvim_win_set_cursor(0, { new_row, new_col })
-
-  if config.get_opt("insert_mode_after_paste") and vim.api.nvim_get_mode().mode ~= "i" then
-    if new_col == string.len(line) - 1 then
-      vim.api.nvim_input("a")
-    else
-      vim.api.nvim_input("i")
-    end
-  end
-
-  return true
-end
-
----@param base64 string the file path or base64 string
----@return boolean
-function M.insert_base64_markup(base64)
-  -- pass args to template
+---@param input string
+---@param is_file_path? boolean
+---@return string | nil
+function M.get_template(input, is_file_path)
   local template_args = {
     file_path = "",
     file_name = "",
@@ -138,34 +68,75 @@ function M.insert_base64_markup(base64)
     cursor = "$CURSOR",
     label = "",
   }
-  local template = config.get_opt("template", template_args)
-  if not template then
-    return false
+
+  if is_file_path then
+    template_args.file_path = input
+    template_args.file_name = vim.fn.fnamemodify(input, ":t")
+    template_args.file_name_no_ext = vim.fn.fnamemodify(input, ":t:r")
+    template_args.label = template_args.file_name_no_ext:gsub("%s+", "-"):lower()
+
+    -- see issue #21
+    local current_dir_path = vim.fn.expand("%:p:h")
+    if
+      config.get_opt("relative_template_path")
+      and not config.get_opt("use_absolute_path")
+      and current_dir_path ~= vim.fn.getcwd()
+    then
+      template_args.file_path = fs.relpath(template_args.file_path, current_dir_path)
+    end
+
+    -- url encode path
+    if config.get_opt("url_encode_path") then
+      template_args.file_path = M.url_encode(template_args.file_path)
+      template_args.file_path = template_args.file_path:gsub("%%", "%%%%") -- escape % so we can call gsub again
+    end
+  else
+    template_args.file_path = input
   end
 
-  template = template:gsub("$FILE_NAME_NO_EXT", "")
-  template = template:gsub("$FILE_NAME", "")
-  template = template:gsub("$FILE_PATH", base64)
-  template = template:gsub("$LABEL", "")
+  local template = config.get_opt("template", template_args)
+  if not template then
+    return nil
+  end
+
+  template = template:gsub("$FILE_NAME_NO_EXT", template_args.file_name_no_ext)
+  template = template:gsub("$FILE_NAME", template_args.file_name)
+  template = template:gsub("$FILE_PATH", template_args.file_path)
+  template = template:gsub("$LABEL", template_args.label)
 
   if not config.get_opt("use_cursor_in_template") then
     template = template:gsub("$CURSOR", "")
   end
 
-  local lines = M.split_lines(template)
+  return template
+end
 
+---@param input string
+---@param is_file_path? boolean
+---@return boolean
+function M.insert_markup(input, is_file_path)
+  local template = M.get_template(input, is_file_path)
+  if not template then
+    return false
+  end
+
+  -- get current cursor position
+  local lines = M.split_lines(template)
   local cur_pos = vim.api.nvim_win_get_cursor(0)
   local cur_row = cur_pos[1]
 
+  -- get new cursor position
   local new_row, line, index = M.get_new_cursor_row(cur_row, lines)
   local new_col = M.get_new_cursor_col(line)
 
+  -- remove cursor placeholder from template
   lines[index] = line:gsub("$CURSOR", "")
 
+  -- paste lines and place cursor in correct position
   vim.api.nvim_put(lines, "l", true, true)
-
   vim.api.nvim_win_set_cursor(0, { new_row, new_col })
 
+  -- enter insert mode if configured
   if config.get_opt("insert_mode_after_paste") and vim.api.nvim_get_mode().mode ~= "i" then
     if new_col == string.len(line) - 1 then
       vim.api.nvim_input("a")

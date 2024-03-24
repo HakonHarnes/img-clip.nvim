@@ -64,7 +64,7 @@ describe("markup", function()
     end)
 
     it("inserts markup into a file", function()
-      local success = markup.insert_markup("/path/to/file.png")
+      local success = markup.insert_markup("/path/to/file.png", true)
       local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
       assert.equal("/path/to/file.png", lines[2])
@@ -74,7 +74,7 @@ describe("markup", function()
     it("inserts markup into a markdown file", function()
       vim.bo.filetype = "markdown"
 
-      local success = markup.insert_markup("/path/to/file.png")
+      local success = markup.insert_markup("/path/to/file.png", true)
       local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
       assert.equal("![](/path/to/file.png)", lines[2])
@@ -84,7 +84,7 @@ describe("markup", function()
     it("inserts markup into a LaTeX file", function()
       vim.bo.filetype = "tex"
 
-      local success = markup.insert_markup("/path/to/example file.png")
+      local success = markup.insert_markup("/path/to/example file.png", true)
       local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
       assert.equal("\\begin{figure}[h]", lines[2])
@@ -114,7 +114,7 @@ describe("markup", function()
         },
       })
 
-      local success = markup.insert_markup("/path/to/file.png")
+      local success = markup.insert_markup("/path/to/file.png", true)
       local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
       assert.equal(" /path/to/file.png file.png file file", lines[2])
