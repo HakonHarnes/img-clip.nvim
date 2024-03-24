@@ -192,6 +192,10 @@ end
 ---@return string | nil
 M.get_base64_encoded_image = function(file_path)
   local cmd = clipoard.get_clip_cmd()
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    process_cmd = "| " .. process_cmd .. " "
+  end
 
   -- Windows
   if cmd == "powershell.exe" then
@@ -203,7 +207,7 @@ M.get_base64_encoded_image = function(file_path)
 
   -- Linux/MacOS
   else
-    local command = string.format("base64 '%s' | tr -d '\n'", file_path)
+    local command = string.format("cat '%s' " .. process_cmd .. "| base64 | tr -d '\n'", file_path)
     local output, exit_code = util.execute(command)
     if exit_code == 0 then
       return output
