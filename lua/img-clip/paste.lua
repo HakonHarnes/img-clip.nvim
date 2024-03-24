@@ -167,10 +167,12 @@ M.paste_image_from_clipboard = function()
     return false
   end
 
-  local output, exit_code = fs.process_image(file_path)
-  if exit_code ~= 0 then
-    util.warn("Could not process image.", true)
-    util.warn("Output: " .. output, true)
+  if util.has("wsl") then
+    local output, exit_code = fs.process_image(file_path)
+    if exit_code ~= 0 then
+      util.warn("Could not process image.", true)
+      util.warn("Output: " .. output, true)
+    end
   end
 
   if not markup.insert_markup(file_path) then

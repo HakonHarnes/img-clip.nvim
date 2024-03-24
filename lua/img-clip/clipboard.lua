@@ -70,26 +70,28 @@ M.content_is_image = function()
   return false
 end
 
----@param file_path string
----@return boolean
 M.save_image = function(file_path)
   local cmd = M.get_clip_cmd()
+  local process_cmd = config.get_opt("process_cmd")
+  if process_cmd ~= "" then
+    process_cmd = "| " .. process_cmd .. " "
+  end
 
   -- Linux (X11)
   if cmd == "xclip" then
-    local command = string.format('xclip -selection clipboard -o -t image/png > "%s"', file_path)
+    local command = string.format('xclip -selection clipboard -o -t image/png %s> "%s"', process_cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    local command = string.format('wl-paste --type image/png > "%s"', file_path)
+    local command = string.format('wl-paste --type image/png %s> "%s"', process_cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
   -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
-    local command = string.format('pngpaste "%s"', file_path)
+    local command = string.format('pngpaste - %s> "%s"', process_cmd, file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
@@ -98,7 +100,10 @@ M.save_image = function(file_path)
     local command = string.format(
       [[osascript -e 'set theFile to (open for access POSIX file "%s" with write permission)' ]]
         .. [[-e 'try' -e 'write (the clipboard as «class PNGf») to theFile' -e 'end try' ]]
-        .. [[-e 'close access theFile']],
+        .. [[-e 'close access theFile' -e 'do shell script "cat %s %s> %s"']],
+      file_path,
+      file_path,
+      process_cmd,
       file_path
     )
     local _, exit_code = util.execute(command)
