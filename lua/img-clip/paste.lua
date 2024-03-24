@@ -87,7 +87,7 @@ M.paste_image_from_url = function(url)
     util.warn("Output: " .. output, true)
   end
 
-  if not markup.insert_markup(file_path) then
+  if not markup.insert_markup(file_path, true) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -104,7 +104,7 @@ M.paste_image_from_path = function(src_path)
   end
 
   if not config.get_opt("drag_and_drop.copy_images") then
-    if not markup.insert_markup(src_path) then
+    if not markup.insert_markup(src_path, true) then
       util.error("Could not insert markup code.")
       return false
     end
@@ -135,7 +135,7 @@ M.paste_image_from_path = function(src_path)
     util.warn("Output: " .. output, true)
   end
 
-  if not markup.insert_markup(file_path) then
+  if not markup.insert_markup(file_path, true) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -175,7 +175,7 @@ M.paste_image_from_clipboard = function()
     end
   end
 
-  if not markup.insert_markup(file_path) then
+  if not markup.insert_markup(file_path, true) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -213,7 +213,7 @@ M.embed_image_as_base64 = function(file_path)
   end
 
   local prefix = M.get_base64_prefix()
-  if not markup.insert_base64_markup(prefix .. base64) then
+  if not markup.insert_markup(prefix .. base64) then
     util.error("Could not insert markup code.")
     return false
   end
