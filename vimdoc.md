@@ -71,6 +71,7 @@ The plugin comes with the following defaults:
   default = {
     debug = false, -- enable debug mode
     dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
+    process_cmd = "", -- shell command to process the image before saving or embedding as base64 (e.g. "convert -quality 85 - -")
     file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
     url_encode_path = false, -- encode spaces and special characters in file path
     use_absolute_path = false, -- expands dir_path to an absolute path
@@ -172,6 +173,20 @@ dir_path = function()
   return vim.fn.expand("%:t:r")
 end,
 ```
+
+### Processing images
+
+The `process_cmd` option allows you to specify a shell command to process the image before saving or embedding it as base64. The command should read the image data from the standard input and write the processed data to the standard output.
+
+Examples:
+
+```bash
+process_cmd = "convert - -quality 85 -" -- compress the image with 85% quality
+process_cmd = "convert - -resize 50% -" -- resize the image to 50% of its original size
+process_cmd = "convert - -colorspace Gray -" -- convert the image to grayscale
+```
+
+Ensure the specified command and its dependencies are installed and accessible in your system's shell environment. The above examples require [ImageMagick](https://imagemagick.org/index.php) to be installed.
 
 ### Filetypes
 
