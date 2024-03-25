@@ -177,7 +177,7 @@ M.process_image = function(file_path, opts)
 
   -- process image
   local output, exit_code =
-    util.execute(string.format("cat '%s' | %s > '%s'", file_path, process_cmd, tmp_file_path), true)
+    util.execute(string.format("cat '%s' | %s > '%s'", file_path, process_cmd:gsub("%%", "%%%%"), tmp_file_path), true)
   if exit_code == 0 then
     M.copy_file(tmp_file_path, file_path)
   end
@@ -207,7 +207,7 @@ M.get_base64_encoded_image = function(file_path)
 
   -- Linux/MacOS
   else
-    local command = string.format("cat '%s' " .. process_cmd .. "| base64 | tr -d '\n'", file_path)
+    local command = string.format("cat '%s' " .. process_cmd:gsub("%%", "%%%%") .. "| base64 | tr -d '\n'", file_path)
     local output, exit_code = util.execute(command)
     if exit_code == 0 then
       return output

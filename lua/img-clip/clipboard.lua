@@ -79,19 +79,20 @@ M.save_image = function(file_path)
 
   -- Linux (X11)
   if cmd == "xclip" then
-    local command = string.format('xclip -selection clipboard -o -t image/png %s> "%s"', process_cmd, file_path)
+    local command =
+      string.format('xclip -selection clipboard -o -t image/png %s> "%s"', process_cmd:gsub("%%", "%%%%"), file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
   -- Linux (Wayland)
   elseif cmd == "wl-paste" then
-    local command = string.format('wl-paste --type image/png %s> "%s"', process_cmd, file_path)
+    local command = string.format('wl-paste --type image/png %s> "%s"', process_cmd:gsub("%%", "%%%%"), file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
   -- MacOS (pngpaste) which is faster than osascript
   elseif cmd == "pngpaste" then
-    local command = string.format('pngpaste - %s> "%s"', process_cmd, file_path)
+    local command = string.format('pngpaste - %s> "%s"', process_cmd:gsub("%%", "%%%%"), file_path)
     local _, exit_code = util.execute(command)
     return exit_code == 0
 
@@ -103,7 +104,7 @@ M.save_image = function(file_path)
         .. [[-e 'close access theFile' -e 'do shell script "cat %s %s> %s"']],
       file_path,
       file_path,
-      process_cmd,
+      process_cmd:gsub("%%", "%%%%"),
       file_path
     )
     local _, exit_code = util.execute(command)
