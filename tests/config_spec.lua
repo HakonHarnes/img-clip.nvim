@@ -26,13 +26,10 @@ describe("config", function()
 
     assert.is_true(config.get_opt("drag_and_drop.enabled"))
     assert.is_false(config.get_opt("drag_and_drop.insert_mode"))
-    assert.is_false(config.get_opt("drag_and_drop.copy_images"))
-    assert.is_true(config.get_opt("drag_and_drop.download_images"))
 
     vim.bo.filetype = "markdown"
     assert.is_true(config.get_opt("url_encode_path"))
     assert.equals("![$CURSOR]($FILE_PATH)", config.get_opt("template"))
-    assert.is_false(config.get_opt("drag_and_drop.download_images"))
   end)
 
   it("should allow overriding default values", function()
