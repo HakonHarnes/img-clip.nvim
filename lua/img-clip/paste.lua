@@ -48,6 +48,7 @@ end
 
 ---@param url string
 M.paste_image_from_url = function(url)
+  -- if we are not downloading images, then just insert the url
   if not config.get_opt("download_images") then
     if not markup.insert_markup(url) then
       util.error("Could not insert markup code.")
@@ -103,6 +104,7 @@ M.paste_image_from_path = function(src_path)
     end
   end
 
+  -- if we are not copying images, then just insert the original path
   if not config.get_opt("copy_images") then
     if not markup.insert_markup(src_path, true) then
       util.error("Could not insert markup code.")
