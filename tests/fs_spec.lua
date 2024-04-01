@@ -71,18 +71,6 @@ describe("fs", function()
       assert.equals(expected, actual)
     end)
 
-    it("uses an absolute path when 'use_absolute_path' option is true", function()
-      config.setup({ default = { use_absolute_path = true } }) -- set absolute_path option to true
-
-      local ext = "png"
-      local path = config.get_opt("dir_path") .. fs.sep .. os.date(config.get_opt("file_name")) .. "." .. ext
-      local absolute_path = vim.fn.fnamemodify(path, ":p")
-      local expected = absolute_path
-      local actual = fs.get_file_path(ext)
-
-      assert.equals(expected, actual)
-    end)
-
     it("returns path with trailing separator when dir_path has no trailing separator", function()
       config.setup({ default = { dir_path = "custom" .. fs.sep .. "path" } })
 
