@@ -83,6 +83,8 @@ function M.get_template(input, is_file_path)
       and current_dir_path ~= vim.fn.getcwd()
     then
       template_args.file_path = fs.relpath(template_args.file_path, current_dir_path)
+    elseif config.get_opt("use_absolute_path") then
+      template_args.file_path = vim.fn.fnamemodify(template_args.file_path, ":p")
     end
 
     -- url encode path
