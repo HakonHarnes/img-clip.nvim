@@ -30,8 +30,6 @@ local defaults = {
     drag_and_drop = {
       enabled = true, -- enable drag and drop mode
       insert_mode = false, -- enable drag and drop in insert mode
-      copy_images = false, -- copy images instead of using the original file
-      download_images = true, -- download images and save them to dir_path instead of using the URL
     },
   },
 
@@ -44,10 +42,7 @@ local defaults = {
     markdown = {
       url_encode_path = true,
       template = "![$CURSOR]($FILE_PATH)",
-
-      drag_and_drop = {
-        download_images = false,
-      },
+      download_images = false,
     },
 
     html = {
