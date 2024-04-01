@@ -72,9 +72,15 @@ vim.paste = (function(original)
     end
 
     util.verbose = false
-    if not plugin.pasteImage({}, line) then
+    config.drag_and_drop = true
+
+    local ok = plugin.pasteImage({}, line)
+
+    config.drag_and_drop = false
+    util.verbose = true
+
+    if not ok then
       debug.log("Did not handle paste, calling original vim.paste")
-      util.verbose = true
       return original(lines, phase) -- if we did not handle the paste, call the original vim.paste function
     end
   end

@@ -84,12 +84,12 @@ The plugin comes with the following defaults:
     embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
     max_base64_size = 10, -- max size of base64 string in KB
     template = "$FILE_PATH", -- default template
+    copy_images = false, -- copy images instead of using the original file
+    download_images = true, -- download images and save them to dir_path instead of using the URL
 
     drag_and_drop = {
       enabled = true, -- enable drag and drop mode
       insert_mode = false, -- enable drag and drop in insert mode
-      copy_images = false, -- copy images instead of using the original file
-      download_images = true, -- download images and save them to dir_path instead of using the URL
     },
   },
 
@@ -102,10 +102,7 @@ The plugin comes with the following defaults:
     markdown = {
       url_encode_path = true,
       template = "![$CURSOR]($FILE_PATH)",
-
-      drag_and_drop = {
-        download_images = false,
-      },
+      download_images = false,
     },
 
     html = {
