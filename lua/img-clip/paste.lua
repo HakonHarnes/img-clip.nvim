@@ -48,7 +48,7 @@ end
 
 ---@param url string
 M.paste_image_from_url = function(url)
-  if not config.get_opt("drag_and_drop.download_images") then
+  if not config.get_opt("download_images") then
     if not markup.insert_markup(url) then
       util.error("Could not insert markup code.")
       return false
@@ -103,7 +103,7 @@ M.paste_image_from_path = function(src_path)
     end
   end
 
-  if not config.get_opt("drag_and_drop.copy_images") then
+  if not config.get_opt("copy_images") then
     if not markup.insert_markup(src_path, true) then
       util.error("Could not insert markup code.")
       return false

@@ -1,5 +1,6 @@
 local M = {}
 
+M.drag_and_drop = false
 M.config_file = "Default"
 M.sorted_files = {}
 M.sorted_dirs = {}
@@ -23,6 +24,8 @@ local defaults = {
     embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
     max_base64_size = 10, -- max size of base64 string in KB
     template = "$FILE_PATH", -- default template
+    copy_images = false, -- copy images instead of using the original file
+    download_images = true, -- download images and save them to dir_path instead of using the URL
 
     drag_and_drop = {
       enabled = true, -- enable drag and drop mode
@@ -290,6 +293,15 @@ M.get_opt = function(key, args, opts)
       return val
     end
     return M.get_opt(key, args, M.get_config())
+  end
+
+  -- if we're in drag and drop mode, try to get drag and drop options
+  -- and then fall back to the regular options if they're not found
+  if M.drag_and_drop and not key:find("drag_and_drop") then
+    local val = M.get_opt("drag_and_drop." .. key, args, M.opts)
+    if val ~= nil then
+      return val
+    end
   end
 
   local val = get_custom_opt(key, opts, args)
