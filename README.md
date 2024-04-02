@@ -14,6 +14,7 @@ https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/043c6c74-9e87-4485-
 - 🎨 Configurable templates with placeholders for file paths, labels, and cursor positioning
 - 📝 Built-in templates for popular markup languages like LaTeX, Markdown, and Typst
 - 🔧 Extensive configuration options, including per-project, per-directory, and per-filetype settings
+- 🔌 Powerful API with example integrations for popular plugins like [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) and [oil.nvim](https://github.com/stevearc/oil.nvim)
 - 💻 Compatible with Linux, macOS, and Windows, including WSL!
 
 ## 🔧 Requirements
@@ -67,7 +68,7 @@ You can also use the Lua equivalent, which allows you to override your configura
 require("img-clip").paste_image(opts?, input?) -- input is optional and can be a file path or URL
 ```
 
-<details> <summary><b>Example</b></summary>
+<details> <summary>Example</summary>
 
 ```lua
 require("img-clip").paste_image({ use_absolute_path = false, file_name = "image.png" }, "/path/to/file.png")
@@ -185,7 +186,7 @@ The plugin is highly configurable. Please refer to the default configuration bel
 
 Option values can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions.
 
-<details> <summary><b>Example: Dynamically set the dir path</b></summary>
+<details> <summary>Example: Dynamically set the dir path</summary>
 
 To set the `dir_path` to match the name of the currently opened file:
 
@@ -201,7 +202,7 @@ end,
 
 The `process_cmd` option allows you to specify a shell command to process the image before saving or embedding it as base64. The command should read the image data from the standard input and write the processed data to the standard output.
 
-<details> <summary><b>Example: ImageMagick</b></summary>
+<details> <summary>Example: ImageMagick</summary>
 
 ```bash
 process_cmd = "convert - -quality 85 -" -- compress the image with 85% quality
@@ -228,7 +229,7 @@ filetypes = {
 }
 ```
 
-<details> <summary><b>Example: LaTeX-specific configuration</b></summary>
+<details> <summary>Example: LaTeX-specific configuration</summary>
 
 If you only want to use absolute file paths for LaTeX, then:
 
@@ -259,7 +260,7 @@ The plugin evaluates the options in the following order:
 4. Filetype specific options
 5. Default options
 
-<details> <summary><b>Example</b></summary>
+<details> <summary>Example</summary>
 
 ```lua
 -- file specific options
@@ -328,7 +329,7 @@ return {
 }
 ```
 
-<details> <summary><b>Example</b></summary>
+<details> <summary>Example</summary>
 
 ```lua
 return {
@@ -361,7 +362,7 @@ For available placeholders, see the following table and the [demonstration](#dem
 
 Templates can also be defined using functions with the above placeholders available as function parameters. 
 
-<details> <summary><b>Example</b></summary>
+<details> <summary>Example</summary>
 
 ```lua
 template = function(context)
@@ -556,3 +557,7 @@ A list of terminal emulators and their capabilities is given below.
 
 > [!WARNING]
 > MacOS URLs only work in Safari.
+
+## 🙌 Contributing
+
+Contributions are welcome! If you have any ideas, suggestions, or bug reports, please open an issue on the GitHub repository.
