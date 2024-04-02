@@ -10,29 +10,40 @@ M.opts = {}
 
 local defaults = {
   default = {
+    -- file and directory options
     dir_path = "assets", ---@type string
     file_name = "%Y-%m-%d-%H-%M-%S", ---@type string
-    process_cmd = "", ---@type string
-    url_encode_path = false, ---@type boolean
     use_absolute_path = false, ---@type boolean
     relative_to_current_file = false, ---@type boolean
+
+    -- template options
+    template = "$FILE_PATH", ---@type string
+    url_encode_path = false, ---@type boolean
     relative_template_path = true, ---@type boolean
-    prompt_for_file_name = true, ---@type boolean
-    show_dir_path_in_prompt = false, ---@type boolean
     use_cursor_in_template = true, ---@type boolean
     insert_mode_after_paste = true, ---@type boolean
-    embed_image_as_base64 = false, ---@type boolean
+
+    -- prompt options
+    prompt_for_file_name = true, ---@type boolean
+    show_dir_path_in_prompt = false, ---@type boolean
+
+    -- base64 options
     max_base64_size = 10, ---@type number
-    template = "$FILE_PATH", ---@type string
+    embed_image_as_base64 = false, ---@type boolean
+
+    -- image options
+    process_cmd = "", ---@type string
     copy_images = false, ---@type boolean
     download_images = true, ---@type boolean
 
+    -- drag and drop options
     drag_and_drop = {
       enabled = true, ---@type boolean
       insert_mode = false, ---@type boolean
     },
   },
 
+  -- filetype specific options
   filetypes = {
     markdown = {
       url_encode_path = true, ---@type boolean
@@ -88,6 +99,7 @@ local defaults = {
     },
   },
 
+  -- file, directory, and custom triggered options
   files = {}, ---@type table
   dirs = {}, ---@type table
   custom = {}, ---@type table
