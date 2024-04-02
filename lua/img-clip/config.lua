@@ -57,7 +57,7 @@ local defaults = {
 
     tex = {
       relative_template_path = false, ---@type boolean
-      template = [[ 
+      template = [[
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
