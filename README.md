@@ -1,29 +1,30 @@
-# 📸 img-clip.nvim
+# 📋 img-clip.nvim
 
 Effortlessly embed images into any markup language, like LaTeX, Markdown or Typst.
 
 ![demo](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/db364ae2-f966-43d2-8f15-34654e03e0f4)
 
-## Features
+## ⚡ Features
 
-- Paste images directly from the system clipboard.
-- Drag and drop images from your web browser or file explorer to embed them.
-- Embed images as files, URLs, or directly as Base64.
-- Configurable templates with cursor positioning and figure labels.
-- Default templates for widely-used markup languages like LaTeX, Markdown and Typst.
-- Cross-compatibility with Linux, Windows, and MacOS.
+- 📋 Paste images directly from your system clipboard
+- 🖱️ Seamlessly drag and drop images from your web browser or file explorer
+- 📁 Embed images as files, web URLs, or Base64-encoded data
+- 🌐 Automatically download and embed images from the web
+- ⚙️ Process images using configurable shell commands
+- 🎨 Configurable templates with placeholders for file paths, labels, and cursor positioning
+- 📝 Built-in templates for popular markup languages like LaTeX, Markdown, and Typst
+- 🔧 Extensive configuration options, including per-project, per-directory, and per-filetype settings
+- 💻 Compatible with Linux, macOS, and Windows, including WSL!
 
-See these features in action in the [demonstration section](#demonstration)!
+## 🔧 Requirements
 
-## Requirements
-
-- **Linux:** [xclip](https://github.com/astrand/xclip) (x11) or [wl-clipboard](https://github.com/bugaevc/wl-clipboard) (wayland).
-- **MacOS:** [pngpaste](https://github.com/jcsalterego/pngpaste) (optional, but recommended).
-- **Windows:** No requirements.
+- **Linux:** [xclip](https://github.com/astrand/xclip) (x11) or [wl-clipboard](https://github.com/bugaevc/wl-clipboard) (wayland)
+- **MacOS:** [pngpaste](https://github.com/jcsalterego/pngpaste) (optional, but recommended)
+- **Windows:** No additional requirements
 
 > ⚠️ Run `:checkhealth img-clip` after installation to ensure requirements are satisfied.
 
-## Installation
+## 📦 Installation
 
 Install the plugin with your preferred package manager:
 
@@ -32,27 +33,27 @@ Install the plugin with your preferred package manager:
 ```lua
 return {
   "HakonHarnes/img-clip.nvim",
-  event = "BufEnter",
+  event = "VeryLazy",
   opts = {
     -- add options here
     -- or leave it empty to use the default settings
   },
   keys = {
     -- suggested keymap
-    { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste clipboard image" },
+    { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
   },
 }
 ```
 
-## Usage
+## 🚀 Usage
 
 ### Commands
 
 The plugin comes with the following commands:
 
-- `PasteImage` Inserts the image from the clipboard into the document.
-- `ImgClipDebug` Prints the debug log, including the output of shell commands.
-- `ImgClipConfig` Prints the current configuration.
+- `PasteImage`: Pastes an image form the system clipboard
+- `ImgClipDebug`: Prints the debug log, including the output of shell commands
+- `ImgClipConfig`: Prints the current configuration
 
 Consider binding `PasteImage` to something like `<leader>p`.
 
@@ -70,7 +71,7 @@ Example:
 require("img-clip").paste_image({ use_absolute_path = false, file_name = "image.png" }, "/path/to/file.png")
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 ### Setup
 
@@ -340,7 +341,7 @@ template = function(context)
 end
 ```
 
-## Drag and drop
+## 🖱️ Drag and drop
 
 The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in normal mode.
 It can be optionally enabled in insert mode using the `drag_and_drop.insert_mode` option.
@@ -522,23 +523,3 @@ A list of terminal emulators and their capabilities is given below.
 > 💡 If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`.
 
 > ⚠️ MacOS URLs only work in Safari.
-
-## Demonstration
-
-### Drag and drop
-
-![drag-and-drop](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/7ca4543c-e68e-4ec6-b723-46c959833e6e)
-
-### Paste from clipboard
-
-![clipboard-screenshot](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/6ecbdbf8-b382-434b-ad92-a09776309864)
-![clipboard-copy](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/05c3f0e3-3d73-45d6-a2ad-d8f43a298943)
-
-### Templates
-
-![template](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/af10a690-cea9-4776-88aa-1f793c1552e6)
-![template-image](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/fd996028-adc0-4706-9340-63ba33f6e252)
-
-### Base64
-
-![base64-encoding](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/504fc4bd-bb91-456c-b580-2ec8c05e2aea)
