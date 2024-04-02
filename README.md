@@ -1,29 +1,32 @@
-# 📸 img-clip.nvim
+# 📋 img-clip.nvim
 
 Effortlessly embed images into any markup language, like LaTeX, Markdown or Typst.
 
-![demo](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/db364ae2-f966-43d2-8f15-34654e03e0f4)
+https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/ab4edc10-d296-4532-bfce-6abdd4f218bf
 
-## Features
+## ⚡ Features
 
-- Paste images directly from the system clipboard.
-- Drag and drop images from your web browser or file explorer to embed them.
-- Embed images as files, URLs, or directly as Base64.
-- Configurable templates with cursor positioning and figure labels.
-- Default templates for widely-used markup languages like LaTeX, Markdown and Typst.
-- Cross-compatibility with Linux, Windows, and MacOS.
+- 📋 Paste images directly from your system clipboard
+- 🖱️ Seamlessly drag and drop images from your web browser or file explorer
+- 📁 Embed images as files, web URLs, or Base64-encoded data
+- 🌐 Automatically download and embed images from the web
+- ⚙️ Process images using configurable shell commands
+- 🎨 Configurable templates with placeholders for file paths, labels, and cursor positioning
+- 📝 Built-in templates for popular markup languages like LaTeX, Markdown, and Typst
+- 🔧 Extensive configuration options, including per-project, per-directory, and per-filetype settings
+- 🔌 Powerful API with example integrations for popular plugins like [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) and [oil.nvim](https://github.com/stevearc/oil.nvim)
+- 💻 Compatible with Linux, macOS, and Windows, including WSL!
 
-See these features in action in the [demonstration section](#demonstration)!
+## 🔧 Requirements
 
-## Requirements
+- **Linux:** [xclip](https://github.com/astrand/xclip) (x11) or [wl-clipboard](https://github.com/bugaevc/wl-clipboard) (wayland)
+- **MacOS:** [pngpaste](https://github.com/jcsalterego/pngpaste) (optional, but recommended)
+- **Windows:** No additional requirements
 
-- **Linux:** [xclip](https://github.com/astrand/xclip) (x11) or [wl-clipboard](https://github.com/bugaevc/wl-clipboard) (wayland).
-- **MacOS:** [pngpaste](https://github.com/jcsalterego/pngpaste) (optional, but recommended).
-- **Windows:** No requirements.
+> [!IMPORTANT]
+> Run `:checkhealth img-clip` after installation to ensure requirements are satisfied.
 
-> ⚠️ Run `:checkhealth img-clip` after installation to ensure requirements are satisfied.
-
-## Installation
+## 📦 Installation
 
 Install the plugin with your preferred package manager:
 
@@ -32,29 +35,30 @@ Install the plugin with your preferred package manager:
 ```lua
 return {
   "HakonHarnes/img-clip.nvim",
-  event = "BufEnter",
+  event = "VeryLazy",
   opts = {
     -- add options here
     -- or leave it empty to use the default settings
   },
   keys = {
     -- suggested keymap
-    { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste clipboard image" },
+    { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
   },
 }
 ```
 
-## Usage
+## 🚀 Usage
 
 ### Commands
 
 The plugin comes with the following commands:
 
-- `PasteImage` Inserts the image from the clipboard into the document.
-- `ImgClipDebug` Prints the debug log, including the output of shell commands.
-- `ImgClipConfig` Prints the current configuration.
+- `PasteImage`: Pastes an image form the system clipboard
+- `ImgClipDebug`: Prints the debug log, including the output of shell commands
+- `ImgClipConfig`: Prints the current configuration
 
-Consider binding `PasteImage` to something like `<leader>p`.
+> [!TIP]
+> Consider binding `PasteImage` to something like `<leader>p`.
 
 ### API
 
@@ -64,70 +68,79 @@ You can also use the Lua equivalent, which allows you to override your configura
 require("img-clip").paste_image(opts?, input?) -- input is optional and can be a file path or URL
 ```
 
-Example:
+<details> <summary>Example</summary>
 
 ```lua
 require("img-clip").paste_image({ use_absolute_path = false, file_name = "image.png" }, "/path/to/file.png")
 ```
 
-## Configuration
+</details>
+
+
+## ⚙️ Configuration
 
 ### Setup
 
-The plugin comes with the following defaults:
+The plugin is highly configurable. Please refer to the default configuration below:
 
 ```lua
 {
   default = {
-    dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
-    file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
-    process_cmd = "", -- shell command to process the image before saving or embedding as base64 (e.g. "convert -quality 85 - -")
-    url_encode_path = false, -- encode spaces and special characters in file path
-    use_absolute_path = false, -- expands dir_path to an absolute path
-    relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-    relative_template_path = true, -- make file path in the template relative to current file rather than the cwd
-    prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
-    show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-    use_cursor_in_template = true, -- jump to cursor position in template after pasting
-    insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-    embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
-    max_base64_size = 10, -- max size of base64 string in KB
-    template = "$FILE_PATH", -- default template
-    copy_images = false, -- copy images instead of using the original file
-    download_images = true, -- download images and save them to dir_path instead of using the URL
+    -- file and directory options
+    dir_path = "assets", ---@type string
+    file_name = "%Y-%m-%d-%H-%M-%S", ---@type string
+    use_absolute_path = false, ---@type boolean
+    relative_to_current_file = false, ---@type boolean
 
+    -- template options
+    template = "$FILE_PATH", ---@type string
+    url_encode_path = false, ---@type boolean
+    relative_template_path = true, ---@type boolean
+    use_cursor_in_template = true, ---@type boolean
+    insert_mode_after_paste = true, ---@type boolean
+
+    -- prompt options
+    prompt_for_file_name = true, ---@type boolean
+    show_dir_path_in_prompt = false, ---@type boolean
+
+    -- base64 options
+    max_base64_size = 10, ---@type number
+    embed_image_as_base64 = false, ---@type boolean
+
+    -- image options
+    process_cmd = "", ---@type string
+    copy_images = false, ---@type boolean
+    download_images = true, ---@type boolean
+
+    -- drag and drop options
     drag_and_drop = {
-      enabled = true, -- enable drag and drop mode
-      insert_mode = false, -- enable drag and drop in insert mode
+      enabled = true, ---@type boolean
+      insert_mode = false, ---@type boolean
     },
   },
 
   -- filetype specific options
-  -- any options that are passed here will override the default config
-  -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular filetype
-  -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
   filetypes = {
     markdown = {
-      url_encode_path = true,
-      template = "![$CURSOR]($FILE_PATH)",
-      download_images = false,
+      url_encode_path = true, ---@type boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string
+      download_images = false, ---@type boolean
     },
 
     html = {
-      template = '<img src="$FILE_PATH" alt="$CURSOR">',
+      template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string
     },
 
     tex = {
-      relative_template_path = false,
-      template = [[
+      relative_template_path = false, ---@type boolean
+      template = [[ 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
   \caption{$CURSOR}
   \label{fig:$LABEL}
 \end{figure}
-    ]],
+    ]], ---@type string
     },
 
     typst = {
@@ -136,7 +149,7 @@ The plugin comes with the following defaults:
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
-    ]],
+    ]], ---@type string
     },
 
     rst = {
@@ -144,11 +157,11 @@ The plugin comes with the following defaults:
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
-    ]],
+    ]], ---@type string
     },
 
     asciidoc = {
-      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]', ---@type string
     },
 
     org = {
@@ -158,21 +171,24 @@ The plugin comes with the following defaults:
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
-    ]=],
+    ]=], ---@type string
     },
   },
 
-  -- override options for specific files, dirs or custom triggers
-  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
-  dirs = {}, -- dir specific options (e.g. "project" or "/home/user/project")
-  custom = {}, -- custom options enabled with the trigger option
+  -- file, directory, and custom triggered options
+  files = {}, ---@type table
+  dirs = {}, ---@type table
+  custom = {}, ---@type table
 }
 ```
 
 ### Options
 
 Option values can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions.
-For instance, to set the `dir_path` to match the name of the currently opened file:
+
+<details> <summary>Example: Dynamically set the dir path</summary>
+
+To set the `dir_path` to match the name of the currently opened file:
 
 ```lua
 dir_path = function()
@@ -180,11 +196,13 @@ dir_path = function()
 end,
 ```
 
+</details>
+
 ### Processing images
 
 The `process_cmd` option allows you to specify a shell command to process the image before saving or embedding it as base64. The command should read the image data from the standard input and write the processed data to the standard output.
 
-Examples:
+<details> <summary>Example: ImageMagick</summary>
 
 ```bash
 process_cmd = "convert - -quality 85 -" -- compress the image with 85% quality
@@ -194,20 +212,12 @@ process_cmd = "convert - -colorspace Gray -" -- convert the image to grayscale
 
 Ensure the specified command and its dependencies are installed and accessible in your system's shell environment. The above examples require [ImageMagick](https://imagemagick.org/index.php) to be installed.
 
+</details>
+
 ### Filetypes
 
 Filetype specific options will override the default (or global) configuration.
 Any option can be specified for a specific filetype.
-For instance, if you only want to use absolute file paths for LaTeX, then:
-
-```lua
-filetypes = {
-  tex = {
-    use_absolute_path = true
-  }
-}
-```
-
 Filetype specific options are determined by the _filetype_ (see `:help filetype`).
 You can override settings for any filetype by specifying it as the key in your configuration:
 
@@ -218,6 +228,20 @@ filetypes = {
   }
 }
 ```
+
+<details> <summary>Example: LaTeX-specific configuration</summary>
+
+If you only want to use absolute file paths for LaTeX, then:
+
+```lua
+filetypes = {
+  tex = {
+    use_absolute_path = true
+  }
+}
+```
+
+</details>
 
 ### Overriding options for specific files, directories or custom triggers
 
@@ -236,7 +260,7 @@ The plugin evaluates the options in the following order:
 4. Filetype specific options
 5. Default options
 
-Example configuration:
+<details> <summary>Example</summary>
 
 ```lua
 -- file specific options
@@ -289,6 +313,8 @@ dirs = {
 }
 ```
 
+</details>
+
 ### Project-specific settings with the `.img-clip.lua` file
 
 Project-specific settings can be specified in a `.img-clip.lua` file in the root of your project.
@@ -303,7 +329,7 @@ return {
 }
 ```
 
-Example:
+<details> <summary>Example</summary>
 
 ```lua
 return {
@@ -319,6 +345,8 @@ return {
 }
 ```
 
+</details>
+
 ### Templates
 
 Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime.
@@ -332,7 +360,9 @@ For available placeholders, see the following table and the [demonstration](#dem
 | `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
 | `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          |                                    |
 
-Templates can also be defined using functions with the above placeholders available as function parameters:
+Templates can also be defined using functions with the above placeholders available as function parameters. 
+
+<details> <summary>Example</summary>
 
 ```lua
 template = function(context)
@@ -340,10 +370,13 @@ template = function(context)
 end
 ```
 
-## Drag and drop
+</details>
+
+
+## 🖱️ Drag and drop
 
 The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in normal mode.
-It can be optionally enabled in insert mode using the `drag_and_drop.insert_mode` option.
+Drag and drop can also be enabled in insert mode by setting the `drag_and_drop.insert_mode` option to `true`.
 For drag and drop to work properly, the following is required by the terminal emulator:
 
 1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
@@ -519,26 +552,92 @@ A list of terminal emulators and their capabilities is given below.
   </tbody>
 </table>
 
-> 💡 If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`.
+> [!TIP]
+> If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`.
 
-> ⚠️ MacOS URLs only work in Safari.
+> [!WARNING]
+> MacOS URLs only work in Safari.
+ 
+## 🔌 Integrations
 
-## Demonstration
+### Telescope.nvim
 
-### Drag and drop
+The plugin can be integrated with [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)  to provide a seamless way to select and embed images using Telescope's powerful fuzzy finding capabilities.
 
-![drag-and-drop](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/7ca4543c-e68e-4ec6-b723-46c959833e6e)
+<details> <summary>Example configuration</summary>
 
-### Paste from clipboard
+```lua
+function()
+  local telescope = require("telescope.builtin")
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
 
-![clipboard-screenshot](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/6ecbdbf8-b382-434b-ad92-a09776309864)
-![clipboard-copy](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/05c3f0e3-3d73-45d6-a2ad-d8f43a298943)
+  telescope.find_files({
+    attach_mappings = function(_, map)
+      local function embed_image(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local filepath = entry[1]
+        actions.close(prompt_bufnr)
 
-### Templates
+        local img_clip = require("img-clip")
+        img_clip.paste_image(nil, filepath)
+      end
 
-![template](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/af10a690-cea9-4776-88aa-1f793c1552e6)
-![template-image](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/fd996028-adc0-4706-9340-63ba33f6e252)
+      map("i", "<CR>", embed_image)
+      map("n", "<CR>", embed_image)
 
-### Base64
+      return true
+    end,
+  })
+end
+```
 
-![base64-encoding](https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/504fc4bd-bb91-456c-b580-2ec8c05e2aea)
+The above function should be bound to a keymap, e.g. through lazy.nvim.
+
+</details>
+
+
+### Oil.nvim 
+
+The plugin also integrates with [oil.nvim](https://github.com/stevearc/oil.nvim), providing a convenient way to browse and select images using Oil's file explorer.
+
+<details> <summary>Example configuration</summary>
+
+```lua
+function()
+  local oil = require("oil")
+  local filename = oil.get_cursor_entry().name
+  local dir = oil.get_current_dir()
+  oil.close()
+
+  local img_clip = require("img-clip")
+  img_clip.paste_image({}, dir .. filename)
+end
+```
+
+The above function should be bound to a keymap, e.g. through lazy.nvim.
+
+</details>
+
+Alternatively, you can invoke img-clip.nvim directly from your oil.nvim configuration:
+
+<details> <summary>Example configuration</summary>
+
+```lua
+keymaps = {
+  ["<leader>p"] = function()
+    local oil = require("oil")
+    local filename = oil.get_cursor_entry().name
+    local dir = oil.get_current_dir()
+    oil.close()
+
+    local img_clip = require("img-clip")
+    img_clip.paste_image({}, dir .. filename)
+  end,
+}
+```
+</details>
+
+## 🙌 Contributing
+
+Contributions are welcome! If you have any ideas, suggestions, or bug reports, please open an issue on the GitHub repository.

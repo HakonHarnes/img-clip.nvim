@@ -10,47 +10,53 @@ M.opts = {}
 
 local defaults = {
   default = {
-    dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
-    file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
-    process_cmd = "", -- shell command to process the image before saving or embedding as base64
-    url_encode_path = false, -- encode spaces and special characters in file path
-    use_absolute_path = false, -- expands dir_path to an absolute path
-    relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-    relative_template_path = true, -- make file path in the template relative to current file rather than the cwd
-    prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
-    show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-    use_cursor_in_template = true, -- jump to cursor position in template after pasting
-    insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-    embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
-    max_base64_size = 10, -- max size of base64 string in KB
-    template = "$FILE_PATH", -- default template
-    copy_images = false, -- copy images instead of using the original file
-    download_images = true, -- download images and save them to dir_path instead of using the URL
+    -- file and directory options
+    dir_path = "assets", ---@type string
+    file_name = "%Y-%m-%d-%H-%M-%S", ---@type string
+    use_absolute_path = false, ---@type boolean
+    relative_to_current_file = false, ---@type boolean
 
+    -- template options
+    template = "$FILE_PATH", ---@type string
+    url_encode_path = false, ---@type boolean
+    relative_template_path = true, ---@type boolean
+    use_cursor_in_template = true, ---@type boolean
+    insert_mode_after_paste = true, ---@type boolean
+
+    -- prompt options
+    prompt_for_file_name = true, ---@type boolean
+    show_dir_path_in_prompt = false, ---@type boolean
+
+    -- base64 options
+    max_base64_size = 10, ---@type number
+    embed_image_as_base64 = false, ---@type boolean
+
+    -- image options
+    process_cmd = "", ---@type string
+    copy_images = false, ---@type boolean
+    download_images = true, ---@type boolean
+
+    -- drag and drop options
     drag_and_drop = {
-      enabled = true, -- enable drag and drop mode
-      insert_mode = false, -- enable drag and drop in insert mode
+      enabled = true, ---@type boolean
+      insert_mode = false, ---@type boolean
     },
   },
 
   -- filetype specific options
-  -- any options that are passed here will override the default config
-  -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular filetype
-  -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
   filetypes = {
     markdown = {
-      url_encode_path = true,
-      template = "![$CURSOR]($FILE_PATH)",
-      download_images = false,
+      url_encode_path = true, ---@type boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string
+      download_images = false, ---@type boolean
     },
 
     html = {
-      template = '<img src="$FILE_PATH" alt="$CURSOR">',
+      template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string
     },
 
     tex = {
-      relative_template_path = false,
+      relative_template_path = false, ---@type boolean
       template = [[
 \begin{figure}[h]
   \centering
@@ -58,7 +64,7 @@ local defaults = {
   \caption{$CURSOR}
   \label{fig:$LABEL}
 \end{figure}
-    ]],
+    ]], ---@type string
     },
 
     typst = {
@@ -67,7 +73,7 @@ local defaults = {
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
-    ]],
+    ]], ---@type string
     },
 
     rst = {
@@ -75,11 +81,11 @@ local defaults = {
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
-    ]],
+    ]], ---@type string
     },
 
     asciidoc = {
-      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]', ---@type string
     },
 
     org = {
@@ -89,13 +95,14 @@ local defaults = {
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
-    ]=],
+    ]=], ---@type string
     },
   },
 
-  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
-  dirs = {}, -- dir specific options (e.g. "project" or "/home/hakon/project")
-  custom = {}, -- custom options enabled with the trigger option
+  -- file, directory, and custom triggered options
+  files = {}, ---@type table
+  dirs = {}, ---@type table
+  custom = {}, ---@type table
 }
 
 defaults.filetypes.plaintex = defaults.filetypes.tex
