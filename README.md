@@ -375,7 +375,7 @@ end
 ## 🖱️ Drag and drop
 
 The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in normal mode.
-It can be optionally enabled in insert mode using the `drag_and_drop.insert_mode` option.
+Drag and drop can also be enabled in insert mode by setting the `drag_and_drop.insert_mode` option to `true`.
 For drag and drop to work properly, the following is required by the terminal emulator:
 
 1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
