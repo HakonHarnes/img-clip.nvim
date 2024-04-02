@@ -2,7 +2,7 @@
 
 Effortlessly embed images into any markup language, like LaTeX, Markdown or Typst.
 
-https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/043c6c74-9e87-4485-aad9-38daf5c74fbf
+https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/ab4edc10-d296-4532-bfce-6abdd4f218bf
 
 ## ⚡ Features
 
