@@ -22,7 +22,8 @@ https://github.com/HakonHarnes/img-clip.nvim/assets/89907156/043c6c74-9e87-4485-
 - **MacOS:** [pngpaste](https://github.com/jcsalterego/pngpaste) (optional, but recommended)
 - **Windows:** No additional requirements
 
-> ⚠️ Run `:checkhealth img-clip` after installation to ensure requirements are satisfied.
+> [!IMPORTANT]
+> Run `:checkhealth img-clip` after installation to ensure requirements are satisfied.
 
 ## 📦 Installation
 
@@ -55,7 +56,8 @@ The plugin comes with the following commands:
 - `ImgClipDebug`: Prints the debug log, including the output of shell commands
 - `ImgClipConfig`: Prints the current configuration
 
-Consider binding `PasteImage` to something like `<leader>p`.
+> [!TIP]
+> Consider binding `PasteImage` to something like `<leader>p`.
 
 ### API
 
@@ -65,70 +67,79 @@ You can also use the Lua equivalent, which allows you to override your configura
 require("img-clip").paste_image(opts?, input?) -- input is optional and can be a file path or URL
 ```
 
-Example:
+<details> <summary><b>Example</b></summary>
 
 ```lua
 require("img-clip").paste_image({ use_absolute_path = false, file_name = "image.png" }, "/path/to/file.png")
 ```
 
+</details>
+
+
 ## ⚙️ Configuration
 
 ### Setup
 
-The plugin comes with the following defaults:
+The plugin is highly configurable. Please refer to the default configuration below:
 
 ```lua
 {
   default = {
-    dir_path = "assets", -- directory path to save images to, can be relative (cwd or current file) or absolute
-    file_name = "%Y-%m-%d-%H-%M-%S", -- file name format (see lua.org/pil/22.1.html)
-    process_cmd = "", -- shell command to process the image before saving or embedding as base64 (e.g. "convert -quality 85 - -")
-    url_encode_path = false, -- encode spaces and special characters in file path
-    use_absolute_path = false, -- expands dir_path to an absolute path
-    relative_to_current_file = false, -- make dir_path relative to current file rather than the cwd
-    relative_template_path = true, -- make file path in the template relative to current file rather than the cwd
-    prompt_for_file_name = true, -- ask user for file name before saving, leave empty to use default
-    show_dir_path_in_prompt = false, -- show dir_path in prompt when prompting for file name
-    use_cursor_in_template = true, -- jump to cursor position in template after pasting
-    insert_mode_after_paste = true, -- enter insert mode after pasting the markup code
-    embed_image_as_base64 = false, -- paste image as base64 string instead of saving to file
-    max_base64_size = 10, -- max size of base64 string in KB
-    template = "$FILE_PATH", -- default template
-    copy_images = false, -- copy images instead of using the original file
-    download_images = true, -- download images and save them to dir_path instead of using the URL
+    -- file and directory options
+    dir_path = "assets", ---@type string
+    file_name = "%Y-%m-%d-%H-%M-%S", ---@type string
+    use_absolute_path = false, ---@type boolean
+    relative_to_current_file = false, ---@type boolean
 
+    -- template options
+    template = "$FILE_PATH", ---@type string
+    url_encode_path = false, ---@type boolean
+    relative_template_path = true, ---@type boolean
+    use_cursor_in_template = true, ---@type boolean
+    insert_mode_after_paste = true, ---@type boolean
+
+    -- prompt options
+    prompt_for_file_name = true, ---@type boolean
+    show_dir_path_in_prompt = false, ---@type boolean
+
+    -- base64 options
+    max_base64_size = 10, ---@type number
+    embed_image_as_base64 = false, ---@type boolean
+
+    -- image options
+    process_cmd = "", ---@type string
+    copy_images = false, ---@type boolean
+    download_images = true, ---@type boolean
+
+    -- drag and drop options
     drag_and_drop = {
-      enabled = true, -- enable drag and drop mode
-      insert_mode = false, -- enable drag and drop in insert mode
+      enabled = true, ---@type boolean
+      insert_mode = false, ---@type boolean
     },
   },
 
   -- filetype specific options
-  -- any options that are passed here will override the default config
-  -- for instance, setting use_absolute_path = true for markdown will
-  -- only enable that for this particular filetype
-  -- the key (e.g. "markdown") is the filetype (output of "set filetype?")
   filetypes = {
     markdown = {
-      url_encode_path = true,
-      template = "![$CURSOR]($FILE_PATH)",
-      download_images = false,
+      url_encode_path = true, ---@type boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string
+      download_images = false, ---@type boolean
     },
 
     html = {
-      template = '<img src="$FILE_PATH" alt="$CURSOR">',
+      template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string
     },
 
     tex = {
-      relative_template_path = false,
-      template = [[
+      relative_template_path = false, ---@type boolean
+      template = [[ 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
   \caption{$CURSOR}
   \label{fig:$LABEL}
 \end{figure}
-    ]],
+    ]], ---@type string
     },
 
     typst = {
@@ -137,7 +148,7 @@ The plugin comes with the following defaults:
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
-    ]],
+    ]], ---@type string
     },
 
     rst = {
@@ -145,11 +156,11 @@ The plugin comes with the following defaults:
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
-    ]],
+    ]], ---@type string
     },
 
     asciidoc = {
-      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]',
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]', ---@type string
     },
 
     org = {
@@ -159,21 +170,24 @@ The plugin comes with the following defaults:
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
-    ]=],
+    ]=], ---@type string
     },
   },
 
-  -- override options for specific files, dirs or custom triggers
-  files = {}, -- file specific options (e.g. "main.md" or "/path/to/main.md")
-  dirs = {}, -- dir specific options (e.g. "project" or "/home/user/project")
-  custom = {}, -- custom options enabled with the trigger option
+  -- file, directory, and custom triggered options
+  files = {}, ---@type table
+  dirs = {}, ---@type table
+  custom = {}, ---@type table
 }
 ```
 
 ### Options
 
 Option values can be configured as either static values (e.g. "assets"), or by dynamically generating them through functions.
-For instance, to set the `dir_path` to match the name of the currently opened file:
+
+<details> <summary><b>Example: Dynamically set the dir path</b></summary>
+
+To set the `dir_path` to match the name of the currently opened file:
 
 ```lua
 dir_path = function()
@@ -181,11 +195,13 @@ dir_path = function()
 end,
 ```
 
+</details>
+
 ### Processing images
 
 The `process_cmd` option allows you to specify a shell command to process the image before saving or embedding it as base64. The command should read the image data from the standard input and write the processed data to the standard output.
 
-Examples:
+<details> <summary><b>Example: ImageMagick</b></summary>
 
 ```bash
 process_cmd = "convert - -quality 85 -" -- compress the image with 85% quality
@@ -195,20 +211,12 @@ process_cmd = "convert - -colorspace Gray -" -- convert the image to grayscale
 
 Ensure the specified command and its dependencies are installed and accessible in your system's shell environment. The above examples require [ImageMagick](https://imagemagick.org/index.php) to be installed.
 
+</details>
+
 ### Filetypes
 
 Filetype specific options will override the default (or global) configuration.
 Any option can be specified for a specific filetype.
-For instance, if you only want to use absolute file paths for LaTeX, then:
-
-```lua
-filetypes = {
-  tex = {
-    use_absolute_path = true
-  }
-}
-```
-
 Filetype specific options are determined by the _filetype_ (see `:help filetype`).
 You can override settings for any filetype by specifying it as the key in your configuration:
 
@@ -219,6 +227,20 @@ filetypes = {
   }
 }
 ```
+
+<details> <summary><b>Example: LaTeX-specific configuration</b></summary>
+
+If you only want to use absolute file paths for LaTeX, then:
+
+```lua
+filetypes = {
+  tex = {
+    use_absolute_path = true
+  }
+}
+```
+
+</details>
 
 ### Overriding options for specific files, directories or custom triggers
 
@@ -237,7 +259,7 @@ The plugin evaluates the options in the following order:
 4. Filetype specific options
 5. Default options
 
-Example configuration:
+<details> <summary><b>Example</b></summary>
 
 ```lua
 -- file specific options
@@ -290,6 +312,8 @@ dirs = {
 }
 ```
 
+</details>
+
 ### Project-specific settings with the `.img-clip.lua` file
 
 Project-specific settings can be specified in a `.img-clip.lua` file in the root of your project.
@@ -304,7 +328,7 @@ return {
 }
 ```
 
-Example:
+<details> <summary><b>Example</b></summary>
 
 ```lua
 return {
@@ -320,6 +344,8 @@ return {
 }
 ```
 
+</details>
+
 ### Templates
 
 Templates in the plugin use placeholders that are dynamically replaced with the correct values at runtime.
@@ -333,13 +359,18 @@ For available placeholders, see the following table and the [demonstration](#dem
 | `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
 | `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          |                                    |
 
-Templates can also be defined using functions with the above placeholders available as function parameters:
+Templates can also be defined using functions with the above placeholders available as function parameters. 
+
+<details> <summary><b>Example</b></summary>
 
 ```lua
 template = function(context)
   return "![" .. context.cursor .. "](" .. context.file_path .. ")"
 end
 ```
+
+</details>
+
 
 ## 🖱️ Drag and drop
 
@@ -520,6 +551,8 @@ A list of terminal emulators and their capabilities is given below.
   </tbody>
 </table>
 
-> 💡 If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`.
+> [!TIP]
+> If you're having issues on Windows, try changing the default shell to `powershell` or `pwsh`. See `:h shell-powershell`.
 
-> ⚠️ MacOS URLs only work in Safari.
+> [!WARNING]
+> MacOS URLs only work in Safari.
