@@ -25,7 +25,7 @@ describe("util", function()
       local command = "command"
       local output, exit_code = util.execute(command)
 
-      assert.equal(output, command)
+      assert.equal(output, "sh -c 'command'")
       assert.equal(exit_code, 0)
     end)
 

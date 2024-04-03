@@ -6,7 +6,7 @@ local M = {}
 M.verbose = true
 
 ---@param input_cmd string
----@param execute_directly boolean
+---@param execute_directly? boolean
 ---@return string | nil output
 ---@return number exit_code
 M.execute = function(input_cmd, execute_directly)
@@ -33,7 +33,7 @@ M.execute = function(input_cmd, execute_directly)
 
   -- otherwise (linux, macos), execute the command directly
   else
-    cmd = input_cmd
+    cmd = "sh -c " .. vim.fn.shellescape(input_cmd)
   end
 
   local output = vim.fn.system(cmd)
