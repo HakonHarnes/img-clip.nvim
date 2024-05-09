@@ -1,4 +1,4 @@
-*img-clip.nvim.txt*           For NVIM v0.8.0          Last change: April 2024
+*img-clip.nvim.txt*            For NVIM v0.8.0           Last change: May 2024
 
 ==============================================================================
 Table of Contents                            *img-clip.nvim-table-of-contents*
@@ -147,6 +147,12 @@ below:
       -- filetype specific options
       filetypes = {
         markdown = {
+          url_encode_path = true, ---@type boolean
+          template = "![$CURSOR]($FILE_PATH)", ---@type string
+          download_images = false, ---@type boolean
+        },
+    
+        vimwiki = {
           url_encode_path = true, ---@type boolean
           template = "![$CURSOR]($FILE_PATH)", ---@type string
           download_images = false, ---@type boolean
