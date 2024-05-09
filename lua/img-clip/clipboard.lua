@@ -14,14 +14,6 @@ M.get_clip_cmd = function()
   elseif (util.has("win32") or util.has("wsl")) and util.executable("powershell.exe") then
     M.clip_cmd = "powershell.exe"
 
-  -- Linux (Wayland)
-  elseif os.getenv("WAYLAND_DISPLAY") and util.executable("wl-paste") then
-    M.clip_cmd = "wl-paste"
-
-  -- Linux (X11)
-  elseif os.getenv("DISPLAY") and util.executable("xclip") then
-    M.clip_cmd = "xclip"
-
   -- MacOS
   elseif util.has("mac") then
     if util.executable("pngpaste") then
@@ -29,6 +21,14 @@ M.get_clip_cmd = function()
     elseif util.executable("osascript") then
       M.clip_cmd = "osascript"
     end
+
+  -- Linux (Wayland)
+  elseif os.getenv("WAYLAND_DISPLAY") and util.executable("wl-paste") then
+    M.clip_cmd = "wl-paste"
+
+  -- Linux (X11)
+  elseif os.getenv("DISPLAY") and util.executable("xclip") then
+    M.clip_cmd = "xclip"
   else
     return nil
   end
