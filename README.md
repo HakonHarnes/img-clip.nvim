@@ -76,7 +76,6 @@ require("img-clip").paste_image({ use_absolute_path = false, file_name = "image.
 
 </details>
 
-
 ## ⚙️ Configuration
 
 ### Setup
@@ -127,13 +126,19 @@ The plugin is highly configurable. Please refer to the default configuration bel
       download_images = false, ---@type boolean
     },
 
+    vimwiki = {
+      url_encode_path = true, ---@type boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string
+      download_images = false, ---@type boolean
+    },
+
     html = {
       template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string
     },
 
     tex = {
       relative_template_path = false, ---@type boolean
-      template = [[ 
+      template = [[
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{$FILE_PATH}
@@ -360,7 +365,7 @@ For available placeholders, see the following table and the [demonstration](#dem
 | `$LABEL`            | Figure label, generated from the file name, converted to lower-case and with spaces replaced by dashes. | `the-image` (from `the image.png`) |
 | `$CURSOR`           | Indicates where the cursor will be placed after insertion if `use_cursor_in_template` is true.          |                                    |
 
-Templates can also be defined using functions with the above placeholders available as function parameters. 
+Templates can also be defined using functions with the above placeholders available as function parameters.
 
 <details> <summary>Example</summary>
 
@@ -371,7 +376,6 @@ end
 ```
 
 </details>
-
 
 ## 🖱️ Drag and drop
 
@@ -557,12 +561,12 @@ A list of terminal emulators and their capabilities is given below.
 
 > [!WARNING]
 > MacOS URLs only work in Safari.
- 
+
 ## 🔌 Integrations
 
 ### Telescope.nvim
 
-The plugin can be integrated with [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)  to provide a seamless way to select and embed images using Telescope's powerful fuzzy finding capabilities.
+The plugin can be integrated with [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) to provide a seamless way to select and embed images using Telescope's powerful fuzzy finding capabilities.
 
 <details> <summary>Example configuration</summary>
 
@@ -596,8 +600,7 @@ The above function should be bound to a keymap, e.g. through lazy.nvim.
 
 </details>
 
-
-### Oil.nvim 
+### Oil.nvim
 
 The plugin also integrates with [oil.nvim](https://github.com/stevearc/oil.nvim), providing a convenient way to browse and select images using Oil's file explorer.
 
@@ -636,6 +639,7 @@ keymaps = {
   end,
 }
 ```
+
 </details>
 
 ## 🙌 Contributing

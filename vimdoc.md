@@ -126,6 +126,12 @@ The plugin is highly configurable. Please refer to the default configuration bel
       download_images = false, ---@type boolean
     },
 
+    vimwiki = {
+      url_encode_path = true, ---@type boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string
+      download_images = false, ---@type boolean
+    },
+
     html = {
       template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string
     },
