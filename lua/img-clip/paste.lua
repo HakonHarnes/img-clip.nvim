@@ -58,7 +58,8 @@ M.paste_image_from_url = function(url)
     return true
   end
 
-  local file_path = fs.get_file_path("png")
+  local extension = config.get_opt("extension")
+  local file_path = fs.get_file_path(extension)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -114,7 +115,8 @@ M.paste_image_from_path = function(src_path)
     return true
   end
 
-  local file_path = fs.get_file_path("png")
+  local extension = config.get_opt("extension")
+  local file_path = fs.get_file_path(extension)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -152,7 +154,8 @@ M.paste_image_from_clipboard = function()
     end
   end
 
-  local file_path = fs.get_file_path("png")
+  local extension = config.get_opt("extension")
+  local file_path = fs.get_file_path(extension)
   if not file_path then
     util.error("Could not determine file path.")
     return false
