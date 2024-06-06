@@ -72,7 +72,7 @@ end
 
 ---@param ext string
 ---@return string
-M.get_file_path = function(ext)
+M.get_file_path_and_caption = function(ext)
   local config_dir_path = config.get_opt("dir_path")
   local config_file_name = os.date(config.get_opt("file_name"))
 
@@ -86,20 +86,34 @@ M.get_file_path = function(ext)
 
   dir_path = M.normalize_path(dir_path)
 
+  local input_filename
+  local input_caption
+
+  if config.get_opt("prompt_for_caption") then
+    input_caption = util.input({
+      prompt = "Caption: "
+    })
+    input_filename = input_caption:lower():gsub("[^a-z0-9]", "_")
+    if vim.fn.fnamemodify(input_filename, ":e") == "" then
+      input_filename = M.add_file_ext(input_filename, ext)
+    end
+  end
+
   local file_path
   if config.get_opt("prompt_for_file_name") then
     if config.get_opt("show_dir_path_in_prompt") then
       local input_file_path = util.input({
         prompt = "File path: ",
-        default = dir_path,
+        default = dir_path .. (input_filename or ''),
         completion = "file",
       })
       if input_file_path and input_file_path ~= "" and input_file_path ~= dir_path then
         file_path = input_file_path
       end
     else
-      local input_filename = util.input({
+      input_filename = util.input({
         prompt = "File name: ",
+        default = input_filename,
         completion = "file",
       })
       if input_filename and input_filename ~= "" then
@@ -117,7 +131,12 @@ M.get_file_path = function(ext)
   if vim.fn.fnamemodify(file_path, ":e") == "" then
     file_path = M.add_file_ext(file_path, ext)
   end
-  return file_path
+
+  if input_caption == "" then
+    input_caption = vim.fn.fnamemodify(file_path, ":t:r")
+  end
+
+  return file_path, input_caption
 end
 
 ---@param dir string
