@@ -59,7 +59,7 @@ M.paste_image_from_url = function(url)
   end
 
   local extension = config.get_opt("extension")
-  local file_path = fs.get_file_path(extension)
+  local file_path, caption = fs.get_file_path_and_caption(extension)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -89,7 +89,7 @@ M.paste_image_from_url = function(url)
     util.warn("Output: " .. output, true)
   end
 
-  if not markup.insert_markup(file_path, true) then
+  if not markup.insert_markup(file_path, true, caption) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -116,7 +116,7 @@ M.paste_image_from_path = function(src_path)
   end
 
   local extension = config.get_opt("extension")
-  local file_path = fs.get_file_path(extension)
+  local file_path, caption = fs.get_file_path_and_caption(extension)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -139,7 +139,7 @@ M.paste_image_from_path = function(src_path)
     util.warn("Output: " .. output, true)
   end
 
-  if not markup.insert_markup(file_path, true) then
+  if not markup.insert_markup(file_path, true, caption) then
     util.error("Could not insert markup code.")
     return false
   end
@@ -155,7 +155,7 @@ M.paste_image_from_clipboard = function()
   end
 
   local extension = config.get_opt("extension")
-  local file_path = fs.get_file_path(extension)
+  local file_path, caption = fs.get_file_path_and_caption(extension)
   if not file_path then
     util.error("Could not determine file path.")
     return false
@@ -180,7 +180,7 @@ M.paste_image_from_clipboard = function()
     end
   end
 
-  if not markup.insert_markup(file_path, true) then
+  if not markup.insert_markup(file_path, true, caption) then
     util.error("Could not insert markup code.")
     return false
   end

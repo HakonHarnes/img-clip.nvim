@@ -27,6 +27,7 @@ local defaults = {
     -- prompt options
     prompt_for_file_name = true, ---@type boolean
     show_dir_path_in_prompt = false, ---@type boolean
+    prompt_for_caption = false, ---@type boolean
 
     -- base64 options
     max_base64_size = 10, ---@type number

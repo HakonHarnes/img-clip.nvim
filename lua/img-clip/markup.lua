@@ -60,13 +60,14 @@ end
 ---@param input string
 ---@param is_file_path? boolean
 ---@return string | nil
-function M.get_template(input, is_file_path)
+function M.get_template(input, is_file_path, caption)
   local template_args = {
     file_path = "",
     file_name = "",
     file_name_no_ext = "",
     cursor = "$CURSOR",
     label = "",
+    caption = "",
   }
 
   if is_file_path then
@@ -74,6 +75,7 @@ function M.get_template(input, is_file_path)
     template_args.file_name = vim.fn.fnamemodify(input, ":t")
     template_args.file_name_no_ext = vim.fn.fnamemodify(input, ":t:r")
     template_args.label = template_args.file_name_no_ext:gsub("%s+", "-"):lower()
+    template_args.caption = caption
 
     -- see issue #21
     local current_dir_path = vim.fn.expand("%:p:h")
@@ -94,6 +96,7 @@ function M.get_template(input, is_file_path)
     end
   else
     template_args.file_path = input
+    template_args.caption = caption
   end
 
   local template = config.get_opt("template", template_args)
@@ -105,6 +108,7 @@ function M.get_template(input, is_file_path)
   template = template:gsub("$FILE_NAME", template_args.file_name)
   template = template:gsub("$FILE_PATH", template_args.file_path)
   template = template:gsub("$LABEL", template_args.label)
+  template = template:gsub("$CAPTION", template_args.caption)
 
   if not config.get_opt("use_cursor_in_template") then
     template = template:gsub("$CURSOR", "")
@@ -116,8 +120,8 @@ end
 ---@param input string
 ---@param is_file_path? boolean
 ---@return boolean
-function M.insert_markup(input, is_file_path)
-  local template = M.get_template(input, is_file_path)
+function M.insert_markup(input, is_file_path, caption)
+  local template = M.get_template(input, is_file_path, caption)
   if not template then
     return false
   end
