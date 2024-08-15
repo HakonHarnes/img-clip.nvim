@@ -202,8 +202,10 @@ end
 local function get_val(val, args)
   if val == nil then
     return nil
+  elseif type(val) == "function" then
+    return val(args or {})
   else
-    return type(val) == "function" and val(args or {}) or val
+    return val
   end
 end
 
