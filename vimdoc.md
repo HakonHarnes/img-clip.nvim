@@ -86,59 +86,59 @@ The plugin is highly configurable. Please refer to the default configuration bel
 {
   default = {
     -- file and directory options
-    dir_path = "assets", ---@type string
-    extension = "png", ---@type string
-    file_name = "%Y-%m-%d-%H-%M-%S", ---@type string
-    use_absolute_path = false, ---@type boolean
-    relative_to_current_file = false, ---@type boolean
+    dir_path = "assets", ---@type string | fun(): string
+    extension = "png", ---@type string | fun(): string
+    file_name = "%Y-%m-%d-%H-%M-%S", ---@type string | fun(): string
+    use_absolute_path = false, ---@type boolean | fun(): boolean
+    relative_to_current_file = false, ---@type boolean | fun(): boolean
 
     -- template options
-    template = "$FILE_PATH", ---@type string
-    url_encode_path = false, ---@type boolean
-    relative_template_path = true, ---@type boolean
-    use_cursor_in_template = true, ---@type boolean
-    insert_mode_after_paste = true, ---@type boolean
+    template = "$FILE_PATH", ---@type string | fun(context: table): string
+    url_encode_path = false, ---@type boolean | fun(): boolean
+    relative_template_path = true, ---@type boolean | fun(): boolean
+    use_cursor_in_template = true, ---@type boolean | fun(): boolean
+    insert_mode_after_paste = true, ---@type boolean | fun(): boolean
 
     -- prompt options
-    prompt_for_file_name = true, ---@type boolean
-    show_dir_path_in_prompt = false, ---@type boolean
+    prompt_for_file_name = true, ---@type boolean | fun(): boolean
+    show_dir_path_in_prompt = false, ---@type boolean | fun(): boolean
 
     -- base64 options
-    max_base64_size = 10, ---@type number
-    embed_image_as_base64 = false, ---@type boolean
+    max_base64_size = 10, ---@type number | fun(): number
+    embed_image_as_base64 = false, ---@type boolean | fun(): boolean
 
     -- image options
-    process_cmd = "", ---@type string
-    copy_images = false, ---@type boolean
-    download_images = true, ---@type boolean
+    process_cmd = "", ---@type string | fun(): string
+    copy_images = false, ---@type boolean | fun(): boolean
+    download_images = true, ---@type boolean | fun(): boolean
 
     -- drag and drop options
     drag_and_drop = {
-      enabled = true, ---@type boolean
-      insert_mode = false, ---@type boolean
+      enabled = true, ---@type boolean | fun(): boolean
+      insert_mode = false, ---@type boolean | fun(): boolean
     },
   },
 
   -- filetype specific options
   filetypes = {
     markdown = {
-      url_encode_path = true, ---@type boolean
-      template = "![$CURSOR]($FILE_PATH)", ---@type string
-      download_images = false, ---@type boolean
+      url_encode_path = true, ---@type boolean | fun(): boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string | fun(context: table): string
+      download_images = false, ---@type boolean | fun(): boolean
     },
 
     vimwiki = {
-      url_encode_path = true, ---@type boolean
-      template = "![$CURSOR]($FILE_PATH)", ---@type string
-      download_images = false, ---@type boolean
+      url_encode_path = true, ---@type boolean | fun(): boolean
+      template = "![$CURSOR]($FILE_PATH)", ---@type string | fun(context: table): string
+      download_images = false, ---@type boolean | fun(): boolean
     },
 
     html = {
-      template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string
+      template = '<img src="$FILE_PATH" alt="$CURSOR">', ---@type string | fun(context: table): string
     },
 
     tex = {
-      relative_template_path = false, ---@type boolean
+      relative_template_path = false, ---@type boolean | fun(): boolean
       template = [[
 \begin{figure}[h]
   \centering
@@ -146,7 +146,7 @@ The plugin is highly configurable. Please refer to the default configuration bel
   \caption{$CURSOR}
   \label{fig:$LABEL}
 \end{figure}
-    ]], ---@type string
+    ]], ---@type string | fun(context: table): string
     },
 
     typst = {
@@ -155,7 +155,7 @@ The plugin is highly configurable. Please refer to the default configuration bel
   image("$FILE_PATH", width: 80%),
   caption: [$CURSOR],
 ) <fig-$LABEL>
-    ]], ---@type string
+    ]], ---@type string | fun(context: table): string
     },
 
     rst = {
@@ -163,11 +163,11 @@ The plugin is highly configurable. Please refer to the default configuration bel
 .. image:: $FILE_PATH
    :alt: $CURSOR
    :width: 80%
-    ]], ---@type string
+    ]], ---@type string | fun(context: table): string
     },
 
     asciidoc = {
-      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]', ---@type string
+      template = 'image::$FILE_PATH[width=80%, alt="$CURSOR"]', ---@type string | fun(context: table): string
     },
 
     org = {
@@ -177,14 +177,14 @@ The plugin is highly configurable. Please refer to the default configuration bel
 #+CAPTION: $CURSOR
 #+NAME: fig:$LABEL
 #+END_FIGURE
-    ]=], ---@type string
+    ]=], ---@type string | fun(context: table): string
     },
   },
 
   -- file, directory, and custom triggered options
-  files = {}, ---@type table
-  dirs = {}, ---@type table
-  custom = {}, ---@type table
+  files = {}, ---@type table | fun(): table
+  dirs = {}, ---@type table | fun(): table
+  custom = {}, ---@type table | fun(): table
 }
 ```
 
@@ -382,7 +382,7 @@ end
 
 The drag and drop feature enables users to drag images from the web browser or file explorer into the terminal to automatically embed them, in normal mode.
 Drag and drop can also be enabled in insert mode by setting the `drag_and_drop.insert_mode` option to `true`.
-For drag and drop to work properly, the following is required by the terminal emulator:
+For drag and drop to work properly, the terminal emulator must meet the following requirements:
 
 1. The terminal emulator must paste the file path or URL to the image when it is dropped into the terminal.
 2. The text must be inserted in [bracketed paste mode](https://cirw.in/blog/bracketed-paste), which allows Neovim to differentiate pasted text from typed-in text.
