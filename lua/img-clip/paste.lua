@@ -107,7 +107,7 @@ M.paste_image_from_path = function(src_path)
 
   -- if we are not copying images, then just insert the original path
   if not config.get_opt("copy_images") then
-    if config.get_opt("relative_to_current_file") then
+    if not config.get_opt("use_absolute_path") then
       src_path = fs.relpath(src_path)
     end
 
