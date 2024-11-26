@@ -53,7 +53,7 @@ return {
 
 The plugin comes with the following commands:
 
-- `PasteImage`: Pastes an image form the system clipboard
+- `PasteImage`: Pastes an image from the system clipboard
 - `ImgClipDebug`: Prints the debug log, including the output of shell commands
 - `ImgClipConfig`: Prints the current configuration
 
