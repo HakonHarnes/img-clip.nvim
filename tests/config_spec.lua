@@ -25,6 +25,8 @@ describe("config", function()
     assert.equal(10, config.get_opt("max_base64_size"))
     assert.equals("$FILE_PATH", config.get_opt("template"))
 
+    assert.is_true(config.get_opt("url.enabled"))
+
     assert.is_true(config.get_opt("drag_and_drop.enabled"))
     assert.is_false(config.get_opt("drag_and_drop.insert_mode"))
 

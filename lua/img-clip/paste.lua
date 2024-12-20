@@ -15,7 +15,9 @@ M.paste_image = function(input)
     input = util.sanitize_input(input)
 
     if util.is_image_url(input) then
-      return M.paste_image_from_url(input)
+      if config.get_opt("url.enabled") == true then
+        return M.paste_image_from_url(input)
+      end
     elseif util.is_image_path(input) then
       return M.paste_image_from_path(input)
     end
