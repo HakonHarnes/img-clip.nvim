@@ -37,6 +37,11 @@ local defaults = {
     copy_images = false, ---@type boolean
     download_images = true, ---@type boolean
 
+    -- paste from url
+    url = {
+      enabled = true ---@type boolean
+    },
+
     -- drag and drop options
     drag_and_drop = {
       enabled = true, ---@type boolean
@@ -150,7 +155,7 @@ M.get_config = function()
   if M.configs[dir_path] and M.configs[dir_path] ~= {} then
     return M.configs[dir_path]
 
-  -- no cached config file found, use default config
+    -- no cached config file found, use default config
   elseif M.configs[dir_path] == {} then
     M.config_file = "Default"
     return M.opts
@@ -235,7 +240,7 @@ local function get_file_opt(key, opts, args, file)
   end
 
   local function file_matches(f1, f2)
-    return string.sub(f1:lower(), -#f2:lower()) == f2:lower()
+    return string.sub(f1:lower(), - #f2:lower()) == f2:lower()
   end
 
   for _, config_file in ipairs(M.sorted_files) do
