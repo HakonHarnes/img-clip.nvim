@@ -114,7 +114,7 @@ local defaults = {
 
 defaults.filetypes.plaintex = defaults.filetypes.tex
 defaults.filetypes.rmd = defaults.filetypes.markdown
-defaults.filetypes.qmd = defaults.filetypes.markdown
+defaults.filetypes.quarto = defaults.filetypes.markdown
 defaults.filetypes.md = defaults.filetypes.markdown
 
 ---sorts the files and dirs tables by length of the path
