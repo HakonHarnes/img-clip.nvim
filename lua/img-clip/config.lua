@@ -342,6 +342,8 @@ function M.setup(config_opts)
   M.opts = M.sort_config(M.opts)
 end
 
+M.setup()
+
 M.print_config = function()
   local config = M.get_config()
 
