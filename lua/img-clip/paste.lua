@@ -121,8 +121,8 @@ M.paste_image_from_path = function(src_path)
 
   local extension = vim.fn.fnamemodify(src_path, ":e")
   if extension == "" then
-    util.warn("File missing extension. Adding png.")
     extension = config.get_opt("extension")
+    util.warn(string.format("No extension detected. Using default: %s.", extension))
   end
 
   local file_path = fs.get_file_path(extension)
