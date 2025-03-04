@@ -112,7 +112,7 @@ M.get_file_path = function(ext)
         return nil
       end
 
-      if input_filename and input_filename ~= "" then
+      if input_filename ~= "" then
         file_path = dir_path .. input_filename
       end
     end
