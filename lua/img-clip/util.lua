@@ -79,7 +79,7 @@ M.debug = function(msg)
   end
 end
 
----@param args string
+---@param args table
 M.input = function(args)
   local completed, output = pcall(function()
     return vim.fn.input(args)
