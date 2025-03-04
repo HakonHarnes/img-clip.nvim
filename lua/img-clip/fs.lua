@@ -71,7 +71,7 @@ M.add_file_ext = function(str, ext)
 end
 
 ---@param ext string
----@return string
+---@return string | nil
 M.get_file_path = function(ext)
   local config_dir_path = config.get_opt("dir_path")
   local config_file_name = os.date(config.get_opt("file_name"))
@@ -94,7 +94,12 @@ M.get_file_path = function(ext)
         default = dir_path,
         completion = "file",
       })
-      if input_file_path and input_file_path ~= "" and input_file_path ~= dir_path then
+
+      if not input_file_path then
+        return nil
+      end
+
+      if input_file_path ~= "" and input_file_path ~= dir_path then
         file_path = input_file_path
       end
     else
@@ -102,6 +107,11 @@ M.get_file_path = function(ext)
         prompt = "File name: ",
         completion = "file",
       })
+
+      if not input_filename then
+        return nil
+      end
+
       if input_filename and input_filename ~= "" then
         file_path = dir_path .. input_filename
       end

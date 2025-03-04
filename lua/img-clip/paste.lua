@@ -166,7 +166,6 @@ M.paste_image_from_clipboard = function()
   local extension = config.get_opt("extension")
   local file_path = fs.get_file_path(extension)
   if not file_path then
-    util.error("Could not determine file path.")
     return false
   end
 
